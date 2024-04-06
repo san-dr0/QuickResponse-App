@@ -15,6 +15,7 @@ export const registrationUser = async (loginFormValues: RegistrationDTO) => {
     email,
     password,
     isActive,
+    userType,
   } = loginFormValues;
   const sha256Password = await sha256(password);
 
@@ -35,7 +36,9 @@ export const registrationUser = async (loginFormValues: RegistrationDTO) => {
       lastname,
       mobilenumber,
       address,
+      userType,
     },
+    dateCreated: new Date()
   });
 
   return false;

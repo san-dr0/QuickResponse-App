@@ -43,3 +43,8 @@ export const STORAGE_KEY = {
   ACTIVE_USER_EMAIL: 'ACTIVE_USER_EMAIL',
   FB_ID: 'FB_ID'
 };
+
+export const QRAPP_USER_TYPES = [
+  {label: 'User', value: 0},
+  {label: 'Responder', value: 1}
+];
