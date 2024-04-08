@@ -22,10 +22,13 @@ export const registrationUser = async (loginFormValues: RegistrationDTO) => {
   const isUserExists = await validateIfUserExists(email);
 
   if (isUserExists) {
-    return true;
+    return {
+      fbID: '',
+      hasFailedRegistration: true
+    };
   }
 
-  await firestore().collection('Users').add({
+  const rec = await firestore().collection('Users').add({
     email,
     password: sha256Password,
     isActive,
@@ -40,8 +43,11 @@ export const registrationUser = async (loginFormValues: RegistrationDTO) => {
     },
     dateCreated: new Date()
   });
-
-  return false;
+  
+  return {
+    fbID: rec.id,
+    hasFailedRegistration: false
+  };
 };
 
 export const loginUser = async (

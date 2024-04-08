@@ -14,11 +14,17 @@ import * as Yup from 'yup';
 import TextLabel from '../../components/TextLabel';
 import DividerComponent from '../../components/Divider';
 import { Dropdown } from 'react-native-element-dropdown';
-import { QRAPP_USER_TYPES } from '../../constants/string';
+import { QRAPP_USER_TYPES, pleaseProvideSupportingDocuments, pleaseSelectUserType, registrationWasSuccessfull, sometingWentWrong, supportingDocuments } from '../../constants/string';
 import { APP_FONT_SIZE } from '../../constants/number';
-import { launchImageLibrary } from 'react-native-image-picker'
+import DocumentPicker from 'react-native-document-picker';
+import storage from '@react-native-firebase/storage';
+import firestore from '@react-native-firebase/firestore';
+import { SUPPORTING_DOCUMENTS } from '../../constants/dbRef';
+import { uploadImage } from '../../utils/imageManipulation';
+import { useAccountContext } from '../../providers/AccountProvider';
 
 export default function Registration(props: any) {
+  const {activeUserInformation} = useAccountContext();
   const initValues: RegistrationDTO = {
     profile: '',
     firstname: '',
@@ -34,6 +40,9 @@ export default function Registration(props: any) {
   const [dropdownValue, setDropDownValue] = useState<string>('Register as');
   const [isFocus, setIsFocus] = useState<boolean>(false);
   const [responderType, setResponderType] = useState<string>('');
+  const [hasProvideSupportingDocument, setHasProvideSupportingDocument] = useState<boolean>(false);
+  const [uploadSupportingDocuments, setUploadSupportingDocuments] = useState<string>(`${supportingDocuments} (0)`);
+  const [uploadedDocuments, setUploadedDocuments] = useState<any | undefined>(undefined);
   const {sendRegisterQRUser} = useUserCredentials();
   const registrationValidationSchema = Yup.object().shape({
     firstname: Yup.string().required('Firstname is required'),
@@ -52,16 +61,23 @@ export default function Registration(props: any) {
   const onRegister = async (values: RegistrationDTO, resetForm: any) => {
     try {
       if (dropdownValue === 'Register as') {
-        Alert.alert('Oops', 'Please select a user type.');
+        Alert.alert('Oops', pleaseSelectUserType);
+        return;
+      } 
+      if (dropdownValue === 'Responder' && !hasProvideSupportingDocument) {
+        Alert.alert('Oops', pleaseProvideSupportingDocuments);
         return;
       }
+
       resetForm();
       values.userType = dropdownValue;
-      const result = await sendRegisterQRUser(values);
-
-      if (!result) {
+      
+      const result = await sendRegisterQRUser(values) as any;
+      
+      if (!result?.hasFailedRegistration) {
+        uploadImage(SUPPORTING_DOCUMENTS, uploadedDocuments, result?.fbID); // this upload the supporting document first
         ToastAndroid.show(
-          'Your registration was successful!',
+          registrationWasSuccessfull,
           ToastAndroid.SHORT,
         );
         props.navigation.navigate('Login');
@@ -69,12 +85,25 @@ export default function Registration(props: any) {
         Alert.alert('Oops', `'${values.email}' already exists`);
       }
     } catch (error: any) {
-      Alert.alert('Something went wrong', error?.message);
+      Alert.alert(sometingWentWrong, error?.message);
     }
   };
 
-  const onUploadSupportingDocuments = () => {
-   launchImageLibrary({mediaType: 'photo'})
+  const onUploadSupportingDocuments = async () => {
+   try{
+    let document = await DocumentPicker.pick({
+      type: DocumentPicker.types.images,
+      allowMultiSelection: false
+     });
+     setHasProvideSupportingDocument(true);
+     setUploadedDocuments(document);
+     setUploadSupportingDocuments(`${supportingDocuments} (${document.length})`);
+   }
+   catch(error) {
+    ToastAndroid.show('Please provide supporting documents.', ToastAndroid.LONG);
+    setHasProvideSupportingDocument(false);
+    setUploadSupportingDocuments(`${supportingDocuments} (0)`);
+   }
   }
 
   return (
@@ -221,7 +250,7 @@ export default function Registration(props: any) {
                     textMode={TextInputEnum.OUTLINED}
                     value={responderType}
                     onChangeText={handleChange('responderType')} />
-                    <ButtonComponent title="Upload supporting documents" onPress={onUploadSupportingDocuments} />
+                    <ButtonComponent title={uploadSupportingDocuments} onPress={onUploadSupportingDocuments} width={100} />
                   </>
                 )
               }
