@@ -1,3 +1,5 @@
+import { UserType } from "../enums/User.enum";
+
 export type RegistrationDTO = {
     profile: string;
     firstname:    string
@@ -8,5 +10,5 @@ export type RegistrationDTO = {
     email:        string
     password:     string
     isActive:     boolean
-    userType?: string
+    userType?: UserType
 }

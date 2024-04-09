@@ -3,6 +3,7 @@ import {LoginDTO, UpdateProfileDTO, UserDTO} from '../../types/User.type';
 import firestore from '@react-native-firebase/firestore';
 import {sha256} from 'react-native-sha256';
 import {validateIfUserExists} from '../../utils/utility';
+import { UserType } from '../../enums/User.enum';
 
 export const registrationUser = async (loginFormValues: RegistrationDTO) => {
   const {
@@ -31,7 +32,7 @@ export const registrationUser = async (loginFormValues: RegistrationDTO) => {
   const rec = await firestore().collection('Users').add({
     email,
     password: sha256Password,
-    isActive,
+    isActive: userType === UserType.RESPONDER? false : true,
     account: {
       profile,
       firstname,

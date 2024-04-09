@@ -22,6 +22,7 @@ import firestore from '@react-native-firebase/firestore';
 import { SUPPORTING_DOCUMENTS } from '../../constants/dbRef';
 import { uploadImage } from '../../utils/imageManipulation';
 import { useAccountContext } from '../../providers/AccountProvider';
+import { UserType } from '../../enums/User.enum';
 
 export default function Registration(props: any) {
   const {activeUserInformation} = useAccountContext();
@@ -44,6 +45,7 @@ export default function Registration(props: any) {
   const [uploadSupportingDocuments, setUploadSupportingDocuments] = useState<string>(`${supportingDocuments} (0)`);
   const [uploadedDocuments, setUploadedDocuments] = useState<any | undefined>(undefined);
   const {sendRegisterQRUser} = useUserCredentials();
+
   const registrationValidationSchema = Yup.object().shape({
     firstname: Yup.string().required('Firstname is required'),
     middlename: Yup.string().required('Middlename is required'),
@@ -70,16 +72,18 @@ export default function Registration(props: any) {
       }
 
       resetForm();
-      values.userType = dropdownValue;
+      values.userType = dropdownValue as UserType;
       
       const result = await sendRegisterQRUser(values) as any;
       
       if (!result?.hasFailedRegistration) {
-        uploadImage(SUPPORTING_DOCUMENTS, uploadedDocuments, result?.fbID); // this upload the supporting document first
-        ToastAndroid.show(
-          registrationWasSuccessfull,
-          ToastAndroid.SHORT,
-        );
+        if (values.userType === UserType.RESPONDER) {
+          uploadImage(SUPPORTING_DOCUMENTS, uploadedDocuments, result?.fbID); // this upload the supporting document first
+          ToastAndroid.show(
+            registrationWasSuccessfull,
+            ToastAndroid.SHORT,
+          );
+        }
         props.navigation.navigate('Login');
       } else {
         Alert.alert('Oops', `'${values.email}' already exists`);
