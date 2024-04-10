@@ -1,8 +1,10 @@
 import {TouchableOpacity} from 'react-native';
 import styled from 'styled-components';
+import { COLOR_LISTS } from '../../constants/colors';
 
 type ButtonContainerProps = {
   backgroundColor?: string;
+  disabled?: boolean;
   textColor?: string;
   fontWeight?: string;
   fontSize?: number;
@@ -15,7 +17,7 @@ type ButtonContainerProps = {
 
 export const ButtonContainer = styled(TouchableOpacity)<ButtonContainerProps>`
   background-color: ${(props: ButtonContainerProps) =>
-    props.backgroundColor ?? '#FFF'};
+    props.backgroundColor ? props.disabled ? COLOR_LISTS.GREY_500:props.backgroundColor: COLOR_LISTS.WHITE};
   color: ${(props: ButtonContainerProps) => props.textColor ?? '#000'};
   font-weight: ${(props: ButtonContainerProps) => props.fontWeight ?? 'normal'};
   font-size: ${(props: ButtonContainerProps) => props.fontSize ?? 12}px;

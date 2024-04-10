@@ -1,5 +1,5 @@
 /* eslint-disable react-native/no-inline-styles */
-import React from 'react';
+import React, { useState } from 'react';
 import {ButtonComponent} from '../../components/Buttons';
 import {Alert, ScrollView, ToastAndroid, View} from 'react-native';
 import TextInputComponent from '../../components/TextInput';
@@ -39,8 +39,10 @@ export default function Registration(props: any) {
     email: Yup.string().email('Invalid email').required('Email is Required'),
     password: Yup.string().required('Password is Required'),
   });
+  const [isDisabled, setIsDisabled] = useState<boolean>(false);
 
-  const onRegister = async (values: RegistrationDTO) => {
+  const onRegister = async (values: RegistrationDTO, resetForm: any) => {
+    setIsDisabled(true);
     try {
       const result = await sendRegisterQRUser(values);
 
@@ -49,12 +51,16 @@ export default function Registration(props: any) {
           'Your registration was successful!',
           ToastAndroid.SHORT,
         );
+        resetForm();
+        setIsDisabled(false);
         props.navigation.navigate('Login');
       } else {
         Alert.alert('Oops', `'${values.email}' already exists`);
+        setIsDisabled(false);
       }
     } catch (error: any) {
       Alert.alert('Something went wrong', error?.message);
+      setIsDisabled(false);
     }
   };
 
@@ -75,8 +81,7 @@ export default function Registration(props: any) {
         <Formik
           initialValues={initValues}
           onSubmit={(values, {resetForm}) => {
-            resetForm();
-            onRegister(values);
+            onRegister(values, resetForm);
           }}
           validationSchema={registrationValidationSchema}>
           {({handleChange, handleSubmit, values, errors}) => (
@@ -180,6 +185,7 @@ export default function Registration(props: any) {
                 alignSelf="center"
                 backgroundColor={COLOR_LISTS.RED_400}
                 borderRadius="10"
+                disabled={isDisabled}
                 title="Sign up"
                 textAlign="center"
                 textColor={COLOR_LISTS.WHITE}

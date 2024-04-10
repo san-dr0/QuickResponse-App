@@ -5,6 +5,7 @@ import TextComponent from '../TextLabel';
 type ButtonContainerProps = {
   title?: string;
   backgroundColor?: string;
+  disabled?: boolean;
   textColor?: string;
   fontWeight?: string;
   fontSize?: number;
@@ -22,6 +23,7 @@ export const ButtonComponent = (props: ButtonContainerProps) => {
     title,
     backgroundColor,
     textColor,
+    disabled,
     fontWeight,
     fontSize,
     textAlign,
@@ -38,6 +40,7 @@ export const ButtonComponent = (props: ButtonContainerProps) => {
       alignSelf={alignSelf}
       backgroundColor={backgroundColor}
       borderRadius={borderRadius}
+      disabled={disabled}
       textColor={textColor}
       fontWeight={fontWeight}
       fontSize={fontSize}
