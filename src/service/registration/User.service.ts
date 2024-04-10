@@ -4,6 +4,7 @@ import firestore from '@react-native-firebase/firestore';
 import {sha256} from 'react-native-sha256';
 import {validateIfUserExists} from '../../utils/utility';
 import { UserType } from '../../enums/User.enum';
+import { useUserToken } from '../../hooks/userTokenHooks';
 
 export const registrationUser = async (loginFormValues: RegistrationDTO) => {
   const {
@@ -55,6 +56,8 @@ export const loginUser = async (
   loginFormValues: LoginDTO,
 ): Promise<UserDTO> => {
   const {loginEmail, loginPassword} = loginFormValues;
+  const {sendGenerateToken} = useUserToken();
+
   const results = await firestore()
     .collection('Users')
     .where('email', '==', loginEmail)
@@ -73,6 +76,12 @@ export const loginUser = async (
     return {} as UserDTO;
   }
 
+  const deviceToken = await sendGenerateToken();
+  firestore().collection('Tokens').doc(activeUser?.account?.fbID).set({
+    email: loginEmail,
+    token: deviceToken
+  });
+  
   return activeUser;
 };
 

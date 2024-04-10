@@ -16,6 +16,7 @@ import {useUserCredentials} from '../../hooks/useUserHooks';
 import * as Yup from 'yup';
 import {setAsyncStorage} from '../../utils/utility';
 import {STORAGE_KEY} from '../../constants/string';
+import { useState } from 'react';
 
 export default function Login(props: any) {
   const initValues: LoginDTO = {
@@ -31,6 +32,7 @@ export default function Login(props: any) {
       .required('Email is required'),
     loginPassword: Yup.string().required('Password is required'),
   });
+  const [isPassed, setIsPassed] = useState<boolean>(false);
 
   const onSignup = () => {
     navigation.navigate('Register');
@@ -38,6 +40,7 @@ export default function Login(props: any) {
 
   const onLoginUser = async (values: LoginDTO) => {
     try {
+      setIsPassed(true);
       const loginResponse = await sendLoginQRUser(values);
 
       if (Object.keys(loginResponse).length) {
@@ -74,13 +77,15 @@ export default function Login(props: any) {
         });
         setAsyncStorage(STORAGE_KEY.ACTIVE_USER_EMAIL, email);
         setAsyncStorage(STORAGE_KEY.FB_ID, fbID);
-
+        setIsPassed(false)
         navigation.navigate('Dashboard');
       } else {
         Alert.alert('Something went wrong', 'Invalid credentials');
+        setIsPassed(false)
       }
     } catch (error: any) {
       Alert.alert('Something went wrong', error?.message);
+      setIsPassed(false);
     }
   };
 
@@ -144,6 +149,7 @@ export default function Login(props: any) {
                   <ButtonComponent
                     alignSelf="center"
                     borderRadius="10"
+                    disabled={isPassed}
                     fontSize={18}
                     title="Log in"
                     textAlign="center"

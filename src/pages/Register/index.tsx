@@ -59,8 +59,10 @@ export default function Registration(props: any) {
     password: Yup.string().required('Password is Required'),
     userType: Yup.string().optional()
   });
+  const [isDisabled, setIsDisabled] = useState<boolean>(false);
 
   const onRegister = async (values: RegistrationDTO, resetForm: any) => {
+    setIsDisabled(true);
     try {
       if (dropdownValue === 'Register as') {
         Alert.alert('Oops', pleaseSelectUserType);
@@ -87,9 +89,11 @@ export default function Registration(props: any) {
         props.navigation.navigate('Login');
       } else {
         Alert.alert('Oops', `'${values.email}' already exists`);
+        setIsDisabled(false);
       }
     } catch (error: any) {
       Alert.alert(sometingWentWrong, error?.message);
+      setIsDisabled(false);
     }
   };
 
@@ -262,6 +266,7 @@ export default function Registration(props: any) {
                 alignSelf="center"
                 backgroundColor={COLOR_LISTS.RED_400}
                 borderRadius="10"
+                disabled={isDisabled}
                 title="Sign up"
                 textAlign="center"
                 textColor={COLOR_LISTS.WHITE}
