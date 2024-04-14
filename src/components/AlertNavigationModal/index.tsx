@@ -1,10 +1,10 @@
-import { View } from "react-native"
-import TextLabel from "../TextLabel"
 import * as S from './style';
 import { FireComponent } from "./Fire";
 import { MedicalComponent } from "./Medical";
-import { EarthQuakeContainer } from "./EarthQuake/style";
 import { EarthQuakeComponent } from "./EarthQuake";
+import { TyphonComponent } from './Typhon';
+import { FloodComponent } from './Flood';
+import { AccidentComponent } from './Accident';
 
 export const AlertNavigationModal = () => {
     return <S.AlertNavigationContainer>
@@ -13,5 +13,10 @@ export const AlertNavigationModal = () => {
             <MedicalComponent />
             <EarthQuakeComponent />
         </S.NavigateFlexContainer>
+        <S.NavigateFlexContainer>
+            <TyphonComponent />
+            <FloodComponent />
+        </S.NavigateFlexContainer>
+        <AccidentComponent />
     </S.AlertNavigationContainer>
 }

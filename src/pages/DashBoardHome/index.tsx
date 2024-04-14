@@ -9,7 +9,7 @@ import * as S from './style';
 export default function HomeDashBoard() {
   return (
     <S.DashBoardHomeContainer>
-      <QRAMap />
+      {/* <QRAMap /> */}
       <AlertNavigationModal />
     </S.DashBoardHomeContainer>
   );

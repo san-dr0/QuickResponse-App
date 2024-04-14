@@ -48,4 +48,6 @@ export const COLOR_LISTS = {
   GREEN_900: '#1b5e20',
 
   ALERT_NAVIGATION_COLOR: '#d0bcb0',
+  DEEP_ORANGE_800: '#d84315',
+  BROWN_400: '#8d6e63',
 };
