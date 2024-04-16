@@ -9,5 +9,7 @@ export const TextInputContainer = styled(TextInput)<TextInputContainerProps>`
   border-radius: ${(props: TextInputContainerProps) =>
     props.borderRadius ?? 0}px;
   background-color: #fff;
+
   height: ${(props: TextInputContainerProps) => props.height ?? 50}px;
+  margin-top: 10px;
 `;

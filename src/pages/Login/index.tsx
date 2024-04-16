@@ -16,7 +16,7 @@ import {useUserCredentials} from '../../hooks/useUserHooks';
 import * as Yup from 'yup';
 import {setAsyncStorage} from '../../utils/utility';
 import {STORAGE_KEY} from '../../constants/string';
-import { useState } from 'react';
+import {useState} from 'react';
 
 export default function Login(props: any) {
   const initValues: LoginDTO = {
@@ -77,11 +77,11 @@ export default function Login(props: any) {
         });
         setAsyncStorage(STORAGE_KEY.ACTIVE_USER_EMAIL, email);
         setAsyncStorage(STORAGE_KEY.FB_ID, fbID);
-        setIsPassed(false)
+        setIsPassed(false);
         navigation.navigate('Dashboard');
       } else {
         Alert.alert('Something went wrong', 'Invalid credentials');
-        setIsPassed(false)
+        setIsPassed(false);
       }
     } catch (error: any) {
       Alert.alert('Something went wrong', error?.message);
@@ -117,12 +117,6 @@ export default function Login(props: any) {
               <>
                 <DivComponent padding="10">
                   <DividerComponent margin="20px 0 0 0" />
-                  {errors?.loginEmail && (
-                    <TextLabel
-                      title={`${errors?.loginEmail}`}
-                      textColor={COLOR_LISTS.RED}
-                    />
-                  )}
                   <TextInputComponent
                     label="Email"
                     borderRadius={10}
@@ -130,14 +124,8 @@ export default function Login(props: any) {
                     value={values.loginEmail}
                     keyboardType={'email-address'}
                     onChangeText={handleChange('loginEmail')}
+                    error={errors?.loginEmail}
                   />
-                  {errors?.loginPassword && (
-                    <TextLabel
-                      title={`${errors?.loginPassword}`}
-                      textColor={COLOR_LISTS.RED}
-                    />
-                  )}
-
                   <TextInputComponent
                     label="Password"
                     borderRadius={10}
@@ -145,6 +133,7 @@ export default function Login(props: any) {
                     value={values.loginPassword}
                     secureTextEntry
                     onChangeText={handleChange('loginPassword')}
+                    error={errors?.loginPassword}
                   />
                   <ButtonComponent
                     alignSelf="center"
