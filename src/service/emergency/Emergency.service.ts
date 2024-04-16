@@ -26,3 +26,7 @@ export const acceptEmergency = async (
   //push responder to data to Responder Array
   //update the emergency data
 };
+
+//save emergency
+
+// send notfication
