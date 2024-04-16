@@ -1,9 +1,9 @@
-import {RegistrationDTO} from '../../types/Registration.type';
-import {LoginDTO, UpdateProfileDTO, UserDTO} from '../../types/User.type';
 import firestore from '@react-native-firebase/firestore';
-import {sha256} from 'react-native-sha256';
-import {validateIfUserExists} from '../../utils/utility';
+import { sha256 } from 'react-native-sha256';
 import { useUserToken } from '../../hooks/userTokenHooks';
+import { RegistrationDTO } from '../../types/Registration.type';
+import { LoginDTO, UpdateProfileDTO, UserDTO } from '../../types/User.type';
+import { validateIfUserExists } from '../../utils/utility';
 
 export const registrationUser = async (loginFormValues: RegistrationDTO) => {
   const {
@@ -45,8 +45,8 @@ export const registrationUser = async (loginFormValues: RegistrationDTO) => {
 export const loginUser = async (
   loginFormValues: LoginDTO,
 ): Promise<UserDTO> => {
-  const {loginEmail, loginPassword} = loginFormValues;
-  const {sendGenerateToken} = useUserToken();
+  const { loginEmail, loginPassword } = loginFormValues;
+  const { sendGenerateToken } = useUserToken();
 
   const results = await firestore()
     .collection('Users')
@@ -58,7 +58,7 @@ export const loginUser = async (
   }
   const activeUser: UserDTO = results.docs[0].data() as UserDTO;
   activeUser.account.fbID = results?.docs[0]?.id;
-  const {password} = activeUser;
+  const { password } = activeUser;
 
   const loginPassSha256 = await sha256(loginPassword ?? '');
 
@@ -69,9 +69,10 @@ export const loginUser = async (
   const deviceToken = await sendGenerateToken();
   firestore().collection('Tokens').doc(activeUser?.account?.fbID).set({
     email: loginEmail,
-    token: deviceToken
+    token: deviceToken,
+    userType: results?.docs[0].data()?.account?.userType,
   });
-  
+
   return activeUser;
 };
 
@@ -79,12 +80,12 @@ export const updateUserInformation = async (
   activeUserID: string,
   profileInformation: UpdateProfileDTO,
   hasChangedPassword: any,
-): Promise<{hashPassword: string} | undefined> => {
-  const {firstname, middlename, lastname, mobilenumber} = profileInformation;
+): Promise<{ hashPassword: string } | undefined> => {
+  const { firstname, middlename, lastname, mobilenumber } = profileInformation;
   let result = null;
 
   if (hasChangedPassword) {
-    const {password} = profileInformation;
+    const { password } = profileInformation;
     let hashPassword = await sha256(password);
 
     result = await firestore().collection('Users').doc(activeUserID).update({
@@ -97,7 +98,7 @@ export const updateUserInformation = async (
       password: hashPassword,
     });
 
-    return {hashPassword};
+    return { hashPassword };
   } else {
     result = await firestore().collection('Users').doc(activeUserID).update({
       account: {

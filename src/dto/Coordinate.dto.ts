@@ -1,4 +1,4 @@
 export interface CoordinateDto {
-  latitude: string;
-  longitude: string;
-}
+  latitude: number;
+  longitude: number;
+};

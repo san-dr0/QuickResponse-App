@@ -1,5 +1,5 @@
 import firestore from '@react-native-firebase/firestore';
-import {EmergencyDto} from '../../dto/Emergency.dto';
+import { EmergencyDto } from '../../dto/Emergency.dto';
 
 const database = 'Emergency';
 
@@ -26,7 +26,10 @@ export const acceptEmergency = async (
   //push responder to data to Responder Array
   //update the emergency data
 };
-
 //save emergency
 
 // send notfication
+
+export const getAllResponderToken = () => {
+
+};

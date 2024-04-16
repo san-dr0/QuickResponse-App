@@ -1,5 +1,6 @@
 export enum EmergencyType {
   FIRE = 'FIRE',
+  MEDICAL = 'MEDICAL',
   TYPHOON = 'TYPHOON',
   FLOOD = 'FLOOD',
   CAR_ACCIDENT = 'CAR_ACCIDENT',
