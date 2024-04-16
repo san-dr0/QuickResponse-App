@@ -1,0 +1,7 @@
+export enum EmergencyType {
+  FIRE = 'FIRE',
+  TYPHOON = 'TYPHOON',
+  FLOOD = 'FLOOD',
+  CAR_ACCIDENT = 'CAR_ACCIDENT',
+  EARTHQUAKE = 'EARTHQUAKE',
+}
