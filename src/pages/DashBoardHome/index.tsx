@@ -9,13 +9,11 @@ import {
   View,
 } from 'react-native';
 import TextLabel from '../../components/TextLabel';
-import MapView, {PROVIDER_GOOGLE} from 'react-native-maps';
-import useNotificationPermission from '../../hooks/useNotificationPermission';
-import messaging from '@react-native-firebase/messaging';
-import {tokens} from 'react-native-paper/lib/typescript/styles/themes/v3/tokens';
-import AsyncStorage from '@react-native-async-storage/async-storage';
-const width = Dimensions.get('window').width;
-const height = Dimensions.get('window').height;
+import QRAMap from '../../components/Map';
+import { AlertNavigationModal } from '../../components/AlertNavigationModal';
+import { APP_HEIGHT } from '../../constants/dimensions';
+import * as S from './style';
+
 
 export default function HomeDashBoard() {
   const {isPermitted} = useNotificationPermission();
@@ -50,24 +48,10 @@ export default function HomeDashBoard() {
   };
 
   return (
-    <View style={style.containerView}>
-      <TouchableOpacity onPress={getFcmtoken}>
-        <Text>GET FCM TOken</Text>
-      </TouchableOpacity>
-
-      <TouchableOpacity onPress={getFcmtoken}>
-        <Text>SEND NOTIF</Text>
-      </TouchableOpacity>
-      <MapView
-        provider={PROVIDER_GOOGLE} // remove if not using Google Maps
-        style={style.map}
-        region={{
-          latitude: 37.78825,
-          longitude: -122.4324,
-          latitudeDelta: 0.015,
-          longitudeDelta: 0.0121,
-        }}></MapView>
-    </View>
+    <S.DashBoardHomeContainer>
+      {/* <QRAMap /> */}
+      <AlertNavigationModal />
+    </S.DashBoardHomeContainer>
   );
 }
 

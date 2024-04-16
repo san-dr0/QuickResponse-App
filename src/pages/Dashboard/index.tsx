@@ -6,6 +6,7 @@ import HomeDashBoard from '../DashBoardHome';
 import FirstAidDashBoard from '../FirstAids';
 import ProfileDashBoard from '../Profile';
 import NewsFeedDashBoard from '../NewsFeed';
+import TextLabel from '../../components/TextLabel';
 
 const BottomTabNavigation = createBottomTabNavigator();
 

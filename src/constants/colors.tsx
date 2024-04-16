@@ -46,4 +46,8 @@ export const COLOR_LISTS = {
   GREEN_700: '#388e3c',
   GREEN_800: '#2e7d32',
   GREEN_900: '#1b5e20',
+
+  ALERT_NAVIGATION_COLOR: '#d0bcb0',
+  DEEP_ORANGE_800: '#d84315',
+  BROWN_400: '#8d6e63',
 };

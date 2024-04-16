@@ -63,4 +63,7 @@ export const APP_FONT_SIZE = {
     TWENTY_EIGHT: 28,
     TWENTY_NINE: 29,
     THIRTY: 30,
-}
+};
+
+export const MODAL_INCIDENT_WIDTH = 100;
+export const MODAL_INCIDENT_HEIGHT = 50;

@@ -1,3 +1,5 @@
+import { AccountDTO } from "../types/User.type";
+
 export const formatPasswordDisplay = (password?: string) => {
     let firstFiveCharacters = password?.substring(0, 5);
     const otherEndCharacters = password?.substring(5, password?.length-40);
@@ -24,4 +26,8 @@ export const convertFirstCharacterOfWordToUpperCase = (param: string) => {
     }
 
     return newWord;
+};
+
+export const formatActiveUserDisplayInformationToRenderOnMap = (param?: AccountDTO) => {
+    return `${param?.lastname}, ${param?.firstname}`;
 };
