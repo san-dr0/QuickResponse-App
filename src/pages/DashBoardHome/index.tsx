@@ -10,11 +10,6 @@ import {EmergencyType} from '../../enums/EmergencyType.enum';
 import {useGetActiveUserCoordinates} from '../../hooks/useGetActiveUserCoordinates';
 import useNotificationPermission from '../../hooks/useNotificationPermission';
 import {useAccountContext} from '../../providers/AccountProvider';
-import {saveEmergency} from '../../service/emergency/Emergency.service';
-import {
-  getUsersTokens,
-  sendNotifViaAxios,
-} from '../../service/token/DeviceInfo.service';
 import {getCurrentDate} from '../../utils/date.utils';
 import {getNotificationByEmergency} from '../../utils/notification.utils';
 import * as S from './style';
@@ -31,6 +26,7 @@ export default function HomeDashBoard() {
   ) => {
     try {
       // const emergencyType: EmergencyType = checkEmergencyType(param);
+      //console.log(getCurrentDate());
 
       const emergency: EmergencyDto = {
         type: emergencyType,
@@ -44,21 +40,24 @@ export default function HomeDashBoard() {
         emergencyStatus: EmergencyStatus.ACTIVE,
         date: getCurrentDate(),
       };
-      await saveEmergency(emergency);
-      const resp = await getUsersTokens('Responder');
-      if (resp.length < 1) {
-        return;
-      }
 
-      resp.forEach(async element => {
-        await sendNotifViaAxios(
-          emergency,
-          element.token,
-          getNotificationByEmergency(emergencyType) as NotificationDto,
-        );
-      });
-      console.log('REC >>> ');
-      console.log(resp);
+      //await saveEmergency(emergency);
+      //const resp = await getUsersTokens('Responder');
+      // //      console.log('RESP', resp);
+
+      // if (resp.length < 1) {
+      //   return;
+      // }
+      console.log(getNotificationByEmergency(emergencyType) as NotificationDto);
+
+      await sendNotifViaAxios(
+        emergency,
+        'APA91bFrLRMf2agKdoDAL5DRpXb8EVyybL1EQScyxsy3DGia559skjXVogXxNjDhfxwAlPvgTrusgQbAT-AKHR9lh843KntS7xnMwUEotiE-8KjczYsmKYswozcPblEDdEX30aXTQ1YE',
+        getNotificationByEmergency(emergencyType) as NotificationDto,
+      );
+
+      // console.log('REC >>> ');
+      // console.log(resp);
     } catch (error: any) {
       console.log('ERROR >>>');
       console.log(error?.message);

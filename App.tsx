@@ -1,18 +1,18 @@
-import React, {StyleSheet, View} from 'react-native';
 import {NavigationContainer} from '@react-navigation/native';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
+import {COLOR_LISTS} from './src/constants/colors';
+import useNotificationPermission from './src/hooks/useNotificationPermission';
+import DashBoard from './src/pages/Dashboard';
+import FirstAidInformation from './src/pages/FirstAids/FirstAid-Information';
 import Home from './src/pages/Home';
 import Login from './src/pages/Login';
-import Registration from './src/pages/Register';
-import DashBoard from './src/pages/Dashboard';
-import {COLOR_LISTS} from './src/constants/colors';
-import {AccountProvider} from './src/providers/AccountProvider';
 import EditPersonalInformationComponent from './src/pages/Profile/EditPersonalInformation';
-import FirstAidInformation from './src/pages/FirstAids/FirstAid-Information';
-import MapView, {PROVIDER_GOOGLE} from 'react-native-maps';
+import Registration from './src/pages/Register';
+import {AccountProvider} from './src/providers/AccountProvider';
 
 const StackNavigator = createNativeStackNavigator();
 function App() {
+  useNotificationPermission();
   return (
     <AccountProvider>
       <NavigationContainer>

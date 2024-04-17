@@ -1,8 +1,10 @@
 import {useState} from 'react';
+import {Alert} from 'react-native';
 import {AlertNavigationModal} from '../../components/AlertNavigationModal';
 import TextLabel from '../../components/TextLabel';
 import {CoordinateDto} from '../../dto/Coordinate.dto';
 import {EmergencyDto} from '../../dto/Emergency.dto';
+import {NotificationDto} from '../../dto/Notification.dto';
 import {EmergencyStatus} from '../../enums/EmergencyStatus.enum';
 import {EmergencyType} from '../../enums/EmergencyType.enum';
 import {useGetActiveUserCoordinates} from '../../hooks/useGetActiveUserCoordinates';
@@ -14,6 +16,7 @@ import {
   sendNotifViaAxios,
 } from '../../service/token/DeviceInfo.service';
 import {getCurrentDate} from '../../utils/date.utils';
+import {getNotificationByEmergency} from '../../utils/notification.utils';
 import * as S from './style';
 
 export default function HomeDashBoard() {
@@ -28,6 +31,9 @@ export default function HomeDashBoard() {
   ) => {
     try {
       // const emergencyType: EmergencyType = checkEmergencyType(param);
+      if (!isPermitted) {
+        Alert.prompt('You have notification');
+      }
       const emergency: EmergencyDto = {
         type: emergencyType,
         sender: {
@@ -47,7 +53,11 @@ export default function HomeDashBoard() {
       }
 
       resp.forEach(async element => {
-        await sendNotifViaAxios();
+        return await sendNotifViaAxios(
+          emergency,
+          element.token,
+          getNotificationByEmergency(emergencyType) as NotificationDto,
+        );
       });
       console.log('REC >>> ');
       console.log(resp);

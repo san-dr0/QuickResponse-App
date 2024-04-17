@@ -34,23 +34,28 @@ export const sendNotifViaAxios = async (
   recieverToken: string,
   notificationData: NotificationDto,
 ) => {
-  const response = await axios.post(
-    'https://fcm.googleapis.com/fcm/send',
-    {
-      data: data,
-      notification: notificationData,
-      to: recieverToken,
-    },
-    {
-      headers: {
-        'Content-Type': 'application/json',
-        Authorization: [
-          'key',
-          'AAAA_-_KRhA:APA91bFjpjRzCVlFJwVKFOwI6m3cIhSSWsiKDAwiHMXUHTv2jznNOltpZht7qxPVXk3NpU60HEH29rv5ycKeip-qzauPpf0T2TNlQxPpRGWT_vm3p-JNFfZxQTQ_CKwz5F3tJius7mdX',
-        ].join('='),
+  try {
+    const response = await axios.post(
+      'https://fcm.googleapis.com/fcm/send',
+      {
+        data: data,
+        notification: notificationData,
+        to: recieverToken,
       },
-    },
-  );
+      {
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: [
+            'key',
+            'AAAA_-_KRhA:APA91bFjpjRzCVlFJwVKFOwI6m3cIhSSWsiKDAwiHMXUHTv2jznNOltpZht7qxPVXk3NpU60HEH29rv5ycKeip-qzauPpf0T2TNlQxPpRGWT_vm3p-JNFfZxQTQ_CKwz5F3tJius7mdX',
+          ].join('='),
+        },
+      },
+    );
 
-  return response;
+    return response;
+  } catch (error) {
+    console.log("ERROR", error)
+  }
+
 };
