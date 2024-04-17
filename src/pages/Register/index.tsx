@@ -1,5 +1,5 @@
 /* eslint-disable react-native/no-inline-styles */
-import React, { useState } from 'react';
+import React, {useState} from 'react';
 import {ButtonComponent} from '../../components/Buttons';
 import {Alert, ScrollView, ToastAndroid, View} from 'react-native';
 import TextInputComponent from '../../components/TextInput';
@@ -86,51 +86,32 @@ export default function Registration(props: any) {
           validationSchema={registrationValidationSchema}>
           {({handleChange, handleSubmit, values, errors}) => (
             <>
-              {errors?.firstname && (
-                <TextLabel
-                  title={`${errors?.firstname}`}
-                  textColor={COLOR_LISTS.RED}
-                />
-              )}
               <TextInputComponent
                 label="Firstname"
                 borderRadius={10}
                 textMode={TextInputEnum.OUTLINED}
                 value={values.firstname}
                 onChangeText={handleChange('firstname')}
+                error={errors?.firstname}
               />
-              {errors?.middlename && (
-                <TextLabel
-                  title={`${errors?.middlename}`}
-                  textColor={COLOR_LISTS.RED}
-                />
-              )}
+
               <TextInputComponent
                 label="Middlename"
                 borderRadius={10}
                 textMode={TextInputEnum.OUTLINED}
                 value={values.middlename}
                 onChangeText={handleChange('middlename')}
+                error={errors?.middlename}
               />
-              {errors?.lastname && (
-                <TextLabel
-                  title={`${errors?.lastname}`}
-                  textColor={COLOR_LISTS.RED}
-                />
-              )}
               <TextInputComponent
                 label="Lastname"
                 borderRadius={10}
                 textMode={TextInputEnum.OUTLINED}
                 value={values.lastname}
                 onChangeText={handleChange('lastname')}
+                error={errors?.lastname}
               />
-              {errors?.mobilenumber && (
-                <TextLabel
-                  title={`${errors?.mobilenumber}`}
-                  textColor={COLOR_LISTS.RED}
-                />
-              )}
+
               <TextInputComponent
                 label="Contact No."
                 borderRadius={10}
@@ -139,26 +120,16 @@ export default function Registration(props: any) {
                 onChangeText={handleChange('mobilenumber')}
                 keyboardType="phone-pad"
                 maxLength={11}
+                error={errors?.mobilenumber}
               />
-              {errors?.address && (
-                <TextLabel
-                  title={`${errors?.address}`}
-                  textColor={COLOR_LISTS.RED}
-                />
-              )}
               <TextInputComponent
                 label="Address"
                 borderRadius={10}
                 textMode={TextInputEnum.OUTLINED}
                 value={values.address}
                 onChangeText={handleChange('address')}
+                error={errors.address}
               />
-              {errors?.email && (
-                <TextLabel
-                  title={`${errors?.email}`}
-                  textColor={COLOR_LISTS.RED}
-                />
-              )}
               <TextInputComponent
                 label="Email"
                 borderRadius={10}
@@ -166,13 +137,8 @@ export default function Registration(props: any) {
                 onChangeText={handleChange('email')}
                 value={values.email}
                 keyboardType="email-address"
+                error={errors?.email}
               />
-              {errors?.password && (
-                <TextLabel
-                  title={`${errors?.password}`}
-                  textColor={COLOR_LISTS.RED}
-                />
-              )}
               <TextInputComponent
                 label="Password"
                 borderRadius={10}
@@ -180,6 +146,7 @@ export default function Registration(props: any) {
                 value={values.password}
                 onChangeText={handleChange('password')}
                 secureTextEntry
+                error={errors.password}
               />
               <ButtonComponent
                 alignSelf="center"

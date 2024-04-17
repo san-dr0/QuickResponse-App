@@ -2,7 +2,8 @@ import React, {ChangeEvent} from 'react';
 import * as S from './style';
 import TextInputEnum from '../../enums/TextInput.enum';
 import {KeyboardTypeOptions} from 'react-native';
-import { COLOR_LISTS } from '../../constants/colors';
+import {COLOR_LISTS} from '../../constants/colors';
+import TextLabel from '../TextLabel';
 
 type TextInputComponentProps = {
   label?: string;
@@ -15,7 +16,8 @@ type TextInputComponentProps = {
   secureTextEntry?: boolean;
   keyboardType?: KeyboardTypeOptions;
   disabled?: boolean;
-  maxLength?: number
+  maxLength?: number;
+  error?: string | undefined;
 };
 export default function TextInputComponent(props: TextInputComponentProps) {
   const {
@@ -29,22 +31,26 @@ export default function TextInputComponent(props: TextInputComponentProps) {
     secureTextEntry,
     keyboardType,
     disabled,
-    maxLength
+    maxLength,
+    error,
   } = props;
 
   return (
-    <S.TextInputContainer
-      label={label}
-      borderRadius={borderRadius}
-      value={value}
-      mode={textMode}
-      onChangeText={onChangeText}
-      secureTextEntry={secureTextEntry}
-      keyboardType={keyboardType ?? 'default'}
-      height={height}
-      disabled={disabled}
-      textColor={textColor ?? COLOR_LISTS.BLACK}
-      maxLength={maxLength}
-    />
+    <>
+      <S.TextInputContainer
+        label={label}
+        borderRadius={borderRadius}
+        value={value}
+        mode={textMode}
+        onChangeText={onChangeText}
+        secureTextEntry={secureTextEntry}
+        keyboardType={keyboardType ?? 'default'}
+        height={height}
+        disabled={disabled}
+        textColor={textColor ?? COLOR_LISTS.BLACK}
+        maxLength={maxLength}
+      />
+      {error && <TextLabel title={`${error}`} textColor={COLOR_LISTS.RED} />}
+    </>
   );
 }
