@@ -4,14 +4,12 @@ import {AlertNavigationModal} from '../../components/AlertNavigationModal';
 import TextLabel from '../../components/TextLabel';
 import {CoordinateDto} from '../../dto/Coordinate.dto';
 import {EmergencyDto} from '../../dto/Emergency.dto';
-import {NotificationDto} from '../../dto/Notification.dto';
 import {EmergencyStatus} from '../../enums/EmergencyStatus.enum';
 import {EmergencyType} from '../../enums/EmergencyType.enum';
 import {useGetActiveUserCoordinates} from '../../hooks/useGetActiveUserCoordinates';
 import useNotificationPermission from '../../hooks/useNotificationPermission';
 import {useAccountContext} from '../../providers/AccountProvider';
 import {getCurrentDate} from '../../utils/date.utils';
-import {getNotificationByEmergency} from '../../utils/notification.utils';
 import * as S from './style';
 
 export default function HomeDashBoard() {
@@ -48,13 +46,13 @@ export default function HomeDashBoard() {
       // if (resp.length < 1) {
       //   return;
       // }
-      console.log(getNotificationByEmergency(emergencyType) as NotificationDto);
+      // console.log(getNotificationByEmergency(emergencyType) as NotificationDto);
 
-      await sendNotifViaAxios(
-        emergency,
-        'APA91bFrLRMf2agKdoDAL5DRpXb8EVyybL1EQScyxsy3DGia559skjXVogXxNjDhfxwAlPvgTrusgQbAT-AKHR9lh843KntS7xnMwUEotiE-8KjczYsmKYswozcPblEDdEX30aXTQ1YE',
-        getNotificationByEmergency(emergencyType) as NotificationDto,
-      );
+      // await sendNotifViaAxios(
+      //   emergency,
+      //   'APA91bFrLRMf2agKdoDAL5DRpXb8EVyybL1EQScyxsy3DGia559skjXVogXxNjDhfxwAlPvgTrusgQbAT-AKHR9lh843KntS7xnMwUEotiE-8KjczYsmKYswozcPblEDdEX30aXTQ1YE',
+      //   getNotificationByEmergency(emergencyType) as NotificationDto,
+      // );
 
       // console.log('REC >>> ');
       // console.log(resp);
