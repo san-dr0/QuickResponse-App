@@ -1,7 +1,8 @@
+import firestore from '@react-native-firebase/firestore';
 import messaging from '@react-native-firebase/messaging';
 import axios from 'axios';
 import DeviceInfo from 'react-native-device-info';
-import {NotificationDto} from '../../dto/Notification.dto';
+import { NotificationDto } from '../../dto/Notification.dto';
 
 export const generateDeviceToken = async () => {
   const result = await messaging().getToken();
@@ -14,6 +15,19 @@ export const getDevicePhoneNumber = async () => {
 
   return phoneNumber;
 };
+
+
+export const getUsersTokens = async (userType: string) => {
+  const resp = await firestore().collection('Tokens').where('userType', '==', userType).get();
+  const arr = resp.docs.map(val => {
+    return {
+      email: val.data().email,
+      token: val.data().token,
+      userType: val.data().userType
+    }
+  })
+  return arr;
+}
 
 export const sendNotifViaAxios = async (
   data: any,
