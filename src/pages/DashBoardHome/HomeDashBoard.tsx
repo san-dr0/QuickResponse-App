@@ -1,5 +1,4 @@
 import {useState} from 'react';
-import {Alert} from 'react-native';
 import {AlertNavigationModal} from '../../components/AlertNavigationModal';
 import TextLabel from '../../components/TextLabel';
 import {CoordinateDto} from '../../dto/Coordinate.dto';
@@ -31,9 +30,7 @@ export default function HomeDashBoard() {
   ) => {
     try {
       // const emergencyType: EmergencyType = checkEmergencyType(param);
-      if (!isPermitted) {
-        Alert.prompt('You have notification');
-      }
+
       const emergency: EmergencyDto = {
         type: emergencyType,
         sender: {
@@ -59,8 +56,6 @@ export default function HomeDashBoard() {
           getNotificationByEmergency(emergencyType) as NotificationDto,
         );
       });
-      console.log('REC >>> ');
-      console.log(resp);
     } catch (error: any) {
       console.log('ERROR >>>');
       console.log(error?.message);
