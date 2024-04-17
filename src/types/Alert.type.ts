@@ -1,8 +1,8 @@
 export type AlertTypeDTO = {
-    totalAlerts: number;
+  totalAlerts: boolean;
 };
 
 export type AlertContextTypeDTO = {
-  totalAlerts: AlertTypeDTO;
-  setTotalAlerts: (param: AlertTypeDTO) => void;
+  hasAlerts: boolean;
+  setHasAlerts: (param: boolean) => void;
 };

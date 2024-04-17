@@ -1,7 +1,7 @@
+import React from 'react';
 import {NavigationContainer} from '@react-navigation/native';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
 import {COLOR_LISTS} from './src/constants/colors';
-import useNotificationPermission from './src/hooks/useNotificationPermission';
 import DashBoard from './src/pages/Dashboard';
 import FirstAidInformation from './src/pages/FirstAids/FirstAid-Information';
 import Home from './src/pages/Home';
@@ -9,13 +9,12 @@ import Login from './src/pages/Login';
 import EditPersonalInformationComponent from './src/pages/Profile/EditPersonalInformation';
 import Registration from './src/pages/Register';
 import {AccountProvider} from './src/providers/AccountProvider';
-import { useOnReceiveFirebaseCloudMessaging } from './src/hooks/useOnReceiveFCM';
-import { useEffect } from 'react';
+import {useOnReceiveFirebaseCloudMessaging} from './src/hooks/useOnReceiveFCM';
 
 const StackNavigator = createNativeStackNavigator();
 function App() {
-  useNotificationPermission();
-  const {onReceiveBackgroundMessage, onReceive} = useOnReceiveFirebaseCloudMessaging();
+  const {onReceiveBackgroundMessage, onReceive} =
+    useOnReceiveFirebaseCloudMessaging();
 
   onReceive();
   onReceiveBackgroundMessage();
@@ -25,7 +24,9 @@ function App() {
       <NavigationContainer>
         <StackNavigator.Navigator
           initialRouteName="Home"
-          screenOptions={{contentStyle: {backgroundColor: COLOR_LISTS.WHITE}}}>
+          screenOptions={{
+            contentStyle: {backgroundColor: COLOR_LISTS.WHITE},
+          }}>
           <StackNavigator.Screen
             name="Home"
             component={Home}

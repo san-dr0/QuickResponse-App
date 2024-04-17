@@ -1,31 +1,28 @@
 import React, {useState} from 'react';
 import createAppContext from '../utils/createContext';
-import {AccountContextTypeDTO, AccountTypeDTO} from '../types/Account.type';
-import { AlertContextTypeDTO, AlertTypeDTO } from '../types/Alert.type';
+import {AlertContextTypeDTO} from '../types/Alert.type';
 
 type AlertProviderProps = {
   children: React.ReactNode;
 };
 
-const [useAlertContext, AccountContextProvider] =
+const [useAlertContext, AlertContextProvider] =
   createAppContext<AlertContextTypeDTO>();
 
 function AlertProvider(props: AlertProviderProps) {
-  const [totalAlerts, setTotalAlerts] = useState<
-    AlertTypeDTO
-  >({totalAlerts: 0});
+  const [hasAlerts, setHasAlerts] = useState<boolean>(false);
 
   function getValues(): AlertContextTypeDTO {
     return {
-        totalAlerts,
-        setTotalAlerts
-    }
+      hasAlerts,
+      setHasAlerts,
+    };
   }
 
   return (
-    <AccountContextProvider value={getValues()}>
+    <AlertContextProvider value={getValues()}>
       {props.children}
-    </AccountContextProvider>
+    </AlertContextProvider>
   );
 }
 
