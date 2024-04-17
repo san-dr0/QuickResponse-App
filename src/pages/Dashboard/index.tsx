@@ -1,12 +1,11 @@
-import React from 'react';
 import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
-import DashBoardAlerts from '../Alerts';
+import React from 'react';
 import {DASHBOARD} from '../../constants/string';
-import HomeDashBoard from '../DashBoardHome';
+import DashBoardAlerts from '../Alerts';
+import HomeDashBoard from '../DashBoardHome/HomeDashBoard';
 import FirstAidDashBoard from '../FirstAids';
-import ProfileDashBoard from '../Profile';
 import NewsFeedDashBoard from '../NewsFeed';
-import TextLabel from '../../components/TextLabel';
+import ProfileDashBoard from '../Profile';
 
 const BottomTabNavigation = createBottomTabNavigator();
 
@@ -18,7 +17,7 @@ export default function DashBoard() {
         component={HomeDashBoard}
         options={{
           headerTitle: DASHBOARD.HOME.headerTitle,
-          tabBarIcon: () => DASHBOARD.HOME.tabBarIcon
+          tabBarIcon: () => DASHBOARD.HOME.tabBarIcon,
         }}
       />
       <BottomTabNavigation.Screen
@@ -26,7 +25,7 @@ export default function DashBoard() {
         component={NewsFeedDashBoard}
         options={{
           title: DASHBOARD.NEWS_FEEDS.headerTitle,
-          tabBarIcon: () => DASHBOARD.NEWS_FEEDS.tabBarIcon
+          tabBarIcon: () => DASHBOARD.NEWS_FEEDS.tabBarIcon,
         }}
       />
       <BottomTabNavigation.Screen
@@ -34,7 +33,7 @@ export default function DashBoard() {
         component={DashBoardAlerts}
         options={{
           title: DASHBOARD.ALERTS.headerTitle,
-          tabBarIcon: () => DASHBOARD.ALERTS.tabBarIcon
+          tabBarIcon: () => DASHBOARD.ALERTS.tabBarIcon,
         }}
       />
       <BottomTabNavigation.Screen
@@ -42,7 +41,7 @@ export default function DashBoard() {
         component={FirstAidDashBoard}
         options={{
           headerTitle: DASHBOARD.FIRST_AID.headerTitle,
-          tabBarIcon: () => DASHBOARD.FIRST_AID.tabBarIcon
+          tabBarIcon: () => DASHBOARD.FIRST_AID.tabBarIcon,
         }}
       />
       <BottomTabNavigation.Screen
@@ -50,7 +49,7 @@ export default function DashBoard() {
         component={ProfileDashBoard}
         options={{
           headerTitle: DASHBOARD.PROFILE.headerTitle,
-          tabBarIcon: () => DASHBOARD.PROFILE.tabBarIcon
+          tabBarIcon: () => DASHBOARD.PROFILE.tabBarIcon,
         }}
       />
     </BottomTabNavigation.Navigator>

@@ -70,7 +70,7 @@ export const loginUser = async (
   firestore().collection('Tokens').doc(activeUser?.account?.fbID).set({
     email: loginEmail,
     token: deviceToken,
-    userType: results?.docs[0].data()?.account?.userType,
+    userType: results?.docs[0]?.data()?.account?.userType,
   });
 
   return activeUser;

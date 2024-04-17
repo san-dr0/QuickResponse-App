@@ -4,7 +4,7 @@ import TextLabel from '../../TextLabel';
 import * as S from './style';
 
 type EmergencyTypeProps = {
-  onPressAlertNavigationGeneric: (param: string) => void;
+  onPressAlertNavigationGeneric: (param: EmergencyType) => void;
 };
 
 export const TyphonComponent = (props: EmergencyTypeProps) => {

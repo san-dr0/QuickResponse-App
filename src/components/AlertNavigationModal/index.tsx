@@ -1,3 +1,4 @@
+import {EmergencyType} from '../../enums/EmergencyType.enum';
 import {AccidentComponent} from './Accident';
 import {EarthQuakeComponent} from './EarthQuake';
 import {FireComponent} from './Fire';
@@ -7,7 +8,7 @@ import {TyphonComponent} from './Typhon';
 import * as S from './style';
 
 type EmergencyTypeProps = {
-  onPressAlertNavigationGeneric: (param: string) => void;
+  onPressAlertNavigationGeneric: (param: EmergencyType) => void;
 };
 
 export const AlertNavigationModal = (props: EmergencyTypeProps) => {

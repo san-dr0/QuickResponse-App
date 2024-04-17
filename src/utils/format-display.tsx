@@ -42,9 +42,9 @@ export const checkEmergencyType = (type: string) => {
   let emergencyType: EmergencyType = EmergencyType.FIRE;
 
   switch (type) {
-    case 'FIRE':
+    case EmergencyType.FIRE:
       emergencyType = EmergencyType.FIRE;
-    case 'TYPHOON':
+    case EmergencyType.TYPHOON:
       emergencyType = EmergencyType.TYPHOON;
     case 'FLOOD':
       emergencyType = EmergencyType.FLOOD;
