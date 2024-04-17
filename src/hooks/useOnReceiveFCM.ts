@@ -10,5 +10,14 @@ export function useOnReceiveFirebaseCloudMessaging () {
         return message;
     }
 
-    return {onReceive};
-}
+    const onReceiveBackgroundMessage = () => {
+        const backgroundMessage = messaging().setBackgroundMessageHandler(async remoteMessage => {
+            console.log('REMOTE >> backgroundMessage');
+            console.log(remoteMessage);
+        });
+
+        return backgroundMessage;
+    }
+
+    return {onReceive, onReceiveBackgroundMessage};
+};
