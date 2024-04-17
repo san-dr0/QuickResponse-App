@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from 'react';
+import React, {useEffect, useMemo, useState} from 'react';
 import {Alert, ScrollView, ToastAndroid, View} from 'react-native';
 import TextLabel from '../../components/TextLabel';
 import * as S from './style';
@@ -26,6 +26,7 @@ import ViewBloodType from './BloodType/View';
 import {useUserProfile} from '../../hooks/profileUserHooks';
 import AddNewContacts from './Contacts/Add';
 import ViewContacts from './Contacts/View';
+import { getProfileImage } from '../../utils/imageManipulation';
 
 export default function ProfileDashBoard(props: any) {
   const {activeUserInformation} = useAccountContext();
@@ -44,12 +45,25 @@ export default function ProfileDashBoard(props: any) {
     getDoMedicalAidInformation();
   }, []);
 
-  useEffect(() => {    
+  useEffect(() => {
     if (!isRemoteFile) {
       setImage(require('../../assets/QRApp-img1.jpeg'));
     }
   }, []);
 
+  useEffect(() => {
+    displayProfileImage();
+  }, [isRemoteFile, img]);
+
+  async function displayProfileImage() {
+    const profile = await getProfileImage(JSON.parse(activeUserInformation?.account?.fbID ?? ''));
+    if (profile) {
+      setImage(profile);
+      setIsRemoteFile(true);
+    } else {
+      setIsRemoteFile(false);
+    }
+  }
   const onSelectImageFromGallery = async () => {
     try {
       const fbRef = storage().ref(`images-${Date.now().toString()}/`);
@@ -59,17 +73,34 @@ export default function ProfileDashBoard(props: any) {
       })) as unknown as any;
 
       await fbRef.putFile(docs[0].uri);
-
+      
       await firestore()
         .collection('Users')
-        .doc(activeUserInformation?.account?.fbID)
+        .doc(JSON.parse(activeUserInformation?.account?.fbID ?? ''))
         .update({'account.profile': await fbRef.getDownloadURL()});
 
+        setImage(await fbRef.getDownloadURL());
       ToastAndroid.show('Profile was uploaded', ToastAndroid.SHORT);
     } catch (error: any) {
       Alert.alert('Something went wrong', error?.message);
     }
   };
+
+  const displayImageComponent = useMemo(() => {
+    return !isRemoteFile ?<ImageComponent
+      imageSrc={img}
+      isRemoteFile={false}
+      width={80}
+      height={80}
+      borderRadius={100}/>
+      :
+      <ImageComponent
+      imageSrc={img}
+      isRemoteFile={true}
+      width={80}
+      height={80}
+      borderRadius={100}/>
+  }, [isRemoteFile, img]);
 
   const onEditPersonalInformation = () => {
     props.navigation.navigate('Edit Profile');
@@ -160,7 +191,7 @@ export default function ProfileDashBoard(props: any) {
             backgroundColor={COLOR_LISTS.RED_400}
             width="50">
             <TextLabel
-              title="Profile Information"
+              title={`Profile Information`}
               textColor={COLOR_LISTS.WHITE}
               fontSize={15}
               textAlign="center"
@@ -170,13 +201,7 @@ export default function ProfileDashBoard(props: any) {
             display="flex"
             justifyContent="center"
             flexDirection="row">
-            <ImageComponent
-              imageSrc={img}
-              isRemoteFile={isRemoteFile}
-              width={80}
-              height={80}
-              borderRadius={100}
-            />
+            {displayImageComponent}
             <S.UploadFileContainer onPress={onSelectImageFromGallery}>
               <TextLabel
                 title="+"

@@ -43,3 +43,14 @@ export const STORAGE_KEY = {
   ACTIVE_USER_EMAIL: 'ACTIVE_USER_EMAIL',
   FB_ID: 'FB_ID'
 };
+
+export const QRAPP_USER_TYPES = [
+  {label: 'User', value: 0},
+  {label: 'Responder', value: 1}
+];
+
+export const supportingDocuments = 'Upload supporting documents';
+export const pleaseProvideSupportingDocuments = 'Please provide a supporting documents to continue.';
+export const pleaseSelectUserType = 'Please select a user type.';
+export const registrationWasSuccessfull = 'Your registration was successful!';
+export const sometingWentWrong = 'Something went wrong';

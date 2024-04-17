@@ -4,6 +4,7 @@ import { useUserToken } from '../../hooks/userTokenHooks';
 import { RegistrationDTO } from '../../types/Registration.type';
 import { LoginDTO, UpdateProfileDTO, UserDTO } from '../../types/User.type';
 import { validateIfUserExists } from '../../utils/utility';
+import { UserType } from '../../enums/User.enum';
 
 export const registrationUser = async (loginFormValues: RegistrationDTO) => {
   const {
@@ -16,19 +17,23 @@ export const registrationUser = async (loginFormValues: RegistrationDTO) => {
     email,
     password,
     isActive,
+    userType,
   } = loginFormValues;
   const sha256Password = await sha256(password);
 
   const isUserExists = await validateIfUserExists(email);
 
   if (isUserExists) {
-    return true;
+    return {
+      fbID: '',
+      hasFailedRegistration: true
+    };
   }
 
-  await firestore().collection('Users').add({
+  const rec = await firestore().collection('Users').add({
     email,
     password: sha256Password,
-    isActive,
+    isActive: userType === UserType.RESPONDER? false : true,
     account: {
       profile,
       firstname,
@@ -36,10 +41,15 @@ export const registrationUser = async (loginFormValues: RegistrationDTO) => {
       lastname,
       mobilenumber,
       address,
+      userType,
     },
+    dateCreated: new Date()
   });
-
-  return false;
+  
+  return {
+    fbID: rec.id,
+    hasFailedRegistration: false
+  };
 };
 
 export const loginUser = async (
