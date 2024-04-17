@@ -9,10 +9,17 @@ import Login from './src/pages/Login';
 import EditPersonalInformationComponent from './src/pages/Profile/EditPersonalInformation';
 import Registration from './src/pages/Register';
 import {AccountProvider} from './src/providers/AccountProvider';
+import { useOnReceiveFirebaseCloudMessaging } from './src/hooks/useOnReceiveFCM';
+import { useEffect } from 'react';
 
 const StackNavigator = createNativeStackNavigator();
 function App() {
   useNotificationPermission();
+  const {onReceiveBackgroundMessage, onReceive} = useOnReceiveFirebaseCloudMessaging();
+
+  onReceive();
+  onReceiveBackgroundMessage();
+
   return (
     <AccountProvider>
       <NavigationContainer>
