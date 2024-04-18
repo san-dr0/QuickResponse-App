@@ -12,7 +12,7 @@ export type AccountDTO = {
   mobilenumber?: string;
   address?: string;
   responderType?: string;
-
+  userType?: string;
 };
 
 export type UserDTO = {

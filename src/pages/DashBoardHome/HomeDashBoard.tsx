@@ -37,6 +37,7 @@ export default function HomeDashBoard() {
         responder: [],
         emergencyStatus: EmergencyStatus.ACTIVE,
         date: getCurrentDate(),
+        notification: getNotificationByEmergency(emergencyType)
       };
       await saveEmergency(emergency);
       const resp = await getUsersTokens('Responder');

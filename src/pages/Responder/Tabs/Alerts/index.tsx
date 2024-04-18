@@ -5,9 +5,9 @@ export default function Alerts() {
   return (
     <View style={{flex: 1}}>
       <Text>HI</Text>
-      <Maps>
+      {/* <Maps>
         <Text>HI</Text>
-      </Maps>
+      </Maps> */}
     </View>
   );
 }

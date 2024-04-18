@@ -1,4 +1,4 @@
-import React, {Alert, Dimensions, View} from 'react-native';
+import React, {Alert, Dimensions, Modal, View} from 'react-native';
 import TextComponent from '../../components/TextLabel';
 import {ButtonComponent} from '../../components/Buttons';
 import * as S from './style';
@@ -11,11 +11,15 @@ import {STORAGE_KEY} from '../../constants/string';
 import {useUserCredentials} from '../../hooks/useUserHooks';
 import {useAccountContext} from '../../providers/AccountProvider';
 import { useOnReceiveFirebaseCloudMessaging } from '../../hooks/useOnReceiveFCM';
+import { useAlertContext } from '../../providers/AlertProvider';
+import TextLabel from '../../components/TextLabel';
+import { UserType } from '../../enums/User.enum';
 
 export default function Home(props: any) {
   const {navigation} = props;
   const {sendActiveUserInformation} = useUserCredentials();
   const {setActiveUserInformationFunction} = useAccountContext();
+  const {alerts} = useAlertContext();
 
   const {onReceiveBackgroundMessage, onReceive} =
   useOnReceiveFirebaseCloudMessaging();
@@ -51,7 +55,11 @@ onReceiveBackgroundMessage();
             loginPassword: record?.password,
           },
         });
-        navigation.navigate('Dashboard');
+        if (account?.userType === UserType.RESPONDER) {
+          navigation.navigate('Responder');
+        } else {
+          navigation.navigate('Dashboard');
+        }
       }
       return;
     } catch (error) {
@@ -69,6 +77,11 @@ onReceiveBackgroundMessage();
 
   return (
     <View>
+      {
+        alerts?.isActive && <Modal style={{width: 500, height: 500, justifyContent: 'center', alignContent: 'center', alignSelf: 'center'}}>
+          <TextLabel title='Tests out please' />
+        </Modal>
+      }
       <View>
         <ImageComponent
           borderRadius={50}
