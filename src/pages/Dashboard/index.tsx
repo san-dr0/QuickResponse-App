@@ -1,18 +1,17 @@
 import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
-import React from 'react';
+import {View} from 'react-native';
 import {DASHBOARD} from '../../constants/string';
+import {useAlertContext} from '../../providers/AlertProvider';
 import DashBoardAlerts from '../Alerts';
 import HomeDashBoard from '../DashBoardHome/HomeDashBoard';
 import FirstAidDashBoard from '../FirstAids';
 import NewsFeedDashBoard from '../NewsFeed';
 import ProfileDashBoard from '../Profile';
-import {View} from 'react-native';
-import { useAlertContext } from '../../providers/AlertProvider';
 import * as S from './style';
 
 const BottomTabNavigation = createBottomTabNavigator();
 
-export default function DashBoard() {
+export default function DashBoard(props: any) {
   const {alerts} = useAlertContext();
 
   return (

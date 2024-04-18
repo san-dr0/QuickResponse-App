@@ -8,6 +8,7 @@ import Login from './src/pages/Login';
 import EditPersonalInformationComponent from './src/pages/Profile/EditPersonalInformation';
 import Registration from './src/pages/Register';
 import Responder from './src/pages/Responder';
+import ViewEmergency from './src/pages/ViewEmergency';
 import {AccountProvider} from './src/providers/AccountProvider';
 import {AlertProvider} from './src/providers/AlertProvider';
 import useNotificationPermission from './src/hooks/useNotificationPermission';
@@ -63,6 +64,10 @@ function App() {
               name="Responder"
               component={Responder}
               options={{headerShown: false}}
+            />
+            <StackNavigator.Screen
+              name="View-Emergency"
+              component={ViewEmergency}
             />
           </StackNavigator.Navigator>
         </NavigationContainer>
