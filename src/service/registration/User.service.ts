@@ -1,10 +1,10 @@
 import firestore from '@react-native-firebase/firestore';
 import { sha256 } from 'react-native-sha256';
+import { UserType } from '../../enums/User.enum';
 import { useUserToken } from '../../hooks/userTokenHooks';
 import { RegistrationDTO } from '../../types/Registration.type';
 import { LoginDTO, UpdateProfileDTO, UserDTO } from '../../types/User.type';
 import { validateIfUserExists } from '../../utils/utility';
-import { UserType } from '../../enums/User.enum';
 
 export const registrationUser = async (loginFormValues: RegistrationDTO) => {
   const {
@@ -18,6 +18,7 @@ export const registrationUser = async (loginFormValues: RegistrationDTO) => {
     password,
     isActive,
     userType,
+    responderType
   } = loginFormValues;
   const sha256Password = await sha256(password);
 
@@ -33,7 +34,7 @@ export const registrationUser = async (loginFormValues: RegistrationDTO) => {
   const rec = await firestore().collection('Users').add({
     email,
     password: sha256Password,
-    isActive: userType === UserType.RESPONDER? false : true,
+    isActive: userType === UserType.RESPONDER ? false : true,
     account: {
       profile,
       firstname,
@@ -42,10 +43,11 @@ export const registrationUser = async (loginFormValues: RegistrationDTO) => {
       mobilenumber,
       address,
       userType,
+      responderType,
     },
     dateCreated: new Date()
   });
-  
+
   return {
     fbID: rec.id,
     hasFailedRegistration: false

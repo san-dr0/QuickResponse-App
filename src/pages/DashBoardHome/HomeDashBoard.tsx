@@ -1,4 +1,3 @@
-import React from 'react';
 import {AlertNavigationModal} from '../../components/AlertNavigationModal';
 import {CoordinateDto} from '../../dto/Coordinate.dto';
 import {EmergencyDto} from '../../dto/Emergency.dto';
@@ -15,7 +14,6 @@ import {
 import {getCurrentDate} from '../../utils/date.utils';
 import {getNotificationByEmergency} from '../../utils/notification.utils';
 import * as S from './style';
-import QRAMap from '../../components/Map';
 
 export default function HomeDashBoard() {
   const {activeUserInformation} = useAccountContext();
