@@ -1,10 +1,9 @@
 import firestore from '@react-native-firebase/firestore';
 import {NotificationDto} from '../../dto/Notification.dto';
-
-const database = 'Notification';
+import { NOTIFICATION_TABLE } from '../../constants/dbRef';
 
 export const saveNotification = async (notification: NotificationDto) => {
-  const response = await firestore().collection(database).add(notification);
+  const response = await firestore().collection(NOTIFICATION_TABLE).add(notification);
 
   return response;
 };
