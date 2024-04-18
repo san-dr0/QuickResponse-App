@@ -10,9 +10,9 @@ export function useOnReceiveFirebaseCloudMessaging() {
 
   const onReceive = () => {
     const message = messaging().onMessage(async (remoteMessage: any) => {
-      const title = remoteMessage?.data?.sender?.firstname;
-      const body = remoteMessage?.data?.sender?.lastname;
-      
+      const title = JSON.parse(remoteMessage?.data?.notification)?.title;
+      const body = JSON.parse(remoteMessage?.data?.notification)?.body;
+
       console.log('NOTIF >>>');
       console.log(remoteMessage?.data);
       console.log(activeUserInformation?.account);

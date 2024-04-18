@@ -59,6 +59,7 @@ export default function Login(props: any) {
           address,
           userType,
         } = account;
+
         if (!isActive) {
           Alert.alert('Oops', 'Your account is inactive.');
           return;
@@ -74,6 +75,7 @@ export default function Login(props: any) {
             lastname,
             mobilenumber,
             address,
+            userType,
           },
           credentials: {
             loginEmail: email,

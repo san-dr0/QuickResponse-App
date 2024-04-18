@@ -1,4 +1,4 @@
-import React, {Alert, Dimensions, Modal, View} from 'react-native';
+import React, {Alert, Dimensions, View} from 'react-native';
 import TextComponent from '../../components/TextLabel';
 import {ButtonComponent} from '../../components/Buttons';
 import * as S from './style';
@@ -14,6 +14,10 @@ import { useOnReceiveFirebaseCloudMessaging } from '../../hooks/useOnReceiveFCM'
 import { useAlertContext } from '../../providers/AlertProvider';
 import TextLabel from '../../components/TextLabel';
 import { UserType } from '../../enums/User.enum';
+import Modal from "react-native-modal";
+import DivComponent from '../../components/DivContainer';
+import { DivContainer } from '../../components/DivContainer/style';
+import DividerComponent from '../../components/Divider';
 
 export default function Home(props: any) {
   const {navigation} = props;
@@ -24,8 +28,8 @@ export default function Home(props: any) {
   const {onReceiveBackgroundMessage, onReceive} =
   useOnReceiveFirebaseCloudMessaging();
 
-onReceive();
-onReceiveBackgroundMessage();
+  onReceive();
+  onReceiveBackgroundMessage();
 
   const checkIfUserHasLoggedInAlready = async () => {
     try {
@@ -49,6 +53,7 @@ onReceiveBackgroundMessage();
             profile: account?.profile,
             mobilenumber: account?.mobilenumber,
             address: account?.address,
+            userType: account?.userType,
           },
           credentials: {
             loginEmail: record?.email,
@@ -78,8 +83,14 @@ onReceiveBackgroundMessage();
   return (
     <View>
       {
-        alerts?.isActive && <Modal style={{width: 500, height: 500, justifyContent: 'center', alignContent: 'center', alignSelf: 'center'}}>
-          <TextLabel title='Tests out please' />
+        alerts?.isActive && 
+        <Modal isVisible>
+          <S.AlertModal>
+            <TextLabel title={alerts?.title} />
+            <TextLabel title={alerts?.body} />
+            <DividerComponent margin="10px 0 0 0" />
+            <ButtonComponent title="Close" textAlign="center" padding="10" borderRadius="5" backgroundColor='red' textColor={COLOR_LISTS.WHITE} />
+          </S.AlertModal>
         </Modal>
       }
       <View>
