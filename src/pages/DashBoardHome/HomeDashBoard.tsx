@@ -4,9 +4,11 @@ import {EmergencyDto} from '../../dto/Emergency.dto';
 import {NotificationDto} from '../../dto/Notification.dto';
 import {EmergencyStatus} from '../../enums/EmergencyStatus.enum';
 import {EmergencyType} from '../../enums/EmergencyType.enum';
+import { UserType } from '../../enums/User.enum';
 import {useGetActiveUserCoordinates} from '../../hooks/useGetActiveUserCoordinates';
 import {useAccountContext} from '../../providers/AccountProvider';
 import {saveEmergency} from '../../service/emergency/Emergency.service';
+import { saveNotification } from '../../service/notification/Notification.service';
 import {
   getUsersTokens,
   sendNotifViaAxios,
@@ -39,19 +41,28 @@ export default function HomeDashBoard() {
         date: getCurrentDate(),
         notification: getNotificationByEmergency(emergencyType)
       };
+
       await saveEmergency(emergency);
-      const resp = await getUsersTokens('Responder');
+      
+      const resp = await getUsersTokens(UserType.RESPONDER);
+
       if (resp.length < 1) {
         return;
       }
-
+      
       resp.forEach(async element => {
-        return await sendNotifViaAxios(
+        const notification = getNotificationByEmergency(emergencyType) as NotificationDto;
+        notification.userId = activeUserInformation?.account?.fbID;
+        
+        saveNotification(notification);
+        
+        await sendNotifViaAxios(
           emergency,
           element.token,
           getNotificationByEmergency(emergencyType) as NotificationDto,
         );
       });
+
     } catch (error: any) {
       console.log('ERROR >>>');
       console.log(error?.message);
