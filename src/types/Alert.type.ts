@@ -6,6 +6,7 @@ export type AlertItemDTO = {
   title?: string;
   body?: string;
   isActive?: boolean;
+  emergencyID?: string;
 };
 
 export type AlertContextTypeDTO = {
