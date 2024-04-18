@@ -42,9 +42,12 @@ export default function HomeDashBoard() {
         notification: getNotificationByEmergency(emergencyType)
       };
 
-      await saveEmergency(emergency);
+      const savedEmergencyResponse = await saveEmergency(emergency);
+      console.log("SAVED EM >>");
+      console.log(savedEmergencyResponse);
       
       const resp = await getUsersTokens(UserType.RESPONDER);
+      emergency.emergencyId = savedEmergencyResponse?.id;
 
       if (resp.length < 1) {
         return;

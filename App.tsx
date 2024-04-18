@@ -10,9 +10,12 @@ import Registration from './src/pages/Register';
 import Responder from './src/pages/Responder';
 import {AccountProvider} from './src/providers/AccountProvider';
 import {AlertProvider} from './src/providers/AlertProvider';
+import useNotificationPermission from './src/hooks/useNotificationPermission';
 
 const StackNavigator = createNativeStackNavigator();
 function App() {
+  useNotificationPermission();
+
   return (
     <AccountProvider>
       <AlertProvider>
