@@ -10,11 +10,18 @@ import {getAsyncStorage} from '../../utils/utility';
 import {STORAGE_KEY} from '../../constants/string';
 import {useUserCredentials} from '../../hooks/useUserHooks';
 import {useAccountContext} from '../../providers/AccountProvider';
+import { useOnReceiveFirebaseCloudMessaging } from '../../hooks/useOnReceiveFCM';
 
 export default function Home(props: any) {
   const {navigation} = props;
   const {sendActiveUserInformation} = useUserCredentials();
   const {setActiveUserInformationFunction} = useAccountContext();
+
+  const {onReceiveBackgroundMessage, onReceive} =
+  useOnReceiveFirebaseCloudMessaging();
+
+onReceive();
+onReceiveBackgroundMessage();
 
   const checkIfUserHasLoggedInAlready = async () => {
     try {
