@@ -1,4 +1,3 @@
-import React from 'react';
 import {NavigationContainer} from '@react-navigation/native';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
 import {COLOR_LISTS} from './src/constants/colors';
@@ -8,8 +7,9 @@ import Home from './src/pages/Home';
 import Login from './src/pages/Login';
 import EditPersonalInformationComponent from './src/pages/Profile/EditPersonalInformation';
 import Registration from './src/pages/Register';
+import Responder from './src/pages/Responder';
 import {AccountProvider} from './src/providers/AccountProvider';
-import { AlertProvider } from './src/providers/AlertProvider';
+import {AlertProvider} from './src/providers/AlertProvider';
 
 const StackNavigator = createNativeStackNavigator();
 function App() {
@@ -55,6 +55,11 @@ function App() {
               name="FirstAid-Information"
               component={FirstAidInformation}
               options={{title: 'First Aid Information'}}
+            />
+            <StackNavigator.Screen
+              name="Responder"
+              component={Responder}
+              options={{headerShown: false}}
             />
           </StackNavigator.Navigator>
         </NavigationContainer>

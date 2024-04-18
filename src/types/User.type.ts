@@ -11,6 +11,8 @@ export type AccountDTO = {
   lastname?: string;
   mobilenumber?: string;
   address?: string;
+  responderType?: string;
+
 };
 
 export type UserDTO = {

@@ -1,22 +1,25 @@
-import React, {View, ScrollView, Alert} from 'react-native';
-import TextComponent from '../../components/TextLabel';
-import ImageComponent from '../../components/ImageContainer';
-import {APP_WIDTH} from '../../constants/dimensions';
-import {ButtonComponent} from '../../components/Buttons';
-import TextInputComponent from '../../components/TextInput';
-import TextInputEnum from '../../enums/TextInput.enum';
-import DivComponent from '../../components/DivContainer';
-import TextLabel from '../../components/TextLabel';
-import {LoginDTO, UserDTO} from '../../types/User.type';
-import DividerComponent from '../../components/Divider';
-import {COLOR_LISTS} from '../../constants/colors';
 import {Formik} from 'formik';
-import {useAccountContext} from '../../providers/AccountProvider';
-import {useUserCredentials} from '../../hooks/useUserHooks';
-import * as Yup from 'yup';
-import {setAsyncStorage} from '../../utils/utility';
-import {STORAGE_KEY} from '../../constants/string';
 import {useState} from 'react';
+import {Alert, ScrollView, View} from 'react-native';
+import * as Yup from 'yup';
+import {ButtonComponent} from '../../components/Buttons';
+import DivComponent from '../../components/DivContainer';
+import DividerComponent from '../../components/Divider';
+import ImageComponent from '../../components/ImageContainer';
+import TextInputComponent from '../../components/TextInput';
+import {
+  default as TextComponent,
+  default as TextLabel,
+} from '../../components/TextLabel';
+import {COLOR_LISTS} from '../../constants/colors';
+import {APP_WIDTH} from '../../constants/dimensions';
+import {STORAGE_KEY} from '../../constants/string';
+import TextInputEnum from '../../enums/TextInput.enum';
+import {UserType} from '../../enums/User.enum';
+import {useUserCredentials} from '../../hooks/useUserHooks';
+import {useAccountContext} from '../../providers/AccountProvider';
+import {LoginDTO, UserDTO} from '../../types/User.type';
+import {setAsyncStorage} from '../../utils/utility';
 
 export default function Login(props: any) {
   const initValues: LoginDTO = {
@@ -53,6 +56,7 @@ export default function Login(props: any) {
           lastname,
           mobilenumber,
           address,
+          userType,
         } = account;
         if (!isActive) {
           Alert.alert('Oops', 'Your account is inactive.');
@@ -78,6 +82,11 @@ export default function Login(props: any) {
         setAsyncStorage(STORAGE_KEY.ACTIVE_USER_EMAIL, email);
         setAsyncStorage(STORAGE_KEY.FB_ID, fbID);
         setIsPassed(false);
+        if (userType === UserType.RESPONDER) {
+          navigation.navigate('Responder');
+          return;
+        }
+
         navigation.navigate('Dashboard');
       } else {
         Alert.alert('Something went wrong', 'Invalid credentials');

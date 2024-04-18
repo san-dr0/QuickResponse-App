@@ -1,28 +1,33 @@
 /* eslint-disable react-native/no-inline-styles */
-import React, {useState} from 'react';
-import {ButtonComponent} from '../../components/Buttons';
-import {Alert, ScrollView, ToastAndroid, View} from 'react-native';
-import TextInputComponent from '../../components/TextInput';
-import TextInputEnum from '../../enums/TextInput.enum';
-import ImageComponent from '../../components/ImageContainer';
-import DivComponent from '../../components/DivContainer';
 import {Formik} from 'formik';
-import {COLOR_LISTS} from '../../constants/colors';
-import {RegistrationDTO} from '../../types/Registration.type';
-import {useUserCredentials} from '../../hooks/useUserHooks';
-import * as Yup from 'yup';
-import TextLabel from '../../components/TextLabel';
-import DividerComponent from '../../components/Divider';
-import { Dropdown } from 'react-native-element-dropdown';
-import { QRAPP_USER_TYPES, pleaseProvideSupportingDocuments, pleaseSelectUserType, registrationWasSuccessfull, sometingWentWrong, supportingDocuments } from '../../constants/string';
-import { APP_FONT_SIZE } from '../../constants/number';
+import {useState} from 'react';
+import {Alert, ScrollView, ToastAndroid, View} from 'react-native';
 import DocumentPicker from 'react-native-document-picker';
-import storage from '@react-native-firebase/storage';
-import firestore from '@react-native-firebase/firestore';
-import { SUPPORTING_DOCUMENTS } from '../../constants/dbRef';
-import { uploadImage } from '../../utils/imageManipulation';
-import { useAccountContext } from '../../providers/AccountProvider';
-import { UserType } from '../../enums/User.enum';
+import {Dropdown} from 'react-native-element-dropdown';
+import * as Yup from 'yup';
+import {ButtonComponent} from '../../components/Buttons';
+import DivComponent from '../../components/DivContainer';
+import DividerComponent from '../../components/Divider';
+import ImageComponent from '../../components/ImageContainer';
+import TextInputComponent from '../../components/TextInput';
+import TextLabel from '../../components/TextLabel';
+import {COLOR_LISTS} from '../../constants/colors';
+import {SUPPORTING_DOCUMENTS} from '../../constants/dbRef';
+import {APP_FONT_SIZE} from '../../constants/number';
+import {
+  QRAPP_USER_TYPES,
+  pleaseProvideSupportingDocuments,
+  pleaseSelectUserType,
+  registrationWasSuccessfull,
+  sometingWentWrong,
+  supportingDocuments,
+} from '../../constants/string';
+import TextInputEnum from '../../enums/TextInput.enum';
+import {UserType} from '../../enums/User.enum';
+import {useUserCredentials} from '../../hooks/useUserHooks';
+import {useAccountContext} from '../../providers/AccountProvider';
+import {RegistrationDTO} from '../../types/Registration.type';
+import {uploadImage} from '../../utils/imageManipulation';
 
 export default function Registration(props: any) {
   const {activeUserInformation} = useAccountContext();
@@ -37,13 +42,17 @@ export default function Registration(props: any) {
     password: '',
     userType: '',
     isActive: true,
+    responderType: '',
   };
   const [dropdownValue, setDropDownValue] = useState<string>('Register as');
   const [isFocus, setIsFocus] = useState<boolean>(false);
-  const [responderType, setResponderType] = useState<string>('');
-  const [hasProvideSupportingDocument, setHasProvideSupportingDocument] = useState<boolean>(false);
-  const [uploadSupportingDocuments, setUploadSupportingDocuments] = useState<string>(`${supportingDocuments} (0)`);
-  const [uploadedDocuments, setUploadedDocuments] = useState<any | undefined>(undefined);
+  const [hasProvideSupportingDocument, setHasProvideSupportingDocument] =
+    useState<boolean>(false);
+  const [uploadSupportingDocuments, setUploadSupportingDocuments] =
+    useState<string>(`${supportingDocuments} (0)`);
+  const [uploadedDocuments, setUploadedDocuments] = useState<any | undefined>(
+    undefined,
+  );
   const {sendRegisterQRUser} = useUserCredentials();
 
   const registrationValidationSchema = Yup.object().shape({
@@ -57,7 +66,8 @@ export default function Registration(props: any) {
     address: Yup.string().required('Address is Required'),
     email: Yup.string().email('Invalid email').required('Email is Required'),
     password: Yup.string().required('Password is Required'),
-    userType: Yup.string().optional()
+    userType: Yup.string().optional(),
+    responderType: Yup.string().optional(),
   });
   const [isDisabled, setIsDisabled] = useState<boolean>(false);
 
@@ -67,7 +77,7 @@ export default function Registration(props: any) {
       if (dropdownValue === 'Register as') {
         Alert.alert('Oops', pleaseSelectUserType);
         return;
-      } 
+      }
       if (dropdownValue === 'Responder' && !hasProvideSupportingDocument) {
         Alert.alert('Oops', pleaseProvideSupportingDocuments);
         return;
@@ -75,16 +85,14 @@ export default function Registration(props: any) {
 
       resetForm();
       values.userType = dropdownValue as UserType;
-      
-      const result = await sendRegisterQRUser(values) as any;
-      
+      values.responderType = values.responderType ?? 'N/A';
+
+      const result = (await sendRegisterQRUser(values)) as any;
+
       if (!result?.hasFailedRegistration) {
         if (values.userType === UserType.RESPONDER) {
           uploadImage(SUPPORTING_DOCUMENTS, uploadedDocuments, result?.fbID); // this upload the supporting document first
-          ToastAndroid.show(
-            registrationWasSuccessfull,
-            ToastAndroid.SHORT,
-          );
+          ToastAndroid.show(registrationWasSuccessfull, ToastAndroid.SHORT);
         }
         props.navigation.navigate('Login');
       } else {
@@ -98,21 +106,26 @@ export default function Registration(props: any) {
   };
 
   const onUploadSupportingDocuments = async () => {
-   try{
-    let document = await DocumentPicker.pick({
-      type: DocumentPicker.types.images,
-      allowMultiSelection: false
-     });
-     setHasProvideSupportingDocument(true);
-     setUploadedDocuments(document);
-     setUploadSupportingDocuments(`${supportingDocuments} (${document.length})`);
-   }
-   catch(error) {
-    ToastAndroid.show('Please provide supporting documents.', ToastAndroid.LONG);
-    setHasProvideSupportingDocument(false);
-    setUploadSupportingDocuments(`${supportingDocuments} (0)`);
-   }
-  }
+    try {
+      let document = await DocumentPicker.pick({
+        type: DocumentPicker.types.images,
+        allowMultiSelection: false,
+      });
+      setHasProvideSupportingDocument(true);
+      setUploadedDocuments(document);
+      setUploadSupportingDocuments(
+        `${supportingDocuments} (${document.length})`,
+      );
+      setIsDisabled(false);
+    } catch (error) {
+      ToastAndroid.show(
+        'Please provide supporting documents.',
+        ToastAndroid.LONG,
+      );
+      setHasProvideSupportingDocument(false);
+      setUploadSupportingDocuments(`${supportingDocuments} (0)`);
+    }
+  };
 
   return (
     <ScrollView>
@@ -198,9 +211,13 @@ export default function Registration(props: any) {
                 secureTextEntry
                 error={errors.password}
               />
-              <DividerComponent margin='5px 0 0 0'/>
-              <TextLabel title='Register as' fontSize={APP_FONT_SIZE.EIGHTEN} textColor={COLOR_LISTS.GREEN_500} />
-              <DividerComponent margin='5px 0 0 0'/>
+              <DividerComponent margin="5px 0 0 0" />
+              <TextLabel
+                title="Register as"
+                fontSize={APP_FONT_SIZE.EIGHTEN}
+                textColor={COLOR_LISTS.GREEN_500}
+              />
+              <DividerComponent margin="5px 0 0 0" />
               <Dropdown
                 data={QRAPP_USER_TYPES}
                 value={dropdownValue}
@@ -210,25 +227,32 @@ export default function Registration(props: any) {
                 valueField={'value'}
                 onFocus={() => setIsFocus(true)}
                 onBlur={() => setIsFocus(false)}
-                onChange={(item) => {
+                onChange={item => {
                   setDropDownValue(item?.label);
                 }}
               />
-              {dropdownValue === 'Responder' && 
-                (
-                  <>
-                  {errors?.userType && 
-                  <TextLabel title={errors?.userType} textColor={COLOR_LISTS.RED} />}
+              {dropdownValue === 'Responder' && (
+                <>
+                  {errors?.userType && (
+                    <TextLabel
+                      title={errors?.userType}
+                      textColor={COLOR_LISTS.RED}
+                    />
+                  )}
                   <TextInputComponent
-                    label='Type'
+                    label="Type"
                     borderRadius={10}
                     textMode={TextInputEnum.OUTLINED}
-                    value={responderType}
-                    onChangeText={handleChange('responderType')} />
-                    <ButtonComponent title={uploadSupportingDocuments} onPress={onUploadSupportingDocuments} width={100} />
-                  </>
-                )
-              }
+                    value={values.responderType}
+                    onChangeText={handleChange('responderType')}
+                  />
+                  <ButtonComponent
+                    title={uploadSupportingDocuments}
+                    onPress={onUploadSupportingDocuments}
+                    width={100}
+                  />
+                </>
+              )}
               <ButtonComponent
                 alignSelf="center"
                 backgroundColor={COLOR_LISTS.RED_400}
@@ -253,5 +277,11 @@ export default function Registration(props: any) {
 }
 
 function dropDownStyle() {
-  return {borderColor: COLOR_LISTS.BLACK, borderWidth: 0.5, borderRadius: 8, paddingHorizontal: 8, paddingVertical: 5}
+  return {
+    borderColor: COLOR_LISTS.BLACK,
+    borderWidth: 0.5,
+    borderRadius: 8,
+    paddingHorizontal: 8,
+    paddingVertical: 5,
+  };
 }
