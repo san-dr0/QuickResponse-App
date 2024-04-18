@@ -2,7 +2,13 @@ export type AlertTypeDTO = {
   totalAlerts: boolean;
 };
 
+export type AlertItemDTO = {
+  title?: string;
+  body?: string;
+  isActive?: boolean;
+};
+
 export type AlertContextTypeDTO = {
-  hasAlerts: boolean;
-  setHasAlerts: (param: boolean) => void;
+  alerts?: AlertItemDTO,
+  setAlertRecords: (param: AlertItemDTO) => void;
 };

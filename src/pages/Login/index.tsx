@@ -48,6 +48,7 @@ export default function Login(props: any) {
 
       if (Object.keys(loginResponse).length) {
         const {email, password, account, isActive}: UserDTO = loginResponse;
+        
         const {
           fbID,
           profile,

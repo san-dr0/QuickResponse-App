@@ -1,20 +1,28 @@
 import messaging from '@react-native-firebase/messaging';
 import {Alert} from 'react-native';
 import { useAlertContext } from '../providers/AlertProvider';
+import { useAccountContext } from '../providers/AccountProvider';
+import { UserType } from '../enums/User.enum';
 
 export function useOnReceiveFirebaseCloudMessaging() {
-  const {setHasAlerts} = useAlertContext();
+  const {setAlertRecords} = useAlertContext();
+  const {activeUserInformation} = useAccountContext();
 
   const onReceive = () => {
     const message = messaging().onMessage(async (remoteMessage: any) => {
-      const title = remoteMessage?.data?.notification?.title;
-      const body = remoteMessage?.data?.notification?.body;
+      const title = remoteMessage?.data?.sender?.firstname;
+      const body = remoteMessage?.data?.sender?.lastname;
+      
+      console.log('NOTIF >>>');
+      console.log(remoteMessage?.data);
+      console.log(activeUserInformation?.account);
+      
+      if (activeUserInformation?.account?.userType === UserType.RESPONDER) {
+        console.log('IM IN responder');
+        
+        setAlertRecords({title, body, isActive: true});
+      };
 
-      Alert.alert(
-        title,
-        body,
-      );
-      setHasAlerts(true);
     });
 
     return message;
@@ -22,10 +30,12 @@ export function useOnReceiveFirebaseCloudMessaging() {
 
   const onReceiveBackgroundMessage = () => {
     const backgroundMessage = messaging().setBackgroundMessageHandler(
-      async remoteMessage => {
+      async (remoteMessage: any) => {
+        const title = remoteMessage?.data?.notification?.title;
+        const body = remoteMessage?.data?.notification?.body;
         console.log('REMOTE >> backgroundMessage');
         console.log(remoteMessage);
-        setHasAlerts(true);
+        setAlertRecords({title, body, isActive: true});
       },
     );
 

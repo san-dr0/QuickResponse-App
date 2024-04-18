@@ -1,23 +1,32 @@
 import React, {useState} from 'react';
 import createAppContext from '../utils/createContext';
-import {AlertContextTypeDTO} from '../types/Alert.type';
+import {AlertContextTypeDTO, AlertItemDTO} from '../types/Alert.type';
 
 type AlertProviderProps = {
   children: React.ReactNode;
+};
+
+type AlertPromptDTO = {
+  alerts?: AlertItemDTO,
+  setAlertRecords: (param: AlertItemDTO) => void;
 };
 
 const [useAlertContext, AlertContextProvider] =
   createAppContext<AlertContextTypeDTO>();
 
 function AlertProvider(props: AlertProviderProps) {
-  const [hasAlerts, setHasAlerts] = useState<boolean>(false);
+  const [alerts, setAlerts] = useState<AlertItemDTO | undefined>(undefined);
 
-  function getValues(): AlertContextTypeDTO {
+  function setAlertRecords(params: AlertItemDTO) {
+    setAlerts(params);
+  };
+
+  function getValues(): AlertPromptDTO {
     return {
-      hasAlerts,
-      setHasAlerts,
+      alerts,
+      setAlertRecords
     };
-  }
+  };
 
   return (
     <AlertContextProvider value={getValues()}>
