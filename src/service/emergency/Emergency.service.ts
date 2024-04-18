@@ -1,17 +1,16 @@
 import firestore from '@react-native-firebase/firestore';
 import { EmergencyDto } from '../../dto/Emergency.dto';
-
-const database = 'Emergency';
+import { EMERGENCY_TABLE } from '../../constants/dbRef';
 
 export const saveEmergency = async (payload: EmergencyDto) => {
-  const response = await firestore().collection(database).add(payload);
+  const response = await firestore().collection(EMERGENCY_TABLE).add(payload);
 
   return response;
 };
 
 export const getEmergencyById = async (emergencyId: string) => {
   const response = await firestore()
-    .collection(database)
+    .collection(EMERGENCY_TABLE)
     .doc(emergencyId)
     .get();
 
@@ -32,4 +31,10 @@ export const acceptEmergency = async (
 
 export const getAllResponderToken = () => {
 
+};
+
+export const getAllActiveEmergency = async () => {
+  const response = firestore().collection(EMERGENCY_TABLE).get();
+
+  return response;
 };

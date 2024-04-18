@@ -9,60 +9,56 @@ import Login from './src/pages/Login';
 import EditPersonalInformationComponent from './src/pages/Profile/EditPersonalInformation';
 import Registration from './src/pages/Register';
 import {AccountProvider} from './src/providers/AccountProvider';
-import {useOnReceiveFirebaseCloudMessaging} from './src/hooks/useOnReceiveFCM';
+import { AlertProvider } from './src/providers/AlertProvider';
 
 const StackNavigator = createNativeStackNavigator();
 function App() {
-  const {onReceiveBackgroundMessage, onReceive} =
-    useOnReceiveFirebaseCloudMessaging();
-
-  onReceive();
-  onReceiveBackgroundMessage();
-
   return (
     <AccountProvider>
-      <NavigationContainer>
-        <StackNavigator.Navigator
-          initialRouteName="Home"
-          screenOptions={{
-            contentStyle: {backgroundColor: COLOR_LISTS.WHITE},
-          }}>
-          <StackNavigator.Screen
-            name="Home"
-            component={Home}
-            options={{
-              title: 'QR-App',
-              headerShown: false,
-            }}
-          />
-          <StackNavigator.Screen
-            name="Login"
-            component={Login}
-            options={{
-              headerBackVisible: false,
-              headerShown: false,
-            }}
-          />
-          <StackNavigator.Screen name="Register" component={Registration} />
-          <StackNavigator.Screen
-            name="Dashboard"
-            component={DashBoard}
-            options={{
-              headerBackVisible: false,
-              headerShown: false,
-            }}
-          />
-          <StackNavigator.Screen
-            name="Edit Profile"
-            component={EditPersonalInformationComponent}
-          />
-          <StackNavigator.Screen
-            name="FirstAid-Information"
-            component={FirstAidInformation}
-            options={{title: 'First Aid Information'}}
-          />
-        </StackNavigator.Navigator>
-      </NavigationContainer>
+      <AlertProvider>
+        <NavigationContainer>
+          <StackNavigator.Navigator
+            initialRouteName="Home"
+            screenOptions={{
+              contentStyle: {backgroundColor: COLOR_LISTS.WHITE},
+            }}>
+            <StackNavigator.Screen
+              name="Home"
+              component={Home}
+              options={{
+                title: 'QR-App',
+                headerShown: false,
+              }}
+            />
+            <StackNavigator.Screen
+              name="Login"
+              component={Login}
+              options={{
+                headerBackVisible: false,
+                headerShown: false,
+              }}
+            />
+            <StackNavigator.Screen name="Register" component={Registration} />
+            <StackNavigator.Screen
+              name="Dashboard"
+              component={DashBoard}
+              options={{
+                headerBackVisible: false,
+                headerShown: false,
+              }}
+            />
+            <StackNavigator.Screen
+              name="Edit Profile"
+              component={EditPersonalInformationComponent}
+            />
+            <StackNavigator.Screen
+              name="FirstAid-Information"
+              component={FirstAidInformation}
+              options={{title: 'First Aid Information'}}
+            />
+          </StackNavigator.Navigator>
+        </NavigationContainer>
+      </AlertProvider>
     </AccountProvider>
   );
 }

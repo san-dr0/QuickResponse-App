@@ -22,6 +22,6 @@ export const AlertIdentifier = styled(View)`
   right: 0;
   top: 0;
   margin-top: 5px;
-  margin-right: -5px;
+  margin-right: -3px;
   z-index: 100;
 `;

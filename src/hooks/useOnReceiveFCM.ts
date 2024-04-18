@@ -3,13 +3,18 @@ import {Alert} from 'react-native';
 import { useAlertContext } from '../providers/AlertProvider';
 
 export function useOnReceiveFirebaseCloudMessaging() {
-  const {beach_born} = useAlertContext();
+  const {setHasAlerts} = useAlertContext();
+
   const onReceive = () => {
-    const message = messaging().onMessage(async remoteMessage => {
+    const message = messaging().onMessage(async (remoteMessage: any) => {
+      const title = remoteMessage?.data?.notification?.title;
+      const body = remoteMessage?.data?.notification?.body;
+
       Alert.alert(
-        remoteMessage?.data?.notification?.title,
-        remoteMessage?.data?.notification?.body,
+        title,
+        body,
       );
+      setHasAlerts(true);
     });
 
     return message;
@@ -20,6 +25,7 @@ export function useOnReceiveFirebaseCloudMessaging() {
       async remoteMessage => {
         console.log('REMOTE >> backgroundMessage');
         console.log(remoteMessage);
+        setHasAlerts(true);
       },
     );
 

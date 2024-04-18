@@ -7,10 +7,14 @@ import FirstAidDashBoard from '../FirstAids';
 import NewsFeedDashBoard from '../NewsFeed';
 import ProfileDashBoard from '../Profile';
 import {View} from 'react-native';
+import { useAlertContext } from '../../providers/AlertProvider';
+import * as S from './style';
 
 const BottomTabNavigation = createBottomTabNavigator();
 
 export default function DashBoard() {
+  const {hasAlerts} = useAlertContext();
+
   return (
     <BottomTabNavigation.Navigator>
       <BottomTabNavigation.Screen
@@ -37,7 +41,7 @@ export default function DashBoard() {
           tabBarIcon: () => {
             return (
               <View>
-                {/* <View>{hasAlerts && <S.AlertIdentifier />}</View> */}
+                <View>{hasAlerts && <S.AlertIdentifier />}</View>
                 {DASHBOARD.ALERTS.tabBarIcon}
               </View>
             );
