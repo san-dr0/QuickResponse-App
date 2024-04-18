@@ -13,7 +13,7 @@ import * as S from './style';
 const BottomTabNavigation = createBottomTabNavigator();
 
 export default function DashBoard() {
-  const {hasAlerts} = useAlertContext();
+  const {alerts} = useAlertContext();
 
   return (
     <BottomTabNavigation.Navigator>
@@ -41,7 +41,7 @@ export default function DashBoard() {
           tabBarIcon: () => {
             return (
               <View>
-                <View>{hasAlerts && <S.AlertIdentifier />}</View>
+                <View>{alerts?.isActive && <S.AlertIdentifier />}</View>
                 {DASHBOARD.ALERTS.tabBarIcon}
               </View>
             );
