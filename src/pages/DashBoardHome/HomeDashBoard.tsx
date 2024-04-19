@@ -30,6 +30,7 @@ export default function HomeDashBoard() {
       const emergency: EmergencyDto = {
         type: emergencyType,
         sender: {
+          userID: activeUserInformation?.account?.fbID as string,
           firstname: activeUserInformation?.account?.firstname || '',
           middlename: activeUserInformation?.account?.middlename || '',
           lastname: activeUserInformation?.account?.lastname || '',
