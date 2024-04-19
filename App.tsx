@@ -12,6 +12,7 @@ import ViewEmergency from './src/pages/ViewEmergency';
 import {AccountProvider} from './src/providers/AccountProvider';
 import {AlertProvider} from './src/providers/AlertProvider';
 import useNotificationPermission from './src/hooks/useNotificationPermission';
+import { CreateNewsFeed } from './src/pages/NewsFeed/CreateNewsFeed';
 
 const StackNavigator = createNativeStackNavigator();
 function App() {
@@ -68,6 +69,13 @@ function App() {
             <StackNavigator.Screen
               name="View-Emergency"
               component={ViewEmergency}
+            />
+            <StackNavigator.Screen
+              name="CreateNewsFeed"
+              component={CreateNewsFeed}
+              options={{
+                headerBackVisible: false
+              }}
             />
           </StackNavigator.Navigator>
         </NavigationContainer>

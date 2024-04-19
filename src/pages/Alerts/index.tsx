@@ -5,9 +5,8 @@ import { getAllActiveEmergency } from '../../service/notification/Notification.s
 import { ActiveAlertsEmergencyDTO } from '../../types/Emergency.type';
 import { CardComponent } from '../../components/Card';
 import { DivContainer } from '../../components/DivContainer/style';
-import { COLOR_LISTS } from '../../constants/colors';
 import { DividerContainer } from '../../components/Divider/style';
-import { changeNotificationActiveColor, displayIconBasedOnEmergencyType } from '../../utils/format-display';
+import { displayIconBasedOnEmergencyType } from '../../utils/format-display';
 
 export default function DashBoardAlerts() {
   const [activeEmergency, setActiveEmergency] = useState<ActiveAlertsEmergencyDTO[]>([]);
