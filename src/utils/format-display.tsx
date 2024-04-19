@@ -1,5 +1,8 @@
+import { COLOR_LISTS } from '../constants/colors';
+import { EmergencyStatus } from '../enums/EmergencyStatus.enum';
 import {EmergencyType} from '../enums/EmergencyType.enum';
 import {AccountDTO} from '../types/User.type';
+import FontAwesome6 from 'react-native-vector-icons/FontAwesome6';
 
 export const formatPasswordDisplay = (password?: string) => {
   let firstFiveCharacters = password?.substring(0, 5);
@@ -57,4 +60,30 @@ export const checkEmergencyType = (type: string) => {
   }
 
   return emergencyType;
+};
+
+export const changeNotificationActiveColor = (status?: string) => {
+  return status === EmergencyStatus.ACTIVE ? COLOR_LISTS.GREEN_400 : COLOR_LISTS.GREY_400;
+};
+
+export const displayIconBasedOnEmergencyType = (emergencyType?: string) => {
+  console.log('EM > >', emergencyType);
+  
+  switch(emergencyType) {
+    case EmergencyType.FIRE:
+      return <FontAwesome6 name='fire' size={30} color={COLOR_LISTS.AMBER_400} />
+    case EmergencyType.MEDICAL:
+      return <FontAwesome6 name='suitcase-medical' size={30} color={COLOR_LISTS.GREEN} />
+    case EmergencyType.EARTHQUAKE:
+      return <FontAwesome6 name='house-crack' size={30} color={COLOR_LISTS.BROWN_400} />
+    case EmergencyType.TYPHOON:
+      return <FontAwesome6 name='hurricane' size={30} color={COLOR_LISTS.GREY_300} />
+    case EmergencyType.FLOOD:
+      return <FontAwesome6 name='house-flood-water' size={30} color={COLOR_LISTS.BLUE_400} />
+    case EmergencyType.CAR_ACCIDENT:
+      return <FontAwesome6 name='car-burst' size={30} color={COLOR_LISTS.ORANGE_900} />
+    default:
+      return <FontAwesome6 name='circle-xmark' size={30} color={COLOR_LISTS.RED} />
+  }
+
 };
