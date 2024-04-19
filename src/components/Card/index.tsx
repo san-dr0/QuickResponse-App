@@ -3,8 +3,8 @@ import * as S from './style';
 
 type CardComponentProps = {
   children?: React.ReactNode;
-  width?: number;
-  height?: number;
+  width?: string;
+  height?: string;
   backgroundColor?: string;
   borderRadius?: number;
   padding?: number;

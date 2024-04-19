@@ -32,9 +32,3 @@ export const acceptEmergency = async (
 export const getAllResponderToken = () => {
 
 };
-
-export const getAllActiveEmergency = async () => {
-  const response = firestore().collection(EMERGENCY_TABLE).get();
-
-  return response;
-};
