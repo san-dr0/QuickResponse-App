@@ -18,6 +18,7 @@ type TextInputComponentProps = {
   disabled?: boolean;
   maxLength?: number;
   error?: string | undefined;
+  multiline?: boolean;
 };
 export default function TextInputComponent(props: TextInputComponentProps) {
   const {
@@ -33,6 +34,7 @@ export default function TextInputComponent(props: TextInputComponentProps) {
     disabled,
     maxLength,
     error,
+    multiline,
   } = props;
 
   return (
@@ -49,6 +51,7 @@ export default function TextInputComponent(props: TextInputComponentProps) {
         disabled={disabled}
         textColor={textColor ?? COLOR_LISTS.BLACK}
         maxLength={maxLength}
+        multiline={multiline}
       />
       {error && <TextLabel title={`${error}`} textColor={COLOR_LISTS.RED} />}
     </>

@@ -66,9 +66,7 @@ export const changeNotificationActiveColor = (status?: string) => {
   return status === EmergencyStatus.ACTIVE ? COLOR_LISTS.GREEN_400 : COLOR_LISTS.GREY_400;
 };
 
-export const displayIconBasedOnEmergencyType = (emergencyType?: string) => {
-  console.log('EM > >', emergencyType);
-  
+export const displayIconBasedOnEmergencyType = (emergencyType?: string) => {  
   switch(emergencyType) {
     case EmergencyType.FIRE:
       return <FontAwesome6 name='fire' size={30} color={COLOR_LISTS.AMBER_400} />

@@ -8,6 +8,7 @@ type ImageComponentProps = {
   borderRadius?: number;
   isRemoteFile?: boolean;
 };
+
 export default function ImageComponent(props: ImageComponentProps) {
   const {borderRadius, imageSrc, width, height, isRemoteFile} = props;
 

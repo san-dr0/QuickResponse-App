@@ -54,3 +54,4 @@ export const pleaseProvideSupportingDocuments = 'Please provide a supporting doc
 export const pleaseSelectUserType = 'Please select a user type.';
 export const registrationWasSuccessfull = 'Your registration was successful!';
 export const sometingWentWrong = 'Something went wrong';
+export const emptyFields = 'Empty fields';
