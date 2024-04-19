@@ -12,7 +12,7 @@ export function useOnReceiveFirebaseCloudMessaging() {
       const emergencyId = JSON.parse(remoteMessage?.data?.emergencyId)
       const title = JSON.parse(remoteMessage?.data?.notification)?.title;
       const body = JSON.parse(remoteMessage?.data?.notification)?.body;
-
+      const emergency = JSON.parse(remoteMessage?.data?.emergency);
       console.log('NOTIF >>>');
       console.log(remoteMessage?.data);
       console.log(activeUserInformation?.account);
@@ -20,7 +20,7 @@ export function useOnReceiveFirebaseCloudMessaging() {
       if (activeUserInformation?.account?.userType === UserType.RESPONDER) {
         console.log('IM IN responder');
 
-        setAlertRecords({ title, body, isActive: true, emergencyID: emergencyId });
+        setAlertRecords({ title, body, isActive: true, emergencyID: emergencyId, emergency: emergency });
       };
 
     });

@@ -1,3 +1,5 @@
+import { EmergencyDto } from "../dto/Emergency.dto";
+
 export type AlertTypeDTO = {
   totalAlerts: boolean;
 };
@@ -7,6 +9,7 @@ export type AlertItemDTO = {
   body?: string;
   isActive?: boolean;
   emergencyID?: string;
+  emergency: EmergencyDto;
 };
 
 export type AlertContextTypeDTO = {
