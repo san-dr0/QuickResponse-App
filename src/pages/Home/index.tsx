@@ -1,32 +1,32 @@
-import React, {Alert, Dimensions, View} from 'react-native';
-import TextComponent from '../../components/TextLabel';
-import {ButtonComponent} from '../../components/Buttons';
-import * as S from './style';
-import {APP_WIDTH} from '../../constants/dimensions';
-import ImageComponent from '../../components/ImageContainer';
-import {COLOR_LISTS} from '../../constants/colors';
 import {useEffect} from 'react';
-import {getAsyncStorage} from '../../utils/utility';
+import {Alert, Dimensions, View} from 'react-native';
+import Modal from 'react-native-modal';
+import {ButtonComponent} from '../../components/Buttons';
+import DividerComponent from '../../components/Divider';
+import ImageComponent from '../../components/ImageContainer';
+import {
+  default as TextComponent,
+  default as TextLabel,
+} from '../../components/TextLabel';
+import {COLOR_LISTS} from '../../constants/colors';
+import {APP_WIDTH} from '../../constants/dimensions';
 import {STORAGE_KEY} from '../../constants/string';
+import {UserType} from '../../enums/User.enum';
+import {useOnReceiveFirebaseCloudMessaging} from '../../hooks/useOnReceiveFCM';
 import {useUserCredentials} from '../../hooks/useUserHooks';
 import {useAccountContext} from '../../providers/AccountProvider';
-import { useOnReceiveFirebaseCloudMessaging } from '../../hooks/useOnReceiveFCM';
-import { useAlertContext } from '../../providers/AlertProvider';
-import TextLabel from '../../components/TextLabel';
-import { UserType } from '../../enums/User.enum';
-import Modal from "react-native-modal";
-import DivComponent from '../../components/DivContainer';
-import { DivContainer } from '../../components/DivContainer/style';
-import DividerComponent from '../../components/Divider';
+import {useAlertContext} from '../../providers/AlertProvider';
+import {getAsyncStorage} from '../../utils/utility';
+import * as S from './style';
 
 export default function Home(props: any) {
   const {navigation} = props;
   const {sendActiveUserInformation} = useUserCredentials();
   const {setActiveUserInformationFunction} = useAccountContext();
-  const {alerts} = useAlertContext();
+  const {alerts, setAlertRecords} = useAlertContext();
 
   const {onReceiveBackgroundMessage, onReceive} =
-  useOnReceiveFirebaseCloudMessaging();
+    useOnReceiveFirebaseCloudMessaging();
 
   onReceive();
   onReceiveBackgroundMessage();
@@ -80,19 +80,34 @@ export default function Home(props: any) {
     checkIfUserHasLoggedInAlready();
   }, []);
 
+  function handleViewEmergency() {
+    console.log('EMEREGENCY', alerts);
+    //  navigation.navigate('View-Emergency', {
+    //   emergencyId: alerts?.emergencyID,
+    // });
+    // setAlertRecords({...alerts, isActive: false});
+  }
+
   return (
     <View>
-      {
-        alerts?.isActive && 
+      {alerts?.isActive && (
         <Modal isVisible>
           <S.AlertModal>
             <TextLabel title={alerts?.title} />
             <TextLabel title={alerts?.body} />
             <DividerComponent margin="10px 0 0 0" />
-            <ButtonComponent title="Close" textAlign="center" padding="10" borderRadius="5" backgroundColor='red' textColor={COLOR_LISTS.WHITE} />
+            <ButtonComponent
+              title="Close"
+              textAlign="center"
+              padding="10"
+              borderRadius="5"
+              backgroundColor="red"
+              textColor={COLOR_LISTS.WHITE}
+              onPress={handleViewEmergency}
+            />
           </S.AlertModal>
         </Modal>
-      }
+      )}
       <View>
         <ImageComponent
           borderRadius={50}

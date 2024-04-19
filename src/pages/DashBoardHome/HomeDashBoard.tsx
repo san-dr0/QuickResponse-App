@@ -4,11 +4,10 @@ import {EmergencyDto} from '../../dto/Emergency.dto';
 import {NotificationDto} from '../../dto/Notification.dto';
 import {EmergencyStatus} from '../../enums/EmergencyStatus.enum';
 import {EmergencyType} from '../../enums/EmergencyType.enum';
-import { UserType } from '../../enums/User.enum';
+import {UserType} from '../../enums/User.enum';
 import {useGetActiveUserCoordinates} from '../../hooks/useGetActiveUserCoordinates';
 import {useAccountContext} from '../../providers/AccountProvider';
 import {saveEmergency} from '../../service/emergency/Emergency.service';
-import { saveNotification } from '../../service/notification/Notification.service';
 import {
   getUsersTokens,
   sendNotifViaAxios,
@@ -39,33 +38,31 @@ export default function HomeDashBoard() {
         responder: [],
         emergencyStatus: EmergencyStatus.ACTIVE,
         date: getCurrentDate(),
-        notification: getNotificationByEmergency(emergencyType)
       };
 
       const savedEmergencyResponse = await saveEmergency(emergency);
-      console.log("SAVED EM >>");
+      console.log('SAVED EM >>');
       console.log(savedEmergencyResponse);
-      
+
       const resp = await getUsersTokens(UserType.RESPONDER);
       emergency.emergencyId = savedEmergencyResponse?.id;
 
       if (resp.length < 1) {
         return;
       }
-      
+      const payload = {
+        ...emergency,
+        notification: getNotificationByEmergency(
+          emergencyType,
+        ) as NotificationDto,
+      };
       resp.forEach(async element => {
-        const notification = getNotificationByEmergency(emergencyType) as NotificationDto;
-        notification.userId = activeUserInformation?.account?.fbID;
-        
-        saveNotification(notification);
-        
-        await sendNotifViaAxios(
-          emergency,
+        return await sendNotifViaAxios(
+          payload,
           element.token,
           getNotificationByEmergency(emergencyType) as NotificationDto,
         );
       });
-
     } catch (error: any) {
       console.log('ERROR >>>');
       console.log(error?.message);

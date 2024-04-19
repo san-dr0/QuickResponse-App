@@ -2,7 +2,6 @@ import { EmergencyStatus } from '../enums/EmergencyStatus.enum';
 import { EmergencyType } from '../enums/EmergencyType.enum';
 import { Name } from '../enums/Name.type';
 import { CoordinateDto } from './Coordinate.dto';
-import { NotificationDto } from './Notification.dto';
 import { ResponsderDTO } from './Responder.dto';
 
 export interface EmergencyDto {
@@ -13,5 +12,5 @@ export interface EmergencyDto {
   emergencyStatus: EmergencyStatus;
   coordinate: CoordinateDto;
   date: string;
-  notification?: NotificationDto | null;
+
 }
