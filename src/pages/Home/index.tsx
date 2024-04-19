@@ -82,10 +82,15 @@ export default function Home(props: any) {
 
   function handleViewEmergency() {
     console.log('EMEREGENCY', alerts);
-    //  navigation.navigate('View-Emergency', {
-    //   emergencyId: alerts?.emergencyID,
-    // });
-    // setAlertRecords({...alerts, isActive: false});
+    if (!alerts) {
+      return;
+    }
+    navigation.navigate('View-Emergency', {
+      emergencyId: alerts?.emergencyID,
+      emergency: alerts?.emergency,
+    });
+
+    setAlertRecords({...alerts, isActive: false});
   }
 
   return (

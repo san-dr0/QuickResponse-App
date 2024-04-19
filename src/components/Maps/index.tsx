@@ -1,6 +1,7 @@
 import {useEffect, useMemo} from 'react';
 import {Alert, Dimensions, StyleSheet, Text, View} from 'react-native';
 import MapView, {LatLng, Marker, PROVIDER_GOOGLE} from 'react-native-maps';
+import {CoordinateDto} from '../../dto/Coordinate.dto';
 import useGeolocation from '../../hooks/useGeolocation';
 
 const windowWidth = Dimensions.get('window').width;
@@ -9,10 +10,17 @@ const windowHeight = Dimensions.get('window').height;
 type Props = {
   children: React.ReactNode;
   height?: number;
+  isShowCurrentUserMarker: boolean;
+  coordinateProps?: CoordinateDto;
 };
 
 export default function Maps(props: Props) {
-  const {children, height = windowHeight} = props;
+  const {
+    children,
+    height = windowHeight,
+    isShowCurrentUserMarker = true,
+    coordinateProps,
+  } = props;
   const {coordinate, setCoordinate, getLocation, getPermisssion} =
     useGeolocation();
 
@@ -30,10 +38,10 @@ export default function Maps(props: Props) {
     getUserLocation();
   }, []);
 
-  console.log('COORDINATE', coordinate);
-
   const displayMaps = useMemo(() => {
-    if (!coordinate) {
+    const newCoordinate = coordinateProps ?? coordinate;
+
+    if (!newCoordinate) {
       return <Text>Please allow your location</Text>;
     }
     return (
@@ -41,16 +49,21 @@ export default function Maps(props: Props) {
         provider={PROVIDER_GOOGLE} // remove if not using Google Maps
         style={{...styles.maps, height: height}}
         region={{
-          latitude: coordinate.latitude as number,
-          longitude: coordinate.longitude as number,
+          latitude: newCoordinate.latitude as number,
+          longitude: newCoordinate.longitude as number,
           latitudeDelta: 0.015,
           longitudeDelta: 0.0121,
         }}
         zoomTapEnabled>
-        <Marker coordinate={coordinate as LatLng} />
+        {isShowCurrentUserMarker && (
+          <Marker coordinate={newCoordinate as LatLng} />
+        )}
+
+        {children}
       </MapView>
     );
-  }, [coordinate]);
+  }, [coordinate, coordinateProps, isShowCurrentUserMarker]);
+
   return <View style={{...styles.container, height}}>{displayMaps}</View>;
 }
 
