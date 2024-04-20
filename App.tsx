@@ -14,6 +14,7 @@ import Responder from './src/pages/Responder';
 import ViewEmergency from './src/pages/ViewEmergency';
 import {AccountProvider} from './src/providers/AccountProvider';
 import {AlertProvider} from './src/providers/AlertProvider';
+import ViewNewsFeed from './src/pages/NewsFeed/ViewNewsFeed';
 
 const StackNavigator = createNativeStackNavigator();
 function App() {
@@ -77,6 +78,13 @@ function App() {
                 component={CreateNewsFeed}
                 options={{
                   headerBackVisible: false,
+                }}
+              />
+              <StackNavigator.Screen
+                name="ViewNewsFeed"
+                component={ViewNewsFeed}
+                options={{
+                  headerTitle: "View News Feed"
                 }}
               />
             </StackNavigator.Navigator>

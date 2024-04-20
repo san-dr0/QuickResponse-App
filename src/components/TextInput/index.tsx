@@ -19,6 +19,8 @@ type TextInputComponentProps = {
   maxLength?: number;
   error?: string | undefined;
   multiline?: boolean;
+  width?: string;
+  align?: string;
 };
 export default function TextInputComponent(props: TextInputComponentProps) {
   const {
@@ -35,6 +37,8 @@ export default function TextInputComponent(props: TextInputComponentProps) {
     maxLength,
     error,
     multiline,
+    width,
+    align
   } = props;
 
   return (
@@ -52,6 +56,8 @@ export default function TextInputComponent(props: TextInputComponentProps) {
         textColor={textColor ?? COLOR_LISTS.BLACK}
         maxLength={maxLength}
         multiline={multiline}
+        width={width}
+        align={align}
       />
       {error && <TextLabel title={`${error}`} textColor={COLOR_LISTS.RED} />}
     </>

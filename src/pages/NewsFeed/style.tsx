@@ -2,19 +2,19 @@ import {View} from 'react-native';
 import ActionButton from 'react-native-action-button';
 import styled from 'styled-components';
 import {COLOR_LISTS} from '../../constants/colors';
+import { APP_HEIGHT } from '../../constants/dimensions';
 
 type DottedUIProps = {
   marginTop?: number;
 };
 
-export const NewsFeedParentContainer = styled(View)``;
+export const NewsFeedParentContainer = styled(View)`
+  height: ${APP_HEIGHT - 150}px;
+`;
 
 export const NewsFeedActionButton = styled(ActionButton)`
   position: absolute;
   bottom: 0;
-  margin-bottom: -20px;
-  right: 0;
-  margin-right: -20px;
 `;
 
 export const DottedUI = styled(View)<DottedUIProps>`

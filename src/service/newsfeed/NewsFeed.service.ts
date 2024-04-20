@@ -2,6 +2,7 @@ import firstore from "@react-native-firebase/firestore"
 import { NEWS_FEED_TABLE } from "../../constants/dbRef"
 import storage from "@react-native-firebase/storage"
 import { AccountDTO } from "../../types/User.type"
+import { getCurrentDateWithTime } from "../../utils/date.utils"
 
 export const createNewsFeed = async (thoughts: string, newsFeedMaker?: AccountDTO, imagePayload?: any) => {
     const {firstname, lastname, fbID} = newsFeedMaker as AccountDTO;
@@ -16,7 +17,14 @@ export const createNewsFeed = async (thoughts: string, newsFeedMaker?: AccountDT
             firstname,
             lastname,
             image: await imageResp.getDownloadURL(),
-            date: new Date(),
+            date: getCurrentDateWithTime(),
+            isActive: true,
+            likes: 0,
+            disLikes: 0,
+            reports: 0,
+            userLikeInteracted: [],
+            userDisLikeInteracted: [],
+            userReportInteracted: [],
         });
     } else {
         await firstore().collection(NEWS_FEED_TABLE).add({
@@ -25,8 +33,26 @@ export const createNewsFeed = async (thoughts: string, newsFeedMaker?: AccountDT
             firstname,
             lastname,
             image: 'N/A',
-            date: new Date(),
+            date: getCurrentDateWithTime(),
+            isActive: true,
+            likes: 0,
+            disLikes: 0,
+            reports: 0,
+            userLikeInteracted: [],
+            userDisLikeInteracted: [],
+            userReportInteracted: [],
         });
     }
+}
 
+export const updateNewsFeed = async (feedID: string, feedThoughts: string) => {
+    const record = await firstore().collection(NEWS_FEED_TABLE).doc(feedID).update({feed: feedThoughts});
+
+    return record;
+}
+
+export const getCertainNewsFeed = async (feedID: string) => {
+    const record = await firstore().collection(NEWS_FEED_TABLE).doc(feedID).get();
+
+    return record;
 }
