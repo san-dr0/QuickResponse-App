@@ -1,6 +1,6 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import firestore from '@react-native-firebase/firestore';
-import { PermissionsAndroid } from 'react-native';
+import {PermissionsAndroid} from 'react-native';
 
 export const setAsyncStorage = async (key: string, param: any) => {
   try {
@@ -38,7 +38,7 @@ export const validateIfUserExists = async (email: string): Promise<boolean> => {
 };
 
 export const checkToGetActiveUserPermission = async (): Promise<boolean> => {
-  try{
+  try {
     const granted = await PermissionsAndroid.request(
       PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION,
       {
@@ -46,14 +46,25 @@ export const checkToGetActiveUserPermission = async (): Promise<boolean> => {
         message: 'QRApp Map want to ask for permission.',
         buttonNeutral: 'Ask Me Later',
         buttonNegative: 'Cancel',
-        buttonPositive: 'Okay'
-      }
+        buttonPositive: 'Okay',
+      },
     );
-    
+
     return granted === 'granted' ? true : false;
-  }
-  catch(error: any) {
+  } catch (error: any) {
     console.log('Error in MAPS', error?.message);
     return false;
   }
+};
+
+export const debounce = (func: any, delay: any) => {
+  let timeoutId: any = null;
+
+  return (...args: any) => {
+    clearTimeout(timeoutId);
+
+    timeoutId = setTimeout(() => {
+      func.apply(this, args);
+    }, delay);
+  };
 };

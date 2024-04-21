@@ -1,3 +1,4 @@
+import React, {useState} from 'react';
 import {AlertNavigationModal} from '../../components/AlertNavigationModal';
 import {CoordinateDto} from '../../dto/Coordinate.dto';
 import {EmergencyDto} from '../../dto/Emergency.dto';
@@ -15,20 +16,36 @@ import {
 import {getCurrentDate} from '../../utils/date.utils';
 import {getNotificationByEmergency} from '../../utils/notification.utils';
 import * as S from './style';
+import Modal from 'react-native-modal';
+import {COLOR_LISTS} from '../../constants/colors';
+import TextLabel from '../../components/TextLabel';
+import DividerComponent from '../../components/Divider';
+import {ButtonComponent} from '../../components/Buttons';
+import DivComponent from '../../components/DivContainer';
+import QRAMap from '../../components/Map';
 
 export default function HomeDashBoard() {
   const {activeUserInformation} = useAccountContext();
   const {coordiantes} = useGetActiveUserCoordinates();
+  const [verifyRequest, setVerifyRequest] = useState<boolean>(false);
+  const [emergencyTypeChooseByUser, setEmergencyTypeChooseByUser] =
+    useState<EmergencyType>(EmergencyType.CAR_ACCIDENT);
+
   console.log(coordiantes);
 
-  const onPressAlertNavigationGeneric = async (
-    emergencyType: EmergencyType,
-  ) => {
+  const onPressCancelEmergency = () => {
+    setVerifyRequest(false);
+  };
+
+  const onConfirmEmergencyRequest = async () => {
     try {
       // const emergencyType: EmergencyType = checkEmergencyType(param);
 
+      if (!verifyRequest) {
+        return;
+      }
       const emergency: EmergencyDto = {
-        type: emergencyType,
+        type: emergencyTypeChooseByUser,
         sender: {
           userID: activeUserInformation?.account?.fbID as string,
           firstname: activeUserInformation?.account?.firstname || '',
@@ -54,14 +71,16 @@ export default function HomeDashBoard() {
       const payload = {
         ...emergency,
         notification: getNotificationByEmergency(
-          emergencyType,
+          emergencyTypeChooseByUser,
         ) as NotificationDto,
       };
       resp.forEach(async element => {
         return await sendNotifViaAxios(
           payload,
           element.token,
-          getNotificationByEmergency(emergencyType) as NotificationDto,
+          getNotificationByEmergency(
+            emergencyTypeChooseByUser,
+          ) as NotificationDto,
         );
       });
     } catch (error: any) {
@@ -70,9 +89,56 @@ export default function HomeDashBoard() {
     }
   };
 
+  const onPressAlertNavigationGeneric = async (
+    emergencyType: EmergencyType,
+  ) => {
+    setEmergencyTypeChooseByUser(emergencyType);
+    setVerifyRequest(true);
+  };
+
   return (
     <S.DashBoardHomeContainer>
-      {/* <QRAMap /> */}
+      <QRAMap />
+      <Modal isVisible={verifyRequest}>
+        <S.AlertModal>
+          <TextLabel
+            title={'Confirmation'}
+            textColor={COLOR_LISTS.GREEN}
+            fontSize={18}
+          />
+          <DivComponent padding="5">
+            <TextLabel
+              title={
+                'Kindly confirm that this was really an emergency request, Thank you.'
+              }
+              textAlign="center"
+            />
+          </DivComponent>
+          <DividerComponent margin="10px 0 0 0" />
+          <DivComponent flexDirection="row" padding="10">
+            <ButtonComponent
+              title="Cancel"
+              textAlign="center"
+              padding="10"
+              borderRadius="5"
+              backgroundColor={COLOR_LISTS.RED}
+              textColor={COLOR_LISTS.WHITE}
+              onPress={onPressCancelEmergency}
+            />
+            <TextLabel title=" " fontSize={10} />
+            <ButtonComponent
+              title="Confirm"
+              textAlign="center"
+              padding="10"
+              borderRadius="5"
+              backgroundColor={COLOR_LISTS.GREEN}
+              textColor={COLOR_LISTS.WHITE}
+              onPress={onConfirmEmergencyRequest}
+            />
+          </DivComponent>
+        </S.AlertModal>
+      </Modal>
+
       <AlertNavigationModal
         onPressAlertNavigationGeneric={onPressAlertNavigationGeneric}
       />

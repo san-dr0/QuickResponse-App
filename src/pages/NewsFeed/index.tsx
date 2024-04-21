@@ -12,33 +12,36 @@ import TextLabel from '../../components/TextLabel';
 import {COLOR_LISTS} from '../../constants/colors';
 import {APP_HEIGHT, APP_WIDTH} from '../../constants/dimensions';
 import {useNewsFeed} from '../../hooks/useNewsFeed';
-import {formatDateFromFirebase} from '../../utils/date.utils';
 import * as S from './style';
 import TextInputComponent from '../../components/TextInput';
 import TextInputEnum from '../../enums/TextInput.enum';
 import DividerComponent from '../../components/Divider';
-import { NewsFeedDTO } from '../../dto/NewsFeed.dto';
-import { useAccountContext } from '../../providers/AccountProvider';
-import { sometingWentWrong } from '../../constants/string';
-import { Badge } from 'react-native-paper';
+import {NewsFeedDTO} from '../../dto/NewsFeed.dto';
+import {useAccountContext} from '../../providers/AccountProvider';
+import {sometingWentWrong} from '../../constants/string';
+import {Badge} from 'react-native-paper';
 import FontAwesome6Icon from 'react-native-vector-icons/FontAwesome6';
 
 export default function NewsFeedDashBoard(props: any) {
   const {navigation} = props;
-  const {newsFeedData, sendRemoveNewsFeed, searchFromNewsFeed} = useNewsFeed();
+  const {newsFeedData, sendRemoveNewsFeed, searchFromNewsFeed, setNewsData} =
+    useNewsFeed();
   const {activeUserInformation} = useAccountContext();
 
   const onCreateNewsFeed = () => {
     navigation.navigate('CreateNewsFeed', {
-      actionType: 'create'
+      actionType: 'create',
     });
   };
 
   const onEditNewsFeed = (item: NewsFeedDTO) => {
     const {feed, feedID, userID} = item;
-    
+
     if (userID !== activeUserInformation?.account?.fbID) {
-      Alert.alert('Oops', `${sometingWentWrong}, you can not Edit News Feed that is not yours!`);
+      Alert.alert(
+        'Oops',
+        `${sometingWentWrong}, you can not Edit News Feed that is not yours!`,
+      );
       return;
     }
     navigation.navigate('CreateNewsFeed', {
@@ -46,7 +49,7 @@ export default function NewsFeedDashBoard(props: any) {
       newsFeed: {
         feed,
         feedID,
-      }
+      },
     });
   };
 
@@ -54,13 +57,16 @@ export default function NewsFeedDashBoard(props: any) {
     const {userID, feedID} = item;
 
     if (userID !== activeUserInformation?.account?.fbID) {
-      Alert.alert('Oops', `${sometingWentWrong}, you can not remove News Feed that is not yours!`);
-      return ;
+      Alert.alert(
+        'Oops',
+        `${sometingWentWrong}, you can not remove News Feed that is not yours!`,
+      );
+      return;
     }
     sendRemoveNewsFeed(feedID);
 
     ToastAndroid.show('You created news feed was removed!', ToastAndroid.SHORT);
-  }
+  };
 
   const onViewNewsFeed = (item: NewsFeedDTO) => {
     const {feedID} = item;
@@ -70,13 +76,14 @@ export default function NewsFeedDashBoard(props: any) {
   };
 
   const onSearchNewsFeed = async (e: any) => {
-    try{
+    try {
       const result = await searchFromNewsFeed(e, e, e);
+
+      setNewsData(result);
+    } catch (error: any) {
+      console.log('ERR >> ', error?.message);
     }
-    catch(error: any) {
-      console.log("ERR >> ", error?.message);
-    }
-  }
+  };
 
   const renderNewsFeed = ({item}: any) => {
     return (
@@ -93,9 +100,12 @@ export default function NewsFeedDashBoard(props: any) {
               <S.DottedUI />
             </MenuTrigger>
             <MenuOptions>
-              <MenuOption text="View" onSelect={() => onViewNewsFeed(item)}></MenuOption>
-              <MenuOption text="Edit" onSelect={() => onEditNewsFeed(item)}></MenuOption>
-              <MenuOption text="Remove" onSelect={() => onRemoveNewsFeed(item)}></MenuOption>
+              <MenuOption text="View" onSelect={() => onViewNewsFeed(item)} />
+              <MenuOption text="Edit" onSelect={() => onEditNewsFeed(item)} />
+              <MenuOption
+                text="Remove"
+                onSelect={() => onRemoveNewsFeed(item)}
+              />
             </MenuOptions>
           </Menu>
         </DivComponent>
@@ -108,23 +118,36 @@ export default function NewsFeedDashBoard(props: any) {
               isRemoteFile
             />
           </DivComponent>
-        ) : <FontAwesome6Icon name="image" size={80} style={{alignSelf: 'center'}} /> }
+        ) : (
+          <FontAwesome6Icon
+            name="image"
+            size={80}
+            style={{alignSelf: 'center'}}
+          />
+        )}
+        <DividerComponent margin="5px 0 0 0" />
         <TextLabel title={item?.feed} />
         <TextLabel title={`${item?.lastname}, ${item?.firstname}`} />
-        <TextLabel title={item?.date}/>
-        <DividerComponent margin='10px 0 0 0' />
-        <DivComponent flexDirection='row' justifyContent='space-around'>
+        <TextLabel title={item?.date} />
+        <DividerComponent margin="10px 0 0 0" />
+        <DivComponent flexDirection="row" justifyContent="space-around">
           <View style={{flexDirection: 'row'}}>
-            <TextLabel title='Like: ' />
-            <Badge style={{backgroundColor: COLOR_LISTS.BLUE_400}}>{item?.likes}</Badge>
+            <TextLabel title="Like: " />
+            <Badge style={{backgroundColor: COLOR_LISTS.BLUE_400}}>
+              {item?.likes}
+            </Badge>
           </View>
           <View style={{flexDirection: 'row'}}>
-            <TextLabel title='DisLike:' />
-            <Badge style={{backgroundColor: COLOR_LISTS.RED_400}}>{item?.disLikes}</Badge>
+            <TextLabel title="DisLike:" />
+            <Badge style={{backgroundColor: COLOR_LISTS.RED_400}}>
+              {item?.disLikes}
+            </Badge>
           </View>
           <View style={{flexDirection: 'row'}}>
-            <TextLabel title='Reports:' />
-            <Badge style={{backgroundColor: COLOR_LISTS.ORANGE_700}}>{item?.reports}</Badge>
+            <TextLabel title="Reports:" />
+            <Badge style={{backgroundColor: COLOR_LISTS.ORANGE_700}}>
+              {item?.reports}
+            </Badge>
           </View>
         </DivComponent>
       </CardComponent>
@@ -133,17 +156,33 @@ export default function NewsFeedDashBoard(props: any) {
 
   return (
     <>
-    <TextInputComponent textMode={TextInputEnum.FLAT} label="Search" width='90%' align='center'
-      onChangeText={(e) => onSearchNewsFeed(e)} />
-    <DividerComponent margin='5px 0 0 0' />
-    <S.NewsFeedParentContainer>
-      <View style={{height: APP_HEIGHT - 180}}>
-        <FlatList data={newsFeedData} renderItem={renderNewsFeed} />
-      </View>
-      <S.NewsFeedActionButton
-        buttonColor={COLOR_LISTS.RED}
-        onPress={onCreateNewsFeed}></S.NewsFeedActionButton>
-    </S.NewsFeedParentContainer>
+      <TextInputComponent
+        textMode={TextInputEnum.FLAT}
+        label="Search"
+        width="90%"
+        align="center"
+        onChangeText={e => onSearchNewsFeed(e)}
+      />
+      <DividerComponent margin="5px 0 0 0" />
+      <S.NewsFeedParentContainer>
+        <View style={{height: APP_HEIGHT - 180}}>
+          {newsFeedData.length > 0 ? (
+            <FlatList data={newsFeedData} renderItem={renderNewsFeed} />
+          ) : (
+            <View style={{padding: 5}}>
+              <TextLabel
+                title={'No records to show.'}
+                textAlign="center"
+                fontSize={18}
+              />
+            </View>
+          )}
+        </View>
+        <S.NewsFeedActionButton
+          buttonColor={COLOR_LISTS.RED}
+          onPress={onCreateNewsFeed}
+        />
+      </S.NewsFeedParentContainer>
     </>
   );
 }
