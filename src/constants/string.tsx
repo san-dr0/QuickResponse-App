@@ -55,3 +55,4 @@ export const pleaseSelectUserType = 'Please select a user type.';
 export const registrationWasSuccessfull = 'Your registration was successful!';
 export const sometingWentWrong = 'Something went wrong';
 export const emptyFields = 'Empty fields';
+export const yourFeedBackWasValues = 'Your feedback was valued!';

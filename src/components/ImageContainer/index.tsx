@@ -1,4 +1,3 @@
-import React from 'react';
 import {Image} from 'react-native';
 
 type ImageComponentProps = {
@@ -18,6 +17,7 @@ export default function ImageComponent(props: ImageComponentProps) {
       width={width}
       height={height}
       borderRadius={borderRadius}
+      resizeMode="cover"
     />
   ) : (
     <Image

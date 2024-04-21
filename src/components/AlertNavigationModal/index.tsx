@@ -1,3 +1,4 @@
+import React from 'react';
 import {EmergencyType} from '../../enums/EmergencyType.enum';
 import {AccidentComponent} from './Accident';
 import {EarthQuakeComponent} from './EarthQuake';
