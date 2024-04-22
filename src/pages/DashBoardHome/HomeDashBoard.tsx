@@ -98,7 +98,7 @@ export default function HomeDashBoard() {
 
   return (
     <S.DashBoardHomeContainer>
-      <QRAMap />
+      {/* <QRAMap /> */}
       <Modal isVisible={verifyRequest}>
         <S.AlertModal>
           <TextLabel

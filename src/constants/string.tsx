@@ -29,6 +29,11 @@ export const DASHBOARD = {
     headerTitle: 'Profile',
     tabBarIcon: <FontAwesome6 name='user-gear' size={25} color={COLOR_LISTS.BLUE_400} />,
   },
+  FEEDBACK: {
+    name: 'Feed & Rate',
+    headerTitle: 'Feedback & Rating',
+    tabBarIcon: <FontAwesome6 name='microphone' size={25} color={COLOR_LISTS.GREEN} />,
+  }
 };
 
 export enum TextAlignmentEnum {
