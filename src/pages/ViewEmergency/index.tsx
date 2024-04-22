@@ -6,13 +6,19 @@ import {EmergencyType} from '../../enums/EmergencyType.enum';
 import {MARKER} from '../../constants/image';
 import Modal from 'react-native-modal';
 import {ButtonComponent} from '../../components/Buttons';
+import useGetEmergencyById from '../../hooks/useGetEmergencyById';
+import Button from '../../components/Button';
 
-const height = Dimensions.get('window').height * 0.7;
+const FooterHeight = Dimensions.get('window').height * 0.4;
+const MapsHeight = Dimensions.get('window').height;
 export default function ViewEmergency(props: any) {
   const {route, navigation} = props;
   const id = route.params.emergencyId;
-  const emergency = route.params.emergency;
+
   const [isOpen, setIsOpen] = useState<boolean>(false);
+  const {data: emergency} = useGetEmergencyById({emergencyId: id});
+
+  console.log('DATA', emergency);
 
   function handleClick() {
     console.log('MARKER CLICK');
@@ -21,7 +27,7 @@ export default function ViewEmergency(props: any) {
 
   function getMarkerIcon() {
     let icons = null;
-    switch (emergency.type) {
+    switch (emergency?.type) {
       case EmergencyType.FIRE:
         icons = MARKER.FIRE;
         break;
@@ -48,14 +54,15 @@ export default function ViewEmergency(props: any) {
 
   const displayMarker = useMemo(() => {
     const icons = getMarkerIcon();
-    if (!icons) {
+
+    if (!icons || !emergency) {
       return;
     }
 
     return (
       <Marker
         style={{width: 60, height: 60}}
-        coordinate={emergency.coordinate}
+        coordinate={emergency?.coordinate}
         onPress={() => setIsOpen(true)}>
         <Image
           source={icons}
@@ -73,36 +80,47 @@ export default function ViewEmergency(props: any) {
     if (!emergency) {
       return;
     }
+    console.log('gg');
 
     return (
       <Maps
         isShowCurrentUserMarker={false}
+        height={isOpen ? MapsHeight * 0.6 : MapsHeight}
         coordinateProps={emergency.coordinate}>
         {displayMarker}
       </Maps>
     );
   }, [emergency, isOpen, displayMarker]);
+
+  const viewModal = useMemo(() => {
+    if (!isOpen) {
+      return;
+    }
+
+    return (
+      <View
+        style={{
+          height: FooterHeight,
+          width: '100%',
+          backgroundColor: 'white',
+          padding: 10,
+        }}>
+        <Text style={{fontSize: 18, fontWeight: 'bold'}}>
+          {emergency?.type} Alert
+        </Text>
+        <Text>{emergency?.date}</Text>
+        <Text>
+          {emergency?.sender.firstname + ' ' + emergency?.sender?.lastname}
+        </Text>
+      </View>
+    );
+  }, [isOpen]);
+
   return (
     <View style={{flex: 1}}>
-      <Modal isVisible={isOpen}>
-        <View style={{backgroundColor: 'white', height: height}}>
-          <Text>Emergency Alert</Text>
-          <View
-            style={{
-              width: '100%',
-              justifyContent: 'center',
-              alignItems: 'center',
-            }}>
-            <Image
-              source={getMarkerIcon()}
-              style={{height: 200, width: 200}}
-              resizeMode="center"
-            />
-          </View>
-          <ButtonComponent title="Close" onPress={() => setIsOpen(false)} />
-        </View>
-      </Modal>
       {displayMaps}
+      {viewModal}
+      <Button />
     </View>
   );
 }
