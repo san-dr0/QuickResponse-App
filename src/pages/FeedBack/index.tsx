@@ -24,6 +24,6 @@ export default function FeedBackAndRating() {
       renderScene={renderScene}
       onIndexChange={setIndex}
       initialLayout={{width: layout.width}}
-    />
+      />
   );
 }

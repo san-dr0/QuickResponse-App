@@ -13,3 +13,10 @@ export type NewsFeedDTO = {
     disLike: number,
     isActive: boolean;
 };
+
+export type FeedBackDTO = {
+    userID: string;
+    comment: string;
+    fullName: string;
+    date: string;
+};
