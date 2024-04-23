@@ -1,5 +1,12 @@
-import React, {useState} from 'react';
+import {useState} from 'react';
+import {ToastAndroid} from 'react-native';
+import Modal from 'react-native-modal';
 import {AlertNavigationModal} from '../../components/AlertNavigationModal';
+import {ButtonComponent} from '../../components/Buttons';
+import DivComponent from '../../components/DivContainer';
+import DividerComponent from '../../components/Divider';
+import TextLabel from '../../components/TextLabel';
+import {COLOR_LISTS} from '../../constants/colors';
 import {CoordinateDto} from '../../dto/Coordinate.dto';
 import {EmergencyDto} from '../../dto/Emergency.dto';
 import {NotificationDto} from '../../dto/Notification.dto';
@@ -16,13 +23,6 @@ import {
 import {getCurrentDate} from '../../utils/date.utils';
 import {getNotificationByEmergency} from '../../utils/notification.utils';
 import * as S from './style';
-import Modal from 'react-native-modal';
-import {COLOR_LISTS} from '../../constants/colors';
-import TextLabel from '../../components/TextLabel';
-import DividerComponent from '../../components/Divider';
-import {ButtonComponent} from '../../components/Buttons';
-import DivComponent from '../../components/DivContainer';
-import QRAMap from '../../components/Map';
 
 export default function HomeDashBoard() {
   const {activeUserInformation} = useAccountContext();
@@ -83,6 +83,8 @@ export default function HomeDashBoard() {
           ) as NotificationDto,
         );
       });
+      setVerifyRequest(false);
+      ToastAndroid.show('Your emergency has been send', ToastAndroid.LONG);
     } catch (error: any) {
       console.log('ERROR >>>');
       console.log(error?.message);
