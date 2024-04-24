@@ -52,3 +52,13 @@ export const acceptEmergency = async (
 export const getAllResponderToken = () => {
 
 };
+
+export const getAllEmergency = async (currentActiveEmail: string) => {
+  const response = await firestore().collection(EMERGENCY_TABLE).orderBy('date', 'desc').where('sender.email', '==', currentActiveEmail).get();
+  
+  return response.docs;
+};
+
+export const saveResponderUponAcceptingAnEmergency =  () => {
+  
+};

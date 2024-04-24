@@ -85,9 +85,11 @@ export default function Login(props: any) {
             loginPassword: password,
           },
         });
+        
         setAsyncStorage(STORAGE_KEY.ACTIVE_USER_EMAIL, email);
         setAsyncStorage(STORAGE_KEY.FB_ID, fbID);
         setIsPassed(false);
+
         if (userType === UserType.RESPONDER) {
           navigation.navigate('Responder');
           return;

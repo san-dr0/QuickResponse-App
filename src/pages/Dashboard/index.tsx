@@ -9,6 +9,7 @@ import NewsFeedDashBoard from '../NewsFeed';
 import ProfileDashBoard from '../Profile';
 import * as S from './style';
 import FeedBack from '../FeedBack';
+import Emergency from '../Emergency';
 
 const BottomTabNavigation = createBottomTabNavigator();
 
@@ -70,6 +71,14 @@ export default function DashBoard(props: any) {
         options={{
           headerTitle: DASHBOARD.FEEDBACK.headerTitle,
           tabBarIcon: () => DASHBOARD.FEEDBACK.tabBarIcon,
+        }}
+      />
+      <BottomTabNavigation.Screen
+        name={DASHBOARD.EMERGENCY_LOGS.name}
+        component={Emergency}
+        options={{
+          headerTitle: DASHBOARD.EMERGENCY_LOGS.headerTitle,
+          tabBarIcon: () => DASHBOARD.EMERGENCY_LOGS.tabBarIcon,
         }}
       />
     </BottomTabNavigation.Navigator>

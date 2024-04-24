@@ -3,8 +3,6 @@ import {useEffect, useId, useState} from 'react';
 import {FEEDACK_TABLE, NEWS_FEED_TABLE} from '../constants/dbRef';
 import {FeedBackDTO, NewsFeedDTO} from '../dto/NewsFeed.dto';
 import {createFeedBack, createRating, getAllRatingFeedBack, getCertainNewsFeed} from '../service/newsfeed/NewsFeed.service';
-import { Alert } from 'react-native';
-import { AccountDTO } from '../types/User.type';
 import { RatingDTO } from '../types/FeedAndRating.type';
 
 export const useNewsFeed = () => {

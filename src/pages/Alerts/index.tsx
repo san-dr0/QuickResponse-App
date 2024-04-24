@@ -9,6 +9,7 @@ import {DividerContainer} from '../../components/Divider/style';
 import {displayIconBasedOnEmergencyType} from '../../utils/format-display';
 
 export default function DashBoardAlerts() {
+  
   const [activeEmergency, setActiveEmergency] = useState<
     ActiveAlertsEmergencyDTO[]
   >([]);
