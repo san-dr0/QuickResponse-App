@@ -3,3 +3,5 @@ export const SUPPORTING_DOCUMENTS = 'Supporting Documents';
 export const EMERGENCY_TABLE = 'Emergency';
 export const NOTIFICATION_TABLE = 'Notification';
 export const NEWS_FEED_TABLE = 'NewsFeed';
+export const FEEDACK_TABLE = 'Feedback';
+export const RATING_TABLE = 'Rating';

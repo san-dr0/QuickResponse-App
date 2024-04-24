@@ -1,8 +1,11 @@
 import firebase from '@react-native-firebase/firestore';
-import {useEffect, useState} from 'react';
-import {NEWS_FEED_TABLE} from '../constants/dbRef';
-import {NewsFeedDTO} from '../dto/NewsFeed.dto';
-import {getCertainNewsFeed} from '../service/newsfeed/NewsFeed.service';
+import {useEffect, useId, useState} from 'react';
+import {FEEDACK_TABLE, NEWS_FEED_TABLE} from '../constants/dbRef';
+import {FeedBackDTO, NewsFeedDTO} from '../dto/NewsFeed.dto';
+import {createFeedBack, createRating, getAllRatingFeedBack, getCertainNewsFeed} from '../service/newsfeed/NewsFeed.service';
+import { Alert } from 'react-native';
+import { AccountDTO } from '../types/User.type';
+import { RatingDTO } from '../types/FeedAndRating.type';
 
 export const useNewsFeed = () => {
   const [newsFeedData, setNewsData] = useState<NewsFeedDTO[]>([]);
@@ -199,6 +202,43 @@ export const useNewsFeed = () => {
     return newsFeedRecord;
   };
 
+  // CREATE FEEDBACK and RATING MODULE
+  const sendCreateFeedBack = async (userID: string, userFullName: string, comment: string) => {    
+    return createFeedBack(userID, userFullName, comment);
+  };
+
+  const sendGetAllCreatedFeedBack = async () => {
+    const feedBacks = await firebase().collection(FEEDACK_TABLE).orderBy('date', 'asc').get();
+    
+    const feedBackList: FeedBackDTO[] = [];
+    
+    feedBacks.docs.map((feedback) => {
+      const data = feedback.data() as FeedBackDTO;
+      feedBackList.push(data);
+    });
+
+    return feedBackList;
+  };
+
+  const sendRatingFeedBack = async (ratingCount: number, userID: string, fullName: string) => {
+    const result = await createRating(ratingCount, userID, fullName);
+
+    return result;
+  };
+
+  const sendGetAllRatingFeedBack = async () => {
+    const records = await getAllRatingFeedBack();
+
+    const ratingRecords: RatingDTO[] = [];
+
+    records.docs.map((record) => {      
+      const data = record?.data() as RatingDTO;
+      ratingRecords.push(data);
+    });
+    
+    return ratingRecords;
+  };
+
   useEffect(() => {
     getNewsFeed();
   }, []);
@@ -212,5 +252,11 @@ export const useNewsFeed = () => {
     sendReports,
     sendRemoveNewsFeed,
     searchFromNewsFeed,
+    
+    // CREATE FEEDBACK and RATING MODULE
+    sendCreateFeedBack,
+    sendGetAllCreatedFeedBack,
+    sendRatingFeedBack,
+    sendGetAllRatingFeedBack
   };
 };
