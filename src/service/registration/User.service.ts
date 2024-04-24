@@ -132,3 +132,10 @@ export const setActiveUserInformation = async (id: string) => {
 
   return record;
 };
+
+
+export const getUserById = async (id: string) => {
+  const resp = await firestore().collection("Users").doc(id).get();
+
+  return resp;
+}
