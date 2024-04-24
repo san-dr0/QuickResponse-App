@@ -33,6 +33,11 @@ export const DASHBOARD = {
     name: 'Feed & Rate',
     headerTitle: 'Feedback & Rating',
     tabBarIcon: <FontAwesome6 name='microphone' size={25} color={COLOR_LISTS.GREEN} />,
+  },
+  EMERGENCY_LOGS: {
+    name: 'E Logs',
+    headerTitle: 'Emergency Logs',
+    tabBarIcon: <FontAwesome6 name='book' size={25} color={COLOR_LISTS.RED} />,
   }
 };
 
