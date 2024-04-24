@@ -1,6 +1,7 @@
 import firestore from '@react-native-firebase/firestore';
 import { EMERGENCY_TABLE } from '../../constants/dbRef';
 import { EmergencyDto, EmergencyResponder } from '../../dto/Emergency.dto';
+import { EmergencyType } from '../../enums/EmergencyType.enum';
 
 export const saveEmergency = async (payload: EmergencyDto) => {
   const response = await firestore().collection(EMERGENCY_TABLE).add(payload);
@@ -55,10 +56,30 @@ export const getAllResponderToken = () => {
 
 export const getAllEmergency = async (currentActiveEmail: string) => {
   const response = await firestore().collection(EMERGENCY_TABLE).orderBy('date', 'desc').where('sender.email', '==', currentActiveEmail).get();
-  
+
   return response.docs;
 };
 
-export const saveResponderUponAcceptingAnEmergency =  () => {
-  
+export const saveResponderUponAcceptingAnEmergency = async (userId: string, responderType: EmergencyType) => {
+  try {
+    const tempEmergency: any = []; // list of all responded by an active responder;
+
+    const emergencyList = await firestore().collection(EMERGENCY_TABLE).get();
+    emergencyList.docs.map(emergency => {
+      const data = emergency.data();
+
+      data?.responder.map((resp: any) => {
+        if (resp?.id === userId && resp?.responderType === responderType) {
+          tempEmergency.push(data);
+        }
+      });
+    });
+
+    return tempEmergency;
+  }
+  catch (error: any) {
+    console.log('ERR >>>');
+    console.log(error?.message);
+
+  }
 };
