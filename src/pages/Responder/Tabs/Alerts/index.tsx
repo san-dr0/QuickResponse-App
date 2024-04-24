@@ -7,7 +7,7 @@ export default function Alerts() {
 
   return (
     <View style={{flex: 1}}>
-      <Maps>
+      <Maps isShowCurrentUserMarker={true}>
         <Text>HI</Text>
       </Maps>
     </View>

@@ -34,5 +34,6 @@ export default function useGetEmergencyById(props: Props) {
     setIsRefresh,
     isRefresh,
     data,
+    sendRequest,
   };
 }

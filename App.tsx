@@ -16,6 +16,7 @@ import ViewEmergency from './src/pages/ViewEmergency';
 import ViewUserInfo from './src/pages/ViewUserInfo';
 import {AccountProvider} from './src/providers/AccountProvider';
 import {AlertProvider} from './src/providers/AlertProvider';
+import ViewOtherResponder from './src/pages/ViewOtherResponder';
 
 const StackNavigator = createNativeStackNavigator();
 function App() {
@@ -92,6 +93,11 @@ function App() {
                 name="View-User-Info"
                 component={ViewUserInfo}
                 options={{headerTitle: 'User Info'}}
+              />
+              <StackNavigator.Screen
+                name="View-Other-Responder"
+                component={ViewOtherResponder}
+                options={{headerTitle: 'List of Responder'}}
               />
             </StackNavigator.Navigator>
           </NavigationContainer>
