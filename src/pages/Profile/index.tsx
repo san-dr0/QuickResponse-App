@@ -1,34 +1,38 @@
-import React, {useEffect, useMemo, useState} from 'react';
-import {Alert, ScrollView, ToastAndroid, View} from 'react-native';
-import TextLabel from '../../components/TextLabel';
-import * as S from './style';
-import DividerComponent from '../../components/Divider';
-import {COLOR_LISTS} from '../../constants/colors';
-import TextInputComponent from '../../components/TextInput';
-import TextInputEnum from '../../enums/TextInput.enum';
-import {useAccountContext} from '../../providers/AccountProvider';
-import {ButtonComponent} from '../../components/Buttons';
-import storage from '@react-native-firebase/storage';
-import DivComponent from '../../components/DivContainer';
-import DocumentPicker from 'react-native-document-picker';
 import firestore from '@react-native-firebase/firestore';
-import ImageComponent from '../../components/ImageContainer';
+import storage from '@react-native-firebase/storage';
+import {useEffect, useMemo, useState} from 'react';
+import {Alert, ScrollView, ToastAndroid, View} from 'react-native';
+import ActionButton from 'react-native-action-button';
+import DocumentPicker from 'react-native-document-picker';
 import {PaperProvider, Switch} from 'react-native-paper';
+import FontAwesome6Icon from 'react-native-vector-icons/FontAwesome6';
+import {ButtonComponent} from '../../components/Buttons';
+import DivComponent from '../../components/DivContainer';
+import DividerComponent from '../../components/Divider';
+import ImageComponent from '../../components/ImageContainer';
 import {QRModalComponent} from '../../components/Modal';
+import TextInputComponent from '../../components/TextInput';
+import TextLabel from '../../components/TextLabel';
+import {COLOR_LISTS} from '../../constants/colors';
 import {APP_HEIGHT, APP_WIDTH} from '../../constants/dimensions';
+import TextInputEnum from '../../enums/TextInput.enum';
+import {useUserProfile} from '../../hooks/profileUserHooks';
+import {useAccountContext} from '../../providers/AccountProvider';
 import {formatPasswordDisplay} from '../../utils/format-display';
+import {getProfileImage} from '../../utils/imageManipulation';
+import {clearAsyncStorage} from '../../utils/utility';
 import AddNewAllergies from './Allergies/Add';
 import ViewAllergies from './Allergies/View';
-import AddNewCondition from './Conditions/Add';
-import ViewCondition from './Conditions/View';
 import AddBloodType from './BloodType/Add';
 import ViewBloodType from './BloodType/View';
-import {useUserProfile} from '../../hooks/profileUserHooks';
+import AddNewCondition from './Conditions/Add';
+import ViewCondition from './Conditions/View';
 import AddNewContacts from './Contacts/Add';
 import ViewContacts from './Contacts/View';
-import { getProfileImage } from '../../utils/imageManipulation';
+import * as S from './style';
 
 export default function ProfileDashBoard(props: any) {
+  const {navigation} = props;
   const {activeUserInformation} = useAccountContext();
   const [img, setImage] = useState<any>(
     require('../../assets/QRApp-img1.jpeg'),
@@ -56,7 +60,9 @@ export default function ProfileDashBoard(props: any) {
   }, [isRemoteFile, img]);
 
   async function displayProfileImage() {
-    const profile = await getProfileImage(JSON.parse(activeUserInformation?.account?.fbID ?? ''));
+    const profile = await getProfileImage(
+      JSON.parse(activeUserInformation?.account?.fbID ?? ''),
+    );
     if (profile) {
       setImage(profile);
       setIsRemoteFile(true);
@@ -73,13 +79,13 @@ export default function ProfileDashBoard(props: any) {
       })) as unknown as any;
 
       await fbRef.putFile(docs[0].uri);
-      
+
       await firestore()
         .collection('Users')
         .doc(JSON.parse(activeUserInformation?.account?.fbID ?? ''))
         .update({'account.profile': await fbRef.getDownloadURL()});
 
-        setImage(await fbRef.getDownloadURL());
+      setImage(await fbRef.getDownloadURL());
       ToastAndroid.show('Profile was uploaded', ToastAndroid.SHORT);
     } catch (error: any) {
       Alert.alert('Something went wrong', error?.message);
@@ -87,19 +93,23 @@ export default function ProfileDashBoard(props: any) {
   };
 
   const displayImageComponent = useMemo(() => {
-    return !isRemoteFile ?<ImageComponent
-      imageSrc={img}
-      isRemoteFile={false}
-      width={80}
-      height={80}
-      borderRadius={100}/>
-      :
+    return !isRemoteFile ? (
       <ImageComponent
-      imageSrc={img}
-      isRemoteFile={true}
-      width={80}
-      height={80}
-      borderRadius={100}/>
+        imageSrc={img}
+        isRemoteFile={false}
+        width={80}
+        height={80}
+        borderRadius={100}
+      />
+    ) : (
+      <ImageComponent
+        imageSrc={img}
+        isRemoteFile={true}
+        width={80}
+        height={80}
+        borderRadius={100}
+      />
+    );
   }, [isRemoteFile, img]);
 
   const onEditPersonalInformation = () => {
@@ -162,6 +172,12 @@ export default function ProfileDashBoard(props: any) {
   const onViewContacts = () => {
     setActiveModalView('view-contacts');
     setToggledModal(true);
+  };
+
+  const onLogoutUser = () => {
+    clearAsyncStorage();
+    navigation.navigate('Home');
+    ToastAndroid.show('Thank you for using our App.', ToastAndroid.SHORT);
   };
 
   return (
@@ -421,6 +437,17 @@ export default function ProfileDashBoard(props: any) {
         </View>
         <DividerComponent margin="10px 0 0 0" />
       </ScrollView>
+      <ActionButton
+        renderIcon={() => (
+          <FontAwesome6Icon
+            name="arrow-left"
+            size={20}
+            color={COLOR_LISTS.WHITE}
+          />
+        )}
+        buttonColor={COLOR_LISTS.RED}
+        onPress={onLogoutUser}
+      />
     </PaperProvider>
   );
 }

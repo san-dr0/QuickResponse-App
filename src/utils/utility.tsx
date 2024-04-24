@@ -22,6 +22,14 @@ export const getAsyncStorage = async (key: string) => {
   }
 };
 
+export const clearAsyncStorage = async () => {
+  try {
+    await AsyncStorage.clear();
+  } catch (error: any) {
+    console.log(error);
+  }
+};
+
 export const validateIfUserExists = async (email: string): Promise<boolean> => {
   const response = await firestore()
     .collection('Users')
