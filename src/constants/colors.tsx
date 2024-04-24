@@ -14,6 +14,7 @@ export const COLOR_LISTS = {
   AMBER_700: '#ffa000',
   AMBER_800: '#ff8f00',
   AMBER_900: '#ff6f00',
+  AMBER_700_ACCENT: '#ffab00',
   RED: '#f44336',
   RED_400: '#ef5350',
   RED_500: '#f44336',

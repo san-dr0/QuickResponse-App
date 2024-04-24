@@ -85,3 +85,15 @@ export const displayIconBasedOnEmergencyType = (emergencyType?: string) => {
   }
 
 };
+
+export const displayConfiguredRatingBar = (ratingCount: number) => {
+  let defaultRating: number = 1;
+
+  const newConfigUI = [];
+  while (defaultRating <= ratingCount) {
+    newConfigUI.push(<FontAwesome6 name="star" size={20} color={COLOR_LISTS.AMBER_700_ACCENT} />)
+    defaultRating++;
+  };
+
+  return newConfigUI;
+}

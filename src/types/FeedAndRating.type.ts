@@ -1,0 +1,1 @@
+export type RatingDTO = {ratingCount: number, userID: string, fullName: string, date: string};
