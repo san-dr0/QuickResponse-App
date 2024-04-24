@@ -1,13 +1,14 @@
-import React, {useMemo} from 'react';
-import {TouchableOpacity, Text, StyleSheet} from 'react-native';
+import {useMemo} from 'react';
+import {StyleSheet, Text, TouchableOpacity} from 'react-native';
 
 type Props = {
   background?: string;
   type?: string;
+  title: string;
 };
 
 export default function Button(props: Props) {
-  const {type = 'SOLID', background = 'red'} = props;
+  const {type = 'SOLID', background = 'red', title} = props;
   const buttonStyle = useMemo(() => {
     if (type === 'SOLID') {
       return {
@@ -34,18 +35,19 @@ export default function Button(props: Props) {
 
   return (
     <TouchableOpacity style={{...buttonStyle.button, ...styles.buttonStyle}}>
-      <Text style={{...buttonStyle.text, ...styles.text}}>HI</Text>
+      <Text style={{...buttonStyle.text, ...styles.text}}>{title}</Text>
     </TouchableOpacity>
   );
 }
 
 export const styles = StyleSheet.create({
   buttonStyle: {
-    paddingHorizontal: 5,
-    paddingVertical: 3,
-    borderRadius: 20,
+    paddingHorizontal: 8,
+    paddingVertical: 14,
+    borderRadius: 10,
   },
   text: {
-    fontSize: 12,
+    fontSize: 15,
+    textAlign: 'center',
   },
 });

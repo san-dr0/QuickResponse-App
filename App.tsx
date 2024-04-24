@@ -8,13 +8,14 @@ import FirstAidInformation from './src/pages/FirstAids/FirstAid-Information';
 import Home from './src/pages/Home';
 import Login from './src/pages/Login';
 import {CreateNewsFeed} from './src/pages/NewsFeed/CreateNewsFeed';
+import ViewNewsFeed from './src/pages/NewsFeed/ViewNewsFeed';
 import EditPersonalInformationComponent from './src/pages/Profile/EditPersonalInformation';
 import Registration from './src/pages/Register';
 import Responder from './src/pages/Responder';
 import ViewEmergency from './src/pages/ViewEmergency';
+import ViewUserInfo from './src/pages/ViewUserInfo';
 import {AccountProvider} from './src/providers/AccountProvider';
 import {AlertProvider} from './src/providers/AlertProvider';
-import ViewNewsFeed from './src/pages/NewsFeed/ViewNewsFeed';
 
 const StackNavigator = createNativeStackNavigator();
 function App() {
@@ -84,8 +85,13 @@ function App() {
                 name="ViewNewsFeed"
                 component={ViewNewsFeed}
                 options={{
-                  headerTitle: "View News Feed"
+                  headerTitle: 'View News Feed',
                 }}
+              />
+              <StackNavigator.Screen
+                name="View-User-Info"
+                component={ViewUserInfo}
+                options={{headerTitle: 'User Info'}}
               />
             </StackNavigator.Navigator>
           </NavigationContainer>

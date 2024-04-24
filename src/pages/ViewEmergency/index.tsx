@@ -1,13 +1,12 @@
 import {useMemo, useState} from 'react';
-import {Dimensions, Image, Text, View} from 'react-native';
+import {Dimensions, Image, Text, TouchableOpacity, View} from 'react-native';
 import {Marker} from 'react-native-maps';
-import Maps from '../../components/Maps';
-import {EmergencyType} from '../../enums/EmergencyType.enum';
-import {MARKER} from '../../constants/image';
-import Modal from 'react-native-modal';
-import {ButtonComponent} from '../../components/Buttons';
-import useGetEmergencyById from '../../hooks/useGetEmergencyById';
+import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import Button from '../../components/Button';
+import Maps from '../../components/Maps';
+import {MARKER} from '../../constants/image';
+import {EmergencyType} from '../../enums/EmergencyType.enum';
+import useGetEmergencyById from '../../hooks/useGetEmergencyById';
 
 const FooterHeight = Dimensions.get('window').height * 0.4;
 const MapsHeight = Dimensions.get('window').height;
@@ -21,8 +20,7 @@ export default function ViewEmergency(props: any) {
   console.log('DATA', emergency);
 
   function handleClick() {
-    console.log('MARKER CLICK');
-    setIsOpen(true);
+    setIsOpen(!isOpen);
   }
 
   function getMarkerIcon() {
@@ -63,7 +61,7 @@ export default function ViewEmergency(props: any) {
       <Marker
         style={{width: 60, height: 60}}
         coordinate={emergency?.coordinate}
-        onPress={() => setIsOpen(true)}>
+        onPress={() => handleClick()}>
         <Image
           source={icons}
           style={{
@@ -105,13 +103,50 @@ export default function ViewEmergency(props: any) {
           backgroundColor: 'white',
           padding: 10,
         }}>
-        <Text style={{fontSize: 18, fontWeight: 'bold'}}>
-          {emergency?.type} Alert
-        </Text>
-        <Text>{emergency?.date}</Text>
-        <Text>
-          {emergency?.sender.firstname + ' ' + emergency?.sender?.lastname}
-        </Text>
+        <View style={{display: 'flex', flexDirection: 'row'}}>
+          <View>
+            <Image
+              source={getMarkerIcon()}
+              style={{height: 100, width: 100}}
+              resizeMode="center"
+            />
+          </View>
+          <View style={{padding: 12}}>
+            <Text style={{fontSize: 20, fontWeight: 'bold'}}>
+              {emergency?.type} Alert
+            </Text>
+            <Text style={{fontSize: 16}}>{emergency?.date}</Text>
+            <View style={{flexDirection: 'row', gap: 14}}>
+              <Text style={{fontSize: 16}}>
+                {emergency?.sender.firstname +
+                  ' ' +
+                  emergency?.sender?.lastname}
+              </Text>
+              <TouchableOpacity>
+                <MaterialCommunityIcons
+                  name="account-eye"
+                  color="red"
+                  size={20}
+                />
+              </TouchableOpacity>
+            </View>
+          </View>
+        </View>
+        <Button title="Message Sender" type="OUTLINE" />
+        <View style={{height: 8}} />
+        <Button title="Accept" />
+        <View style={{height: 8}} />
+        <TouchableOpacity style={{padding: 8}} onPress={handleClick}>
+          <Text
+            style={{
+              textAlign: 'center',
+              fontSize: 18,
+              color: 'red',
+              fontWeight: 'bold',
+            }}>
+            Close
+          </Text>
+        </TouchableOpacity>
       </View>
     );
   }, [isOpen]);
@@ -120,7 +155,6 @@ export default function ViewEmergency(props: any) {
     <View style={{flex: 1}}>
       {displayMaps}
       {viewModal}
-      <Button />
     </View>
   );
 }
