@@ -1,8 +1,16 @@
 import {useEffect, useState} from 'react';
-import {Alert, FlatList, TouchableOpacity, View} from 'react-native';
+import {
+  Alert,
+  FlatList,
+  RefreshControl,
+  TouchableOpacity,
+  View,
+} from 'react-native';
 import {CardComponent} from '../../components/Card';
 import DividerComponent from '../../components/Divider';
 import TextLabel from '../../components/TextLabel';
+import {COLOR_LISTS} from '../../constants/colors';
+import {APP_HEIGHT} from '../../constants/dimensions';
 import {EmergencyDto} from '../../dto/Emergency.dto';
 import {useAccountContext} from '../../providers/AccountProvider';
 import {getAllEmergency} from '../../service/emergency/Emergency.service';
@@ -60,23 +68,43 @@ export default function Emergency(props: any) {
     );
   };
 
+  const onRefreshEmergency = () => {
+    setRefresh(true);
+    setTimeout(() => {
+      setRefresh(false);
+    }, 1000);
+  };
+
   useEffect(() => {
     getEmergency();
-  }, []);
+  }, [refresh]);
 
   return (
-    <View style={{padding: 10}}>
-      <CardComponent padding={10} borderRadius={5}>
+    <View style={{padding: 10, height: APP_HEIGHT - 100}}>
+      <CardComponent
+        padding={10}
+        borderRadius={5}
+        backgroundColor={COLOR_LISTS.RED}>
         <TextLabel
           title="All of your created emergency logs."
           fontSize={15}
           textAlign="center"
+          textColor={COLOR_LISTS.WHITE}
         />
       </CardComponent>
       {emergencyList.length > 0 ? (
         <>
           <DividerComponent margin="5px 0 0 0" />
-          <FlatList data={emergencyList} renderItem={renderEmergencyLogs} />
+          <FlatList
+            data={emergencyList}
+            renderItem={renderEmergencyLogs}
+            refreshControl={
+              <RefreshControl
+                refreshing={refresh}
+                onRefresh={onRefreshEmergency}
+              />
+            }
+          />
         </>
       ) : (
         <>
