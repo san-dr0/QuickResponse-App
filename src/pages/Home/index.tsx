@@ -53,6 +53,7 @@ export default function Home(props: any) {
             profile: account?.profile,
             mobilenumber: account?.mobilenumber,
             address: account?.address,
+            responderType: account?.responderType,
             userType: account?.userType,
           },
           credentials: {
