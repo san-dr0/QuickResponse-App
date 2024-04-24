@@ -1,6 +1,6 @@
 import firestore from '@react-native-firebase/firestore';
-import { EmergencyDto } from '../../dto/Emergency.dto';
 import { EMERGENCY_TABLE } from '../../constants/dbRef';
+import { EmergencyDto, EmergencyResponder } from '../../dto/Emergency.dto';
 
 export const saveEmergency = async (payload: EmergencyDto) => {
   const response = await firestore().collection(EMERGENCY_TABLE).add(payload);
@@ -19,11 +19,31 @@ export const getEmergencyById = async (emergencyId: string) => {
 
 export const acceptEmergency = async (
   emergencyId: string,
-  updateData: EmergencyDto,
+  responder: EmergencyResponder,
 ) => {
-  //get the current emergen
-  //push responder to data to Responder Array
-  //update the emergency data
+
+  console.log(emergencyId)
+  const response = await firestore()
+    .collection(EMERGENCY_TABLE)
+    .doc(emergencyId)
+    .get();
+
+  const resp: EmergencyDto = {
+    emergencyId: response.id,
+    ...response.data() as EmergencyDto
+  }
+
+  const arr = [...resp.responder as EmergencyResponder[], responder]
+
+  console.log("GG", arr);
+  const isUpdate = await firestore().collection(EMERGENCY_TABLE).doc(emergencyId).update({
+    responder: arr
+  })
+
+  console.log('GG', isUpdate)
+
+  return isUpdate;
+
 };
 //save emergency
 

@@ -1,26 +1,58 @@
 import {useMemo, useState} from 'react';
-import {Dimensions, Image, Text, TouchableOpacity, View} from 'react-native';
+import {
+  Alert,
+  Dimensions,
+  Image,
+  Text,
+  TouchableOpacity,
+  View,
+} from 'react-native';
 import {Marker} from 'react-native-maps';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import Button from '../../components/Button';
 import Maps from '../../components/Maps';
 import {MARKER} from '../../constants/image';
+import {EmergencyResponder} from '../../dto/Emergency.dto';
 import {EmergencyType} from '../../enums/EmergencyType.enum';
 import useGetEmergencyById from '../../hooks/useGetEmergencyById';
+import {useAccountContext} from '../../providers/AccountProvider';
+import {acceptEmergency} from '../../service/emergency/Emergency.service';
 
 const FooterHeight = Dimensions.get('window').height * 0.4;
 const MapsHeight = Dimensions.get('window').height;
 export default function ViewEmergency(props: any) {
   const {route, navigation} = props;
   const id = route.params.emergencyId;
-
+  const {activeUserInformation: user} = useAccountContext();
   const [isOpen, setIsOpen] = useState<boolean>(false);
   const {data: emergency} = useGetEmergencyById({emergencyId: id});
 
-  console.log('DATA', emergency);
-
   function handleClick() {
     setIsOpen(!isOpen);
+  }
+
+  async function handleAccept() {
+    try {
+      if (!user) {
+        return;
+      }
+
+      const {account, credentials} = user;
+
+      const payload: EmergencyResponder = {
+        id: account?.fbID as string,
+        responderType: account?.responderType as string,
+        firstname: account?.firstname as string,
+        middlename: account?.middlename as string,
+        lastname: account?.lastname as string,
+        email: credentials?.loginEmail as string,
+      };
+      const resp = await acceptEmergency(id, payload);
+      console.log('RESP', resp);
+      Alert.prompt('Successfully Update');
+    } catch (error) {
+      console.log(error);
+    }
   }
 
   function getMarkerIcon() {
@@ -122,11 +154,18 @@ export default function ViewEmergency(props: any) {
                   ' ' +
                   emergency?.sender?.lastname}
               </Text>
-              <TouchableOpacity>
+              <TouchableOpacity
+                onPress={() =>
+                  navigation.navigate('View-User-Info', {
+                    id: emergency?.sender?.userID
+                      ? JSON.parse(emergency?.sender?.userID)
+                      : '',
+                  })
+                }>
                 <MaterialCommunityIcons
                   name="account-eye"
                   color="red"
-                  size={20}
+                  size={30}
                 />
               </TouchableOpacity>
             </View>
@@ -134,7 +173,7 @@ export default function ViewEmergency(props: any) {
         </View>
         <Button title="Message Sender" type="OUTLINE" />
         <View style={{height: 8}} />
-        <Button title="Accept" />
+        <Button title="Accept" onPress={handleAccept} />
         <View style={{height: 8}} />
         <TouchableOpacity style={{padding: 8}} onPress={handleClick}>
           <Text

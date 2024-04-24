@@ -5,6 +5,7 @@ type Props = {
   background?: string;
   type?: string;
   title: string;
+  onPress?: () => void;
 };
 
 export default function Button(props: Props) {
@@ -33,8 +34,18 @@ export default function Button(props: Props) {
     };
   }, [props]);
 
+  const handlePress = () => {
+    if (!props.onPress) {
+      return;
+    }
+
+    props.onPress();
+  };
+
   return (
-    <TouchableOpacity style={{...buttonStyle.button, ...styles.buttonStyle}}>
+    <TouchableOpacity
+      style={{...buttonStyle.button, ...styles.buttonStyle}}
+      onPress={handlePress}>
       <Text style={{...buttonStyle.text, ...styles.text}}>{title}</Text>
     </TouchableOpacity>
   );

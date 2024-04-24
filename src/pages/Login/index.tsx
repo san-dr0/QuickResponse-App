@@ -26,6 +26,7 @@ export default function Login(props: any) {
     loginEmail: '',
     loginPassword: '',
   };
+
   const {navigation} = props;
   const {setActiveUserInformationFunction} = useAccountContext();
   const {sendLoginQRUser} = useUserCredentials();
@@ -48,7 +49,7 @@ export default function Login(props: any) {
 
       if (Object.keys(loginResponse).length) {
         const {email, password, account, isActive}: UserDTO = loginResponse;
-        
+
         const {
           fbID,
           profile,
