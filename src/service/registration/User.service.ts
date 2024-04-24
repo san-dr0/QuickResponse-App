@@ -137,5 +137,7 @@ export const setActiveUserInformation = async (id: string) => {
 export const getUserById = async (id: string) => {
   const resp = await firestore().collection("Users").doc(id).get();
 
-  return resp;
+
+
+  return { id: resp.id, ...resp.data() };
 }
