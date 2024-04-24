@@ -57,6 +57,7 @@ export default function Login(props: any) {
           lastname,
           mobilenumber,
           address,
+          responderType,
           userType,
         } = account;
 
@@ -75,6 +76,7 @@ export default function Login(props: any) {
             lastname,
             mobilenumber,
             address,
+            responderType,
             userType,
           },
           credentials: {
