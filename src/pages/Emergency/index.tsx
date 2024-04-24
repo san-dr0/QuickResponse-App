@@ -1,40 +1,94 @@
-import React, { useEffect, useState } from 'react';
-import { Alert, View } from "react-native";
-import { CardComponent } from '../../components/Card';
+import {useEffect, useState} from 'react';
+import {Alert, FlatList, TouchableOpacity, View} from 'react-native';
+import {CardComponent} from '../../components/Card';
+import DividerComponent from '../../components/Divider';
 import TextLabel from '../../components/TextLabel';
-import { getAllEmergency } from '../../service/emergency/Emergency.service';
-import { EmergencyDto } from '../../dto/Emergency.dto';
-import { useAccountContext } from '../../providers/AccountProvider';
+import {EmergencyDto} from '../../dto/Emergency.dto';
+import {useAccountContext} from '../../providers/AccountProvider';
+import {getAllEmergency} from '../../service/emergency/Emergency.service';
 
-export default function Emergency() {
-    const [emergencyList, setEmergencyList] = useState<EmergencyDto[]>([]);
-    const {activeUserInformation} = useAccountContext();
+export default function Emergency(props: any) {
+  const {navigation} = props;
+  const [emergencyList, setEmergencyList] = useState<EmergencyDto[]>([]);
+  const {activeUserInformation} = useAccountContext();
+  const [refresh, setRefresh] = useState<boolean>(false);
 
-    const getEmergency = async () => {
-        try{
-            const emergencyResult = await getAllEmergency(activeUserInformation?.credentials?.loginEmail as string);
-            const emergencies: EmergencyDto[] = [];
+  const getEmergency = async () => {
+    try {
+      const emergencyResult = await getAllEmergency(
+        activeUserInformation?.credentials?.loginEmail as string,
+      );
+      const emergencies: EmergencyDto[] = [];
 
-            emergencyResult.map((result) => {
-                const data = result.data() as EmergencyDto;
-                emergencies.push(data);
-            });
-            console.log(emergencies);
-            
-        }
-        catch(error: any) {
-            console.log(error?.message);
-            Alert.alert('Something went wrong', error?.message);
-        }
-    };
+      emergencyResult.map(result => {
+        const data = result.data() as EmergencyDto;
+        data.emergencyId = result.id; // emergencyID
+        emergencies.push(data);
+      });
 
-    useEffect(() => {
-        getEmergency();
-    }, []);
+      setEmergencyList(emergencies);
+    } catch (error: any) {
+      console.log(error?.message);
+      Alert.alert('Something went wrong', error?.message);
+    }
+  };
 
-    return <View style={{padding: 10}}>
-        <CardComponent padding={10} borderRadius={5}>
-            <TextLabel title="All of your created emergency logs." fontSize={15} textAlign="center" />
-        </CardComponent>
+  const onOpenCertainEmergency = (emergencyItem: EmergencyDto) => {
+    navigation.navigate('View-Emergency', {
+      emergencyId: emergencyItem?.emergencyId,
+    });
+  };
+
+  const renderEmergencyLogs = ({item}: any) => {
+    return (
+      <>
+        <DividerComponent margin="5px 0 0 0" />
+        <TouchableOpacity onPress={() => onOpenCertainEmergency(item)}>
+          <CardComponent padding={10}>
+            <TextLabel
+              title={`${item?.sender?.lastname}, ${item?.sender?.firstname}`}
+            />
+            <TextLabel title={`Emergency Type: ${item?.type}`} />
+            <TextLabel title={`Emergency Date: ${item?.date}`} />
+            <DividerComponent margin="5px 0 0 0" />
+            <TextLabel title={`Coordinates:`} fontWeight="bold" fontSize={15} />
+            <TextLabel title={`Long: ${item?.coordinate?.longitude}`} />
+            <TextLabel title={`Latitude: ${item?.coordinate?.longitude}`} />
+          </CardComponent>
+        </TouchableOpacity>
+      </>
+    );
+  };
+
+  useEffect(() => {
+    getEmergency();
+  }, []);
+
+  return (
+    <View style={{padding: 10}}>
+      <CardComponent padding={10} borderRadius={5}>
+        <TextLabel
+          title="All of your created emergency logs."
+          fontSize={15}
+          textAlign="center"
+        />
+      </CardComponent>
+      {emergencyList.length > 0 ? (
+        <>
+          <DividerComponent margin="5px 0 0 0" />
+          <FlatList data={emergencyList} renderItem={renderEmergencyLogs} />
+        </>
+      ) : (
+        <>
+          <DividerComponent margin="50px 0 0 0" />
+          <TextLabel
+            title="No records for emergency."
+            textAlign="center"
+            fontWeight="bold"
+            fontSize={20}
+          />
+        </>
+      )}
     </View>
-};
+  );
+}
