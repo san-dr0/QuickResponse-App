@@ -11,14 +11,12 @@ import {
 import {COLOR_LISTS} from '../../constants/colors';
 import {APP_WIDTH} from '../../constants/dimensions';
 import {STORAGE_KEY} from '../../constants/string';
-import {EmergencyType} from '../../enums/EmergencyType.enum';
 import {UserType} from '../../enums/User.enum';
 import {useOnReceiveFirebaseCloudMessaging} from '../../hooks/useOnReceiveFCM';
 import {useUserCredentials} from '../../hooks/useUserHooks';
 import {useAccountContext} from '../../providers/AccountProvider';
 import {useAlertContext} from '../../providers/AlertProvider';
-import {saveResponderUponAcceptingAnEmergency} from '../../service/emergency/Emergency.service';
-import {getAsyncStorage} from '../../utils/utility';
+import {createNewDeviceToken, getAsyncStorage} from '../../utils/utility';
 import * as S from './style';
 
 export default function Home(props: any) {
@@ -63,6 +61,12 @@ export default function Home(props: any) {
             loginPassword: record?.password,
           },
         });
+        createNewDeviceToken(
+          JSON.parse(fbID),
+          record?.email,
+          account?.userType,
+        );
+
         if (account?.userType === UserType.RESPONDER) {
           navigation.navigate('Responder');
         } else {
@@ -81,10 +85,6 @@ export default function Home(props: any) {
 
   useEffect(() => {
     checkIfUserHasLoggedInAlready();
-    saveResponderUponAcceptingAnEmergency(
-      'jRwvwMi6qUnWjjZex9jt',
-      EmergencyType.MEDICAL,
-    );
   }, []);
 
   function handleViewEmergency() {
