@@ -1,11 +1,11 @@
-import React, {useState} from 'react';
-import useGetConversationId from '../../hooks/useGetConversationId';
+import {useState} from 'react';
 import {FlatList, Text, TextInput, ToastAndroid, View} from 'react-native';
-import {MessageDto, MessageUserDto} from '../../types/Message.type';
-import {useAccountContext} from '../../providers/AccountProvider';
-import {COLOR_LISTS} from '../../constants/colors';
 import Button from '../../components/Button';
+import {COLOR_LISTS} from '../../constants/colors';
+import useGetConversationId from '../../hooks/useGetConversationId';
+import {useAccountContext} from '../../providers/AccountProvider';
 import {sendMessage} from '../../service/message/message.service';
+import {MessageDto, MessageUserDto} from '../../types/Message.type';
 
 export default function Messages(props: any) {
   const {route, navigation} = props;
@@ -51,18 +51,14 @@ export default function Messages(props: any) {
   const renderItem = ({item, index}: {item: MessageDto; index: number}) => {
     const isYouAsSender =
       item.sender.id === JSON.parse(user?.account?.fbID as string);
-    console.log('SENDER', item.sender.id);
-    console.log('MYID', JSON.parse(user?.account?.fbID as string));
-    console.log('EQUA', isYouAsSender);
+
     return (
       <View
         style={{
           width: '100%',
-          justifyContent: 'flex-end',
-          alignItems: 'flex-end',
         }}>
         {isYouAsSender ? (
-          <View>
+          <View style={{alignItems: 'flex-end'}}>
             <Text
               style={{
                 textAlign: 'right',
@@ -76,10 +72,23 @@ export default function Messages(props: any) {
             </Text>
           </View>
         ) : (
-          <View style={{width: 0}}>
-            <Text style={{textAlign: 'left', backgroundColor: 'violet'}}>
-              {item.message}
-            </Text>
+          <View
+            style={{
+              alignItems: 'flex-start',
+            }}>
+            <View>
+              <Text
+                style={{
+                  textAlign: 'right',
+                  backgroundColor: COLOR_LISTS.GREY_300,
+                  padding: 10,
+                  marginVertical: 7,
+                  borderRadius: 12,
+                  marginHorizontal: 5,
+                }}>
+                {item.message}
+              </Text>
+            </View>
           </View>
         )}
       </View>
