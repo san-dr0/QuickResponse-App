@@ -1,14 +1,15 @@
 import {useMemo, useState} from 'react';
-import Modal from 'react-native-modal';
 import {
   Alert,
   Dimensions,
   Image,
   Text,
+  TextInput,
   TouchableOpacity,
   View,
 } from 'react-native';
 import {Marker} from 'react-native-maps';
+import Modal from 'react-native-modal';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import Button from '../../components/Button';
 import Maps from '../../components/Maps';
@@ -18,8 +19,8 @@ import {EmergencyType} from '../../enums/EmergencyType.enum';
 import useGetEmergencyById from '../../hooks/useGetEmergencyById';
 import {useAccountContext} from '../../providers/AccountProvider';
 import {acceptEmergency} from '../../service/emergency/Emergency.service';
-import TextInputComponent from '../../components/TextInput';
-import TextInputEnum from '../../enums/TextInput.enum';
+import {sendMessage} from '../../service/message/message.service';
+import {MessageUserDto} from '../../types/Message.type';
 
 const FooterHeight = Dimensions.get('window').height * 0.5;
 const MapsHeight = Dimensions.get('window').height;
@@ -29,9 +30,37 @@ export default function ViewEmergency(props: any) {
   const {activeUserInformation: user} = useAccountContext();
   const [isOpen, setIsOpen] = useState<boolean>(false);
   const {data: emergency, sendRequest} = useGetEmergencyById({emergencyId: id});
-
+  const [message, setMessage] = useState<string>('');
   const [isOpenModal, setIsOpenModal] = useState<boolean>(false);
+  const [isDisable, setIsDisabled] = useState<boolean>(false);
 
+  async function handleSendMessage() {
+    try {
+      setIsDisabled(true);
+      const reciever: MessageUserDto = {
+        id: emergency?.sender?.userID,
+        profile: emergency?.sender?.profile as string,
+        firstname: emergency?.sender?.firstname as string,
+        middlename: emergency?.sender?.middlename as string,
+        lastname: emergency?.sender?.lastname as string,
+      };
+
+      const sender: MessageUserDto = {
+        id: JSON.parse(user?.account?.fbID as string),
+        profile: user?.account?.profile as string,
+        firstname: user?.account?.firstname as string,
+        middlename: user?.account?.middlename as string,
+        lastname: user?.account?.lastname as string,
+      };
+      const isSend = await sendMessage(reciever, sender, message);
+      console.log('GG', isSend);
+
+      setMessage('');
+      setIsDisabled(false);
+    } catch (error) {
+      console.log(error);
+    }
+  }
   function handleClick() {
     setIsOpen(!isOpen);
   }
@@ -138,7 +167,6 @@ export default function ViewEmergency(props: any) {
       val => val.id === user?.account?.fbID,
     );
 
-    console.log('WEW', isIncludeToResponder);
     return (
       <View
         style={{
@@ -186,7 +214,12 @@ export default function ViewEmergency(props: any) {
             </View>
           </View>
         </View>
-        <Button title="Message Sender" type="OUTLINE" />
+        <View style={{height: 20}} />
+        <Button
+          title="Message Sender"
+          onPress={() => setIsOpenModal(true)}
+          type="OUTLINE"
+        />
         <View style={{height: 8}} />
         {isIncludeToResponder ? (
           <Button
@@ -214,20 +247,42 @@ export default function ViewEmergency(props: any) {
         </TouchableOpacity>
       </View>
     );
-  }, [isOpen, emergency]);
+  }, [isOpen, emergency, isOpenModal]);
 
   return (
     <View style={{flex: 1}}>
       <Modal isVisible={isOpenModal}>
         <View
           style={{
-            height: MapsHeight * 0.4,
-            width: '80%',
+            height: MapsHeight * 0.4 - 20,
             backgroundColor: 'white',
             padding: 8,
           }}>
-          <Text>TextMessage</Text>
-          <TextInputComponent textMode={TextInputEnum.FLAT} />
+          <Text style={{fontSize: 24, fontWeight: 'bold', marginBottom: 15}}>
+            Message
+          </Text>
+          <TextInput
+            value={message}
+            style={{
+              borderWidth: 1,
+              borderColor: 'gray',
+              padding: 10,
+              borderRadius: 6,
+              marginBottom: 15,
+            }}
+            onChangeText={setMessage}
+          />
+          <Button
+            onPress={handleSendMessage}
+            title="Send message"
+            isDisable={isDisable}
+          />
+          <View style={{height: 10}} />
+          <Button
+            onPress={() => setIsOpenModal(false)}
+            title="Close"
+            type="OUTLINE"
+          />
         </View>
       </Modal>
       {displayMaps}
