@@ -29,7 +29,7 @@ export const DASHBOARD = {
     name: 'Inbox',
     headerTitle: 'Inbox',
     tabBarIcon: (
-      <Feather name="inbox" size={25} color={COLOR_LISTS.AMBER_400} />
+      <Feather name="inbox" size={25} color={COLOR_LISTS.GREEN} />
     ),
   },
   FIRST_AID: {

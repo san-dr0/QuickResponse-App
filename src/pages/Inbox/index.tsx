@@ -5,6 +5,9 @@ import { useAccountContext } from "../../providers/AccountProvider";
 import { sendGetAllResponderThatRespondToMyEmergency } from "../../service/inbox/Inbox.service";
 import { InboxDTO } from "../../types/Inbox.type";
 import { CardComponent } from "../../components/Card";
+import { COLOR_LISTS } from "../../constants/colors";
+import DivComponent from "../../components/DivContainer";
+import DividerComponent from "../../components/Divider";
 
 
 export default function Inbox () {
@@ -33,11 +36,20 @@ export default function Inbox () {
         getAllRespondedEmergency(activeUserInformation?.account?.fbID as string);
     }, [refresh]);
 
-    const renderItemList = (item: any) => {
-        console.log(item);
-        
-        return <CardComponent margin="5px 0 0 0" padding={10} borderRadius={5}>
-            <TextLabel title="tests" />
+    const renderItemList = (item: any) => {        
+        return <CardComponent key={item?.date} margin="5px 0 0 0" padding={10} borderRadius={5}>
+            {
+                item?.item?.responder.map((record: any) => {
+                    return <View key={record?.id}>
+                        <CardComponent backgroundColor={COLOR_LISTS.GREY_300} margin="5px 0 0 0" padding={10}>
+                            <TextLabel title={`${record?.lastname}, ${record?.firstname}`} />
+                            <TextLabel title={record?.email} />
+                            <TextLabel title={record?.responderType} />
+                        </CardComponent>
+                    </View>
+                })
+            }
+            <DividerComponent margin="5px 0 0 0" />
             <TextLabel title={item?.item?.type} />
         </CardComponent>
     };
@@ -51,9 +63,13 @@ export default function Inbox () {
 
     return <View>
         <View style={{padding: 10}}>
-            <FlatList data={inboxList} renderItem={renderItemList} refreshControl={
-                <RefreshControl refreshing={refresh} onRefresh={onRefreshInbox} />
-            } />
+            {
+                inboxList.length > 0 ? <FlatList data={inboxList} renderItem={renderItemList} refreshControl={
+                    <RefreshControl refreshing={refresh} onRefresh={onRefreshInbox} />
+                } />
+                :
+                <TextLabel title="No records right now." textAlign="center" fontSize={18} />
+            }
         </View>
     </View>
 };
