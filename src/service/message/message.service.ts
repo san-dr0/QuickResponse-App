@@ -1,11 +1,11 @@
 import firestore from '@react-native-firebase/firestore';
-import { CONVERSATIONS } from '../../constants/dbRef';
+import {CONVERSATIONS} from '../../constants/dbRef';
 import {
   ConversationDto,
   MessageDto,
   MessageUserDto,
 } from '../../types/Message.type';
-import { getCurrentDateWithTime } from '../../utils/date.utils';
+import {getCurrentDateWithTime} from '../../utils/date.utils';
 export const sendMessage = async (
   reciever: MessageUserDto,
   sender: MessageUserDto,
@@ -19,17 +19,15 @@ export const sendMessage = async (
   let conversation: ConversationDto[] = [];
 
   dataEqualToUserIncluded.forEach(element => {
-    const { users } = element.data();
+    const {users} = element.data();
 
     const rspns = users.sort().toString();
     const usrincld = userIncluded.sort().toString();
 
     if (rspns === usrincld) {
-      conversation.push({ id: element.id, ...element.data() } as ConversationDto);
+      conversation.push({id: element.id, ...element.data()} as ConversationDto);
     }
-
   });
-
 
   if (conversation.length > 0) {
     const mes: MessageDto = {
@@ -58,17 +56,28 @@ export const sendMessage = async (
   }
 };
 
-
 export const getConversationByUserId = async (id: string) => {
-  console.log([JSON.parse(id)])
-  const resp = await firestore().collection(CONVERSATIONS).where('users', 'array-contains-any', [JSON.parse(id)]).get();
+  console.log([JSON.parse(id)]);
+  const resp = await firestore()
+    .collection(CONVERSATIONS)
+    .where('users', 'array-contains-any', [JSON.parse(id)])
+    .get();
 
   const conversation: ConversationDto[] = [];
 
   resp.forEach(element => {
-    conversation.push({ id: element.id, ...element.data() } as ConversationDto)
-  })
+    conversation.push({id: element.id, ...element.data()} as ConversationDto);
+  });
 
-  console.log("WEW")
+  console.log('WEW');
   return conversation;
-}
+};
+
+export const getConversationById = async (id: string) => {
+  const resp = await firestore().collection(CONVERSATIONS).doc(id).get();
+
+  return {
+    id: resp.id,
+    ...resp.data(),
+  } as ConversationDto;
+};

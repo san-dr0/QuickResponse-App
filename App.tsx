@@ -20,6 +20,7 @@ import ViewOtherResponder from './src/pages/ViewOtherResponder';
 import FeedBackAndRating from './src/pages/FeedBack';
 import Emergency from './src/pages/Emergency';
 import FirstAidDashBoard from './src/pages/FirstAids';
+import Messages from './src/pages/Messages';
 
 const StackNavigator = createNativeStackNavigator();
 function App() {
@@ -117,6 +118,11 @@ function App() {
                 name="First-Aid"
                 component={FirstAidDashBoard}
                 options={{headerTitle: 'First-Aid'}}
+              />
+              <StackNavigator.Screen
+                name="Messages"
+                component={Messages}
+                options={{headerTitle: 'Convo'}}
               />
             </StackNavigator.Navigator>
           </NavigationContainer>

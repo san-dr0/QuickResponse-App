@@ -34,6 +34,9 @@ export default function ViewEmergency(props: any) {
   const [isOpenModal, setIsOpenModal] = useState<boolean>(false);
   const [isDisable, setIsDisabled] = useState<boolean>(false);
 
+  const isLoginSender =
+    emergency?.sender?.userID === JSON.parse(user?.account?.fbID as string);
+
   async function handleSendMessage() {
     try {
       setIsDisabled(true);
@@ -191,27 +194,32 @@ export default function ViewEmergency(props: any) {
             <Text style={{fontSize: 16}}>
               No. responder that respond {numberOfResponder}{' '}
             </Text>
-            <View style={{flexDirection: 'row', gap: 14}}>
-              <Text style={{fontSize: 16}}>
-                {emergency?.sender.firstname +
-                  ' ' +
-                  emergency?.sender?.lastname}
-              </Text>
-              <TouchableOpacity
-                onPress={() =>
-                  navigation.navigate('View-User-Info', {
-                    id: emergency?.sender?.userID
-                      ? JSON.parse(emergency?.sender?.userID)
-                      : '',
-                  })
-                }>
-                <MaterialCommunityIcons
-                  name="account-eye"
-                  color="red"
-                  size={30}
-                />
-              </TouchableOpacity>
-            </View>
+            {isLoginSender ? (
+              <Text>Send by you</Text>
+            ) : (
+              <View style={{flexDirection: 'row', gap: 14}}>
+                <Text style={{fontSize: 16}}>
+                  {emergency?.sender.firstname +
+                    ' ' +
+                    emergency?.sender?.lastname}
+                </Text>
+
+                <TouchableOpacity
+                  onPress={() =>
+                    navigation.navigate('View-User-Info', {
+                      id: emergency?.sender?.userID
+                        ? JSON.parse(emergency?.sender?.userID)
+                        : '',
+                    })
+                  }>
+                  <MaterialCommunityIcons
+                    name="account-eye"
+                    color="red"
+                    size={30}
+                  />
+                </TouchableOpacity>
+              </View>
+            )}
           </View>
         </View>
         <View style={{height: 20}} />
@@ -221,7 +229,7 @@ export default function ViewEmergency(props: any) {
           type="OUTLINE"
         />
         <View style={{height: 8}} />
-        {isIncludeToResponder ? (
+        {isIncludeToResponder || isLoginSender ? (
           <Button
             title="View other Responder"
             onPress={() =>
