@@ -1,6 +1,8 @@
 import React, {useCallback, useEffect, useState} from 'react';
 import {ConversationDto} from '../types/Message.type';
 import {getConversationById} from '../service/message/message.service';
+import firestore from '@react-native-firebase/firestore';
+import {CONVERSATIONS} from '../constants/dbRef';
 
 type Props = {
   id: string;
@@ -21,7 +23,13 @@ export default function useGetConversationId(props: Props) {
   }, [id]);
 
   useEffect(() => {
-    sendRequest();
+    const unsubscribed = firestore()
+      .collection(CONVERSATIONS)
+      .onSnapshot(e => {
+        sendRequest();
+      });
+
+    return unsubscribed;
   }, [id]);
 
   return {
