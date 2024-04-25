@@ -40,7 +40,7 @@ export default function NewsFeedDashBoard(props: any) {
     if (userID !== activeUserInformation?.account?.fbID) {
       Alert.alert(
         'Oops',
-        `${sometingWentWrong}, you can not Edit News Feed that is not yours!`,
+        `You can not Edit News Feed that is not yours!`,
       );
       return;
     }
@@ -59,7 +59,7 @@ export default function NewsFeedDashBoard(props: any) {
     if (userID !== activeUserInformation?.account?.fbID) {
       Alert.alert(
         'Oops',
-        `${sometingWentWrong}, you can not remove News Feed that is not yours!`,
+        `You can not remove News Feed that is not yours!`,
       );
       return;
     }

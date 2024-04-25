@@ -17,6 +17,9 @@ import ViewUserInfo from './src/pages/ViewUserInfo';
 import {AccountProvider} from './src/providers/AccountProvider';
 import {AlertProvider} from './src/providers/AlertProvider';
 import ViewOtherResponder from './src/pages/ViewOtherResponder';
+import FeedBackAndRating from './src/pages/FeedBack';
+import Emergency from './src/pages/Emergency';
+import FirstAidDashBoard from './src/pages/FirstAids';
 
 const StackNavigator = createNativeStackNavigator();
 function App() {
@@ -98,6 +101,22 @@ function App() {
                 name="View-Other-Responder"
                 component={ViewOtherResponder}
                 options={{headerTitle: 'List of Responder'}}
+              />
+              {/* FEEDBACK SCREEN */}
+              <StackNavigator.Screen
+                name="Feedback-And-Rating"
+                component={FeedBackAndRating}
+                options={{headerTitle: 'List of Responder'}}
+              />
+              <StackNavigator.Screen
+                name="Emergency-Logs"
+                component={Emergency}
+                options={{headerTitle: 'List of Responder'}}
+              />
+              <StackNavigator.Screen
+                name="First-Aid"
+                component={FirstAidDashBoard}
+                options={{headerTitle: 'First-Aid'}}
               />
             </StackNavigator.Navigator>
           </NavigationContainer>
