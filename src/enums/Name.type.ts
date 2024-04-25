@@ -4,4 +4,5 @@ export type Name = {
   middlename: string;
   lastname: string;
   email: string;
+  profile: string;
 };

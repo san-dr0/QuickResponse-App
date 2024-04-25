@@ -1,6 +1,8 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import firestore from '@react-native-firebase/firestore';
 import {PermissionsAndroid} from 'react-native';
+import {TOKEN_TABLE} from '../constants/dbRef';
+import {useUserToken} from '../hooks/userTokenHooks';
 
 export const setAsyncStorage = async (key: string, param: any) => {
   try {
@@ -19,6 +21,14 @@ export const getAsyncStorage = async (key: string) => {
     return record;
   } catch (error) {
     console.error(error);
+  }
+};
+
+export const clearAsyncStorage = async () => {
+  try {
+    await AsyncStorage.clear();
+  } catch (error: any) {
+    console.log(error);
   }
 };
 
@@ -67,4 +77,19 @@ export const debounce = (func: any, delay: any) => {
       func.apply(this, args);
     }, delay);
   };
+};
+
+export const createNewDeviceToken = async (
+  userID: string,
+  loginEmail: string,
+  userType: string,
+) => {
+  const {sendGenerateToken} = useUserToken();
+  const deviceToken = await sendGenerateToken();
+
+  firestore().collection(TOKEN_TABLE).doc(userID).set({
+    email: loginEmail,
+    token: deviceToken,
+    userType: userType,
+  });
 };

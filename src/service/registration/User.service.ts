@@ -1,10 +1,9 @@
 import firestore from '@react-native-firebase/firestore';
 import { sha256 } from 'react-native-sha256';
 import { UserType } from '../../enums/User.enum';
-import { useUserToken } from '../../hooks/userTokenHooks';
 import { RegistrationDTO } from '../../types/Registration.type';
 import { LoginDTO, UpdateProfileDTO, UserDTO } from '../../types/User.type';
-import { validateIfUserExists } from '../../utils/utility';
+import { createNewDeviceToken, validateIfUserExists } from '../../utils/utility';
 
 export const registrationUser = async (loginFormValues: RegistrationDTO) => {
   const {
@@ -58,7 +57,6 @@ export const loginUser = async (
   loginFormValues: LoginDTO,
 ): Promise<UserDTO> => {
   const { loginEmail, loginPassword } = loginFormValues;
-  const { sendGenerateToken } = useUserToken();
 
   const results = await firestore()
     .collection('Users')
@@ -78,13 +76,16 @@ export const loginUser = async (
     return {} as UserDTO;
   }
 
-  const deviceToken = await sendGenerateToken();
-  firestore().collection('Tokens').doc(activeUser?.account?.fbID).set({
-    email: loginEmail,
-    token: deviceToken,
-    userType: results?.docs[0]?.data()?.account?.userType,
-  });
+  // const deviceToken = await sendGenerateToken();
+  const userType = results?.docs[0]?.data()?.account?.userType;
 
+  // firestore().collection('Tokens').doc(activeUser?.account?.fbID).set({
+  //   email: loginEmail,
+  //   token: deviceToken,
+  //   userType: results?.docs[0]?.data()?.account?.userType,
+  // });
+
+  createNewDeviceToken(activeUser?.account?.fbID, loginEmail as string, userType); // this is a service that create a deviceToken, then saved it to firebase;
   return activeUser;
 };
 

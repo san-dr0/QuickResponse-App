@@ -52,6 +52,7 @@ export default function HomeDashBoard() {
           middlename: activeUserInformation?.account?.middlename || '',
           lastname: activeUserInformation?.account?.lastname || '',
           email: activeUserInformation?.credentials?.loginEmail as string,
+          profile: activeUserInformation?.account?.profile as string,
         },
         coordinate: coordiantes as CoordinateDto,
         responder: [],

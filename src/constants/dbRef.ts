@@ -6,3 +6,5 @@ export const NEWS_FEED_TABLE = 'NewsFeed';
 export const FEEDACK_TABLE = 'Feedback';
 export const RATING_TABLE = 'Rating';
 export const CONVERSATIONS = 'Conversations';
+export const TOKEN_TABLE = 'Tokens';
+
