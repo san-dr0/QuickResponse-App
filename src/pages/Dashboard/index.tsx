@@ -4,14 +4,11 @@ import {DASHBOARD} from '../../constants/string';
 import {useAlertContext} from '../../providers/AlertProvider';
 import DashBoardAlerts from '../Alerts';
 import HomeDashBoard from '../DashBoardHome/HomeDashBoard';
-import FirstAidDashBoard from '../FirstAids';
 import NewsFeedDashBoard from '../NewsFeed';
 import ProfileDashBoard from '../Profile';
-import * as S from './style';
-import FeedBack from '../FeedBack';
-import Emergency from '../Emergency';
+import Inbox from '../Responder/Tabs/Inbox';
 import QRAppServices from '../Services';
-import Inbox from '../Inbox';
+import * as S from './style';
 
 const BottomTabNavigation = createBottomTabNavigator();
 
