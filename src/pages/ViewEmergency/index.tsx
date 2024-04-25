@@ -1,4 +1,5 @@
 import {useMemo, useState} from 'react';
+import Modal from 'react-native-modal';
 import {
   Alert,
   Dimensions,
@@ -17,15 +18,19 @@ import {EmergencyType} from '../../enums/EmergencyType.enum';
 import useGetEmergencyById from '../../hooks/useGetEmergencyById';
 import {useAccountContext} from '../../providers/AccountProvider';
 import {acceptEmergency} from '../../service/emergency/Emergency.service';
+import TextInputComponent from '../../components/TextInput';
+import TextInputEnum from '../../enums/TextInput.enum';
 
-const FooterHeight = Dimensions.get('window').height * 0.4;
+const FooterHeight = Dimensions.get('window').height * 0.5;
 const MapsHeight = Dimensions.get('window').height;
 export default function ViewEmergency(props: any) {
   const {route, navigation} = props;
   const id = route.params.emergencyId;
   const {activeUserInformation: user} = useAccountContext();
   const [isOpen, setIsOpen] = useState<boolean>(false);
-  const {data: emergency} = useGetEmergencyById({emergencyId: id});
+  const {data: emergency, sendRequest} = useGetEmergencyById({emergencyId: id});
+
+  const [isOpenModal, setIsOpenModal] = useState<boolean>(false);
 
   function handleClick() {
     setIsOpen(!isOpen);
@@ -47,9 +52,10 @@ export default function ViewEmergency(props: any) {
         lastname: account?.lastname as string,
         email: credentials?.loginEmail as string,
       };
-      const resp = await acceptEmergency(id, payload);
-      console.log('RESP', resp);
-      Alert.prompt('Successfully Update');
+
+      await acceptEmergency(id, payload);
+      await sendRequest();
+      await Alert.prompt('Successfully Update');
     } catch (error) {
       console.log(error);
     }
@@ -115,7 +121,7 @@ export default function ViewEmergency(props: any) {
     return (
       <Maps
         isShowCurrentUserMarker={false}
-        height={isOpen ? MapsHeight * 0.6 : MapsHeight}
+        height={isOpen ? MapsHeight * 0.5 : MapsHeight}
         coordinateProps={emergency.coordinate}>
         {displayMarker}
       </Maps>
@@ -127,6 +133,12 @@ export default function ViewEmergency(props: any) {
       return;
     }
 
+    const numberOfResponder = emergency?.responder?.length;
+    const isIncludeToResponder = emergency?.responder?.some(
+      val => val.id === user?.account?.fbID,
+    );
+
+    console.log('WEW', isIncludeToResponder);
     return (
       <View
         style={{
@@ -148,6 +160,9 @@ export default function ViewEmergency(props: any) {
               {emergency?.type} Alert
             </Text>
             <Text style={{fontSize: 16}}>{emergency?.date}</Text>
+            <Text style={{fontSize: 16}}>
+              No. responder that respond {numberOfResponder}{' '}
+            </Text>
             <View style={{flexDirection: 'row', gap: 14}}>
               <Text style={{fontSize: 16}}>
                 {emergency?.sender.firstname +
@@ -173,7 +188,18 @@ export default function ViewEmergency(props: any) {
         </View>
         <Button title="Message Sender" type="OUTLINE" />
         <View style={{height: 8}} />
-        <Button title="Accept" onPress={handleAccept} />
+        {isIncludeToResponder ? (
+          <Button
+            title="View other Responder"
+            onPress={() =>
+              navigation.navigate('View-Other-Responder', {
+                id: id,
+              })
+            }
+          />
+        ) : (
+          <Button title="Accept" onPress={handleAccept} />
+        )}
         <View style={{height: 8}} />
         <TouchableOpacity style={{padding: 8}} onPress={handleClick}>
           <Text
@@ -188,10 +214,22 @@ export default function ViewEmergency(props: any) {
         </TouchableOpacity>
       </View>
     );
-  }, [isOpen]);
+  }, [isOpen, emergency]);
 
   return (
     <View style={{flex: 1}}>
+      <Modal isVisible={isOpenModal}>
+        <View
+          style={{
+            height: MapsHeight * 0.4,
+            width: '80%',
+            backgroundColor: 'white',
+            padding: 8,
+          }}>
+          <Text>TextMessage</Text>
+          <TextInputComponent textMode={TextInputEnum.FLAT} />
+        </View>
+      </Modal>
       {displayMaps}
       {viewModal}
     </View>
