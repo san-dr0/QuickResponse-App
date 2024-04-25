@@ -3,6 +3,7 @@ import {responderRoutes} from '../../constants/routes';
 import FirstAidDashBoard from '../FirstAids';
 import ProfileDashBoard from '../Profile';
 import Alerts from './Tabs/Alerts';
+import Inbox from './Tabs/Inbox';
 
 const BottomTabNavigation = createBottomTabNavigator();
 
@@ -32,6 +33,14 @@ export default function Responder() {
         options={{
           title: responderRoutes.FIRST_AID.headerTitle,
           tabBarIcon: () => responderRoutes.FIRST_AID.tabBarIcon,
+        }}
+      />
+      <BottomTabNavigation.Screen
+        name={responderRoutes.MESSAGE.name}
+        component={Inbox}
+        options={{
+          title: responderRoutes.MESSAGE.headerTitle,
+          tabBarIcon: () => responderRoutes.MESSAGE.tabBarIcon,
         }}
       />
     </BottomTabNavigation.Navigator>

@@ -6,15 +6,16 @@ type Props = {
   type?: string;
   title: string;
   onPress?: () => void;
+  isDisable?: boolean;
 };
 
 export default function Button(props: Props) {
-  const {type = 'SOLID', background = 'red', title} = props;
+  const {type = 'SOLID', background = 'red', title, isDisable} = props;
   const buttonStyle = useMemo(() => {
     if (type === 'SOLID') {
       return {
         button: {
-          backgroundColor: background,
+          backgroundColor: isDisable ? 'whitesmoke' : background,
         },
         text: {
           color: 'white',
@@ -45,7 +46,8 @@ export default function Button(props: Props) {
   return (
     <TouchableOpacity
       style={{...buttonStyle.button, ...styles.buttonStyle}}
-      onPress={handlePress}>
+      onPress={handlePress}
+      disabled={isDisable}>
       <Text style={{...buttonStyle.text, ...styles.text}}>{title}</Text>
     </TouchableOpacity>
   );

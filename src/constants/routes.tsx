@@ -25,4 +25,11 @@ export const responderRoutes = {
       <Fontisto name="first-aid-alt" size={25} color={COLOR_LISTS.RED} />
     ),
   },
+  MESSAGE: {
+    name: 'Inbox',
+    headerTitle: 'Inbox',
+    tabBarIcon: (
+      <FontAwesome6 name="message" size={25} color={COLOR_LISTS.RED} />
+    ),
+  },
 };
