@@ -32,4 +32,11 @@ export const responderRoutes = {
       <FontAwesome6 name="message" size={25} color={COLOR_LISTS.RED} />
     ),
   },
+  HISTORY: {
+    name: 'Emergency-History',
+    headerTitle: 'Emergency History',
+    tabBarIcon: (
+      <FontAwesome6 name="message" size={25} color={COLOR_LISTS.RED} />
+    ),
+  },
 };

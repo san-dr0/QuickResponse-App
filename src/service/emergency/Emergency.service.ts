@@ -1,7 +1,7 @@
 import firestore from '@react-native-firebase/firestore';
-import { EMERGENCY_TABLE } from '../../constants/dbRef';
-import { EmergencyDto, EmergencyResponder } from '../../dto/Emergency.dto';
-import { EmergencyType } from '../../enums/EmergencyType.enum';
+import {EMERGENCY_TABLE} from '../../constants/dbRef';
+import {EmergencyDto, EmergencyResponder} from '../../dto/Emergency.dto';
+import {EmergencyType} from '../../enums/EmergencyType.enum';
 
 export const saveEmergency = async (payload: EmergencyDto) => {
   const response = await firestore().collection(EMERGENCY_TABLE).add(payload);
@@ -22,8 +22,7 @@ export const acceptEmergency = async (
   emergencyId: string,
   responder: EmergencyResponder,
 ) => {
-
-  console.log(emergencyId)
+  console.log(emergencyId);
   const response = await firestore()
     .collection(EMERGENCY_TABLE)
     .doc(emergencyId)
@@ -31,36 +30,43 @@ export const acceptEmergency = async (
 
   const resp: EmergencyDto = {
     emergencyId: response.id,
-    ...response.data() as EmergencyDto
-  }
+    ...(response.data() as EmergencyDto),
+  };
 
-  const arr = [...resp.responder as EmergencyResponder[], responder]
+  const arr = [...(resp.responder as EmergencyResponder[]), responder];
 
-  console.log("GG", arr);
-  const isUpdate = await firestore().collection(EMERGENCY_TABLE).doc(emergencyId).update({
-    responder: arr
-  })
+  console.log('GG', arr);
+  const isUpdate = await firestore()
+    .collection(EMERGENCY_TABLE)
+    .doc(emergencyId)
+    .update({
+      responder: arr,
+    });
 
-  console.log('GG', isUpdate)
+  console.log('GG', isUpdate);
 
   return isUpdate;
-
 };
 //save emergency
 
 // send notfication
 
-export const getAllResponderToken = () => {
-
-};
+export const getAllResponderToken = () => {};
 
 export const getAllEmergency = async (currentActiveEmail: string) => {
-  const response = await firestore().collection(EMERGENCY_TABLE).orderBy('date', 'desc').where('sender.email', '==', currentActiveEmail).get();
+  const response = await firestore()
+    .collection(EMERGENCY_TABLE)
+    .orderBy('date', 'desc')
+    .where('sender.email', '==', currentActiveEmail)
+    .get();
 
   return response.docs;
 };
 
-export const saveResponderUponAcceptingAnEmergency = async (userId: string, responderType: EmergencyType) => {
+export const saveResponderUponAcceptingAnEmergency = async (
+  userId: string,
+  responderType: EmergencyType,
+) => {
   try {
     const tempEmergency: any = []; // list of all responded by an active responder;
 
@@ -70,16 +76,14 @@ export const saveResponderUponAcceptingAnEmergency = async (userId: string, resp
 
       data?.responder.map((resp: any) => {
         if (resp?.id === userId && resp?.responderType === responderType) {
-          tempEmergency.push(data);
+          tempEmergency.push({emergencyId: emergency.id, ...data});
         }
       });
     });
 
     return tempEmergency;
-  }
-  catch (error: any) {
+  } catch (error: any) {
     console.log('ERR >>>');
     console.log(error?.message);
-
   }
 };

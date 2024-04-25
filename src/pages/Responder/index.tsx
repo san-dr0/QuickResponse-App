@@ -4,6 +4,7 @@ import FirstAidDashBoard from '../FirstAids';
 import ProfileDashBoard from '../Profile';
 import Alerts from './Tabs/Alerts';
 import Inbox from './Tabs/Inbox';
+import EmergencyHistory from './EmergencyHistory';
 
 const BottomTabNavigation = createBottomTabNavigator();
 
@@ -41,6 +42,14 @@ export default function Responder() {
         options={{
           title: responderRoutes.MESSAGE.headerTitle,
           tabBarIcon: () => responderRoutes.MESSAGE.tabBarIcon,
+        }}
+      />
+      <BottomTabNavigation.Screen
+        name={responderRoutes.HISTORY.name}
+        component={EmergencyHistory}
+        options={{
+          title: responderRoutes.HISTORY.headerTitle,
+          tabBarIcon: () => responderRoutes.HISTORY.tabBarIcon,
         }}
       />
     </BottomTabNavigation.Navigator>
