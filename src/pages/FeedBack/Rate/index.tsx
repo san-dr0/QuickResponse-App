@@ -140,7 +140,7 @@ export const Rate = () => {
     const {ratingCount, fullName, userID, date} = item;
     const ratingList = displayConfiguredRatingBar(ratingCount);
 
-    return <CardComponent margin='5px 0 0 0' borderRadius={5} padding={10}>
+    return <CardComponent margin='5px 0 0 0' borderRadius={5} padding={10} backgroundColor={COLOR_LISTS.WHITE}>
       <DivComponent alignItems='center'>
         <TextLabel title={fullName} fontSize={20} />
         <TextLabel title={'User'} fontSize={10} />
@@ -156,7 +156,7 @@ export const Rate = () => {
     </CardComponent>
   };
 
-  return <View style={{height: '100%', padding: 5}}>
+  return <View style={{height: '100%', padding: 5, backgroundColor: COLOR_LISTS.GREY_300}}>
     <FlatList 
       data={ratingRecords}
       renderItem={renderRatingRecords}

@@ -62,8 +62,8 @@ export const Feed = () => {
     }, 600);
   };
 
-  return (<View style={{justifyContent: 'space-between', flexDirection: 'column'}}>
-    <View style={{padding: 5, height: '90%'}}>
+  return (<View style={{justifyContent: 'space-between', flexDirection: 'column', backgroundColor: COLOR_LISTS.GREY_300}}>
+    <View style={{padding: 5, height: '88%'}}>
       <FlatList data={feedBackList} renderItem={renderFeedBackItem} refreshControl={
         <RefreshControl refreshing={refresh} onRefresh={onRefreshFeedBack} />
       }/>
@@ -76,10 +76,11 @@ export const Feed = () => {
           <View>
             <TextInput 
               multiline 
-              style={{ backgroundColor: COLOR_LISTS.WHITE, width: '100%' }} 
+              style={{ backgroundColor: COLOR_LISTS.WHITE, width: '100%'}} 
               onSubmitEditing={Keyboard.dismiss} 
               value={values?.comment}
               onChangeText={handleChange('comment')}
+              placeholder="Comment..."
             />
             {errors?.comment && <TextLabel title={errors?.comment} textColor={COLOR_LISTS.RED} />}
             <DividerComponent margin='5px 0 0 0' />

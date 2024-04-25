@@ -19,7 +19,7 @@ export function CreateNewsFeed(props: any) {
     const {navigation} = props;
     const {params} = props.route; // this tell if create-news-feed || edit-news-feed
     const [newsFeedID, setNewsFeedID] = useState<string>(''); // this will can be used if we update news-feed-record
-
+    const [uploadImageMessage, setUploadImageMessage] = useState<string>('');
     const [imageTemp, setImageTemp] = useState<any>();
     const [feedThoughts, setFeedThoughts] = useState<string>('');
     const [errorMessage, setErrorMessage] = useState<string>('');
@@ -44,9 +44,12 @@ export function CreateNewsFeed(props: any) {
         try{
             const image = await DocumentPicker.pick({type: DocumentPicker.types.images, allowMultiSelection: false});
             setImageTemp(image);
+            setUploadImageMessage('Image was selected.')
         }
         catch(error: any) {
+            console.log('WEWEW');
             console.log(error);
+            setUploadImageMessage('');
         }
     };
 
@@ -85,7 +88,7 @@ export function CreateNewsFeed(props: any) {
         <DividerComponent margin="10px 0 0 0" />
         <DivContainer alignItems="center">
             <CardComponent backgroundColor={COLOR_LISTS.BLUE_800} padding={10} borderRadius={5}>
-                <TextLabel title="Whats on your mind" fontSize={20} textColor={COLOR_LISTS.WHITE} />
+                <TextLabel title="Share an incident to alert others" fontSize={20} textColor={COLOR_LISTS.WHITE} />
             </CardComponent>
             <DividerComponent margin="5px 0 0 0" />
         <TextInput multiline style={{borderTopWidth: 1, borderBottomWidth: 1, borderLeftWidth: 1, borderRightWidth: 1, borderRadius: 5, width: APP_WIDTH - 50, padding: 10, height: 200, textAlignVertical: 'top'}} inputMode="text" placeholder="...." value={feedThoughts} onChangeText={setFeedThoughts} />
@@ -96,6 +99,7 @@ export function CreateNewsFeed(props: any) {
         <TouchableCardComponent onPressFirstAidInformation={onOpenGallery}>
             <FontAwesome6 name="photo-film" size={30} />
         </TouchableCardComponent>
+        <TextLabel title={uploadImageMessage} textColor={COLOR_LISTS.GREEN} />
 
         </DivContainer>
         <DivComponent justifyContent="center" display="flex" flexDirection="row" padding="5">

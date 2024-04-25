@@ -7,6 +7,7 @@ import {APP_FONT_SIZE, APP_PADDING} from '../../constants/number';
 import {convertFirstCharacterOfWordToUpperCase} from '../../utils/format-display';
 import {useFirstAid} from '../../hooks/useFirstAidHooks';
 import {FirstAidDTO} from '../../types/FirstAid.type';
+import { COLOR_LISTS } from '../../constants/colors';
 
 export default function FirstAidDashBoard(props: any) {
   const {navigation} = props;
@@ -66,19 +67,20 @@ export default function FirstAidDashBoard(props: any) {
   };
 
   return (
-    <RefreshControl onRefresh={onRefreshPage} refreshing={refreshing}>
-      <View
-        style={{
-          paddingLeft: APP_PADDING.FIFTEN,
-          paddingRight: APP_PADDING.FIFTEN,
-          paddingTop: APP_PADDING.EIGHT,
-        }}>
-        {firstAidList ? (
-          <FlatList data={firstAidList} renderItem={renderFirstAid} />
-        ) : (
-          <TextLabel title="No first aid to show." />
-        )}
-      </View>
+    <View style={{backgroundColor: COLOR_LISTS.GREY_300, height: '100%', padding: 5}}>
+      <RefreshControl onRefresh={onRefreshPage} refreshing={refreshing}>
+        <View
+          style={{
+            paddingLeft: APP_PADDING.FIFTEN,
+            paddingRight: APP_PADDING.FIFTEN,
+          }}>
+          {firstAidList ? (
+            <FlatList data={firstAidList} renderItem={renderFirstAid} />
+          ) : (
+            <TextLabel title="No first aid to show." />
+          )}
+        </View>
     </RefreshControl>
+    </View>
   );
 }

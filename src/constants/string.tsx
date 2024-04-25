@@ -25,6 +25,13 @@ export const DASHBOARD = {
       <Feather name="alert-octagon" size={25} color={COLOR_LISTS.AMBER_400} />
     ),
   },
+  INBOX: {
+    name: 'Inbox',
+    headerTitle: 'Inbox',
+    tabBarIcon: (
+      <Feather name="inbox" size={25} color={COLOR_LISTS.GREEN} />
+    ),
+  },
   FIRST_AID: {
     name: 'First Aid',
     headerTitle: 'First Aid',
@@ -39,6 +46,7 @@ export const DASHBOARD = {
       <FontAwesome6 name="user-gear" size={25} color={COLOR_LISTS.BLUE_400} />
     ),
   },
+  // This was removed in bottom navigation
   FEEDBACK: {
     name: 'Feed & Rate',
     headerTitle: 'Feedback & Rating',
@@ -46,11 +54,17 @@ export const DASHBOARD = {
       <FontAwesome6 name="microphone" size={25} color={COLOR_LISTS.GREEN} />
     ),
   },
+  // This was removed in bottom navigation
   EMERGENCY_LOGS: {
     name: 'E Logs',
     headerTitle: 'Emergency Logs',
     tabBarIcon: <FontAwesome6 name="book" size={25} color={COLOR_LISTS.RED} />,
   },
+  SERVICES: {
+    name: 'Services',
+    headerTitle: 'QRApp Services',
+    tabBarIcon: <FontAwesome6 name="sim-card" size={25} color={COLOR_LISTS.RED} />,
+  }
 };
 
 export enum TextAlignmentEnum {

@@ -23,6 +23,7 @@ import {
 import {getCurrentDate} from '../../utils/date.utils';
 import {getNotificationByEmergency} from '../../utils/notification.utils';
 import * as S from './style';
+import QRAMap from '../../components/Map';
 
 export default function HomeDashBoard() {
   const {activeUserInformation} = useAccountContext();
@@ -47,7 +48,7 @@ export default function HomeDashBoard() {
       const emergency: EmergencyDto = {
         type: emergencyTypeChooseByUser,
         sender: {
-          userID: activeUserInformation?.account?.fbID as string,
+          userID: JSON.parse(activeUserInformation?.account?.fbID as string),
           firstname: activeUserInformation?.account?.firstname || '',
           middlename: activeUserInformation?.account?.middlename || '',
           lastname: activeUserInformation?.account?.lastname || '',

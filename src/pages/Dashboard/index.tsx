@@ -10,6 +10,8 @@ import ProfileDashBoard from '../Profile';
 import * as S from './style';
 import FeedBack from '../FeedBack';
 import Emergency from '../Emergency';
+import QRAppServices from '../Services';
+import Inbox from '../Inbox';
 
 const BottomTabNavigation = createBottomTabNavigator();
 
@@ -19,7 +21,7 @@ export default function DashBoard(props: any) {
   return (
     <BottomTabNavigation.Navigator>
       <BottomTabNavigation.Screen
-        name={DASHBOARD.HOME.name}
+        name={DASHBOARD.HOME.headerTitle}
         component={HomeDashBoard}
         options={{
           headerTitle: DASHBOARD.HOME.headerTitle,
@@ -50,13 +52,28 @@ export default function DashBoard(props: any) {
         }}
       />
       <BottomTabNavigation.Screen
+        name={DASHBOARD.INBOX.name}
+        component={Inbox}
+        options={{
+          title: DASHBOARD.INBOX.headerTitle,
+          tabBarIcon: () => {
+            return (
+              <View>
+                <View>{alerts?.isActive && <S.AlertIdentifier />}</View>
+                {DASHBOARD.INBOX.tabBarIcon}
+              </View>
+            );
+          },
+        }}
+      />
+      {/* <BottomTabNavigation.Screen
         name={DASHBOARD.FIRST_AID.name}
         component={FirstAidDashBoard}
         options={{
           headerTitle: DASHBOARD.FIRST_AID.headerTitle,
           tabBarIcon: () => DASHBOARD.FIRST_AID.tabBarIcon,
         }}
-      />
+      /> */}
       <BottomTabNavigation.Screen
         name={DASHBOARD.PROFILE.name}
         component={ProfileDashBoard}
@@ -65,20 +82,28 @@ export default function DashBoard(props: any) {
           tabBarIcon: () => DASHBOARD.PROFILE.tabBarIcon,
         }}
       />
-      <BottomTabNavigation.Screen
+      {/* <BottomTabNavigation.Screen
         name={DASHBOARD.FEEDBACK.name}
         component={FeedBack}
         options={{
           headerTitle: DASHBOARD.FEEDBACK.headerTitle,
           tabBarIcon: () => DASHBOARD.FEEDBACK.tabBarIcon,
         }}
-      />
-      <BottomTabNavigation.Screen
+      /> */}
+      {/* <BottomTabNavigation.Screen
         name={DASHBOARD.EMERGENCY_LOGS.name}
         component={Emergency}
         options={{
           headerTitle: DASHBOARD.EMERGENCY_LOGS.headerTitle,
           tabBarIcon: () => DASHBOARD.EMERGENCY_LOGS.tabBarIcon,
+        }}
+      /> */}
+      <BottomTabNavigation.Screen
+        name={DASHBOARD.SERVICES.name}
+        component={QRAppServices}
+        options={{
+          headerTitle: DASHBOARD.SERVICES.headerTitle,
+          tabBarIcon: () => DASHBOARD.SERVICES.tabBarIcon,
         }}
       />
     </BottomTabNavigation.Navigator>

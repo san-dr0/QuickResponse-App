@@ -1,7 +1,7 @@
 import firestore from '@react-native-firebase/firestore';
 import storage from '@react-native-firebase/storage';
 import {useEffect, useMemo, useState} from 'react';
-import {Alert, ScrollView, ToastAndroid, View} from 'react-native';
+import {Alert, ScrollView, ToastAndroid, TouchableOpacity, View} from 'react-native';
 import ActionButton from 'react-native-action-button';
 import DocumentPicker from 'react-native-document-picker';
 import {PaperProvider, Switch} from 'react-native-paper';
@@ -434,10 +434,12 @@ export default function ProfileDashBoard(props: any) {
             width={80}
             onPress={onEditPersonalInformation}
           />
+          <DividerComponent margin="10px 0 0 0" />
+        <ButtonComponent alignSelf="center" title="Logout" backgroundColor={COLOR_LISTS.RED} padding='10' width={80} borderRadius='10' textAlign='center' fontSize={18} textColor={COLOR_LISTS.WHITE} onPress={onLogoutUser} />
         </View>
         <DividerComponent margin="10px 0 0 0" />
       </ScrollView>
-      <ActionButton
+      {/* <ActionButton
         renderIcon={() => (
           <FontAwesome6Icon
             name="arrow-left"
@@ -447,7 +449,7 @@ export default function ProfileDashBoard(props: any) {
         )}
         buttonColor={COLOR_LISTS.RED}
         onPress={onLogoutUser}
-      />
+      /> */}
     </PaperProvider>
   );
 }

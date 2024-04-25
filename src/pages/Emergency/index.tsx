@@ -80,7 +80,7 @@ export default function Emergency(props: any) {
   }, [refresh]);
 
   return (
-    <View style={{padding: 10, height: APP_HEIGHT - 100}}>
+    <View style={{padding: 10, height: APP_HEIGHT, backgroundColor: COLOR_LISTS.GREY_300}}>
       <CardComponent
         padding={10}
         borderRadius={5}
