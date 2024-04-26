@@ -18,9 +18,10 @@ export default function DashBoard(props: any) {
   return (
     <BottomTabNavigation.Navigator>
       <BottomTabNavigation.Screen
-        name={DASHBOARD.HOME.headerTitle}
+        name={DASHBOARD.HOME.name}
         component={HomeDashBoard}
         options={{
+          tabBarLabel: DASHBOARD.HOME.headerTitle,
           headerTitle: DASHBOARD.HOME.headerTitle,
           tabBarIcon: () => DASHBOARD.HOME.tabBarIcon,
         }}

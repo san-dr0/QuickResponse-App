@@ -33,14 +33,14 @@ export default function Inbox(props: any) {
         item.messages[0].sender.firstname +
         ' ' +
         item.messages[0].sender.middlename +
-        +' ' +
+        ' ' +
         item.messages[0].sender.lastname;
     } else {
       displayName =
         item.messages[0].receiver.firstname +
         ' ' +
         item.messages[0].receiver.middlename +
-        +' ' +
+        ' ' +
         item.messages[0].receiver.lastname;
     }
     const numberOfMessages = item.messages.length;

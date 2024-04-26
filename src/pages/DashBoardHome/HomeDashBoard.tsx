@@ -20,9 +20,10 @@ import {
   getUsersTokens,
   sendNotifViaAxios,
 } from '../../service/token/DeviceInfo.service';
-import {getCurrentDateWithTime} from '../../utils/date.utils';
+import {getCurrentDate} from '../../utils/date.utils';
 import {getNotificationByEmergency} from '../../utils/notification.utils';
 import * as S from './style';
+import QRAMap from '../../components/Map';
 
 export default function HomeDashBoard() {
   const {activeUserInformation} = useAccountContext();
@@ -30,8 +31,6 @@ export default function HomeDashBoard() {
   const [verifyRequest, setVerifyRequest] = useState<boolean>(false);
   const [emergencyTypeChooseByUser, setEmergencyTypeChooseByUser] =
     useState<EmergencyType>(EmergencyType.CAR_ACCIDENT);
-
-  console.log(coordiantes);
 
   const onPressCancelEmergency = () => {
     setVerifyRequest(false);
@@ -57,7 +56,7 @@ export default function HomeDashBoard() {
         coordinate: coordiantes as CoordinateDto,
         responder: [],
         emergencyStatus: EmergencyStatus.ACTIVE,
-        date: getCurrentDateWithTime(),
+        date: getCurrentDate(),
       };
 
       const savedEmergencyResponse = await saveEmergency(emergency);

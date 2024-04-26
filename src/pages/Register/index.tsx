@@ -1,7 +1,14 @@
 /* eslint-disable react-native/no-inline-styles */
 import {Formik} from 'formik';
 import {useState} from 'react';
-import {Alert, ScrollView, ToastAndroid, View} from 'react-native';
+import {
+  Alert,
+  ScrollView,
+  TextInput,
+  ToastAndroid,
+  TouchableOpacity,
+  View,
+} from 'react-native';
 import DocumentPicker from 'react-native-document-picker';
 import {Dropdown} from 'react-native-element-dropdown';
 import * as Yup from 'yup';
@@ -16,6 +23,7 @@ import {SUPPORTING_DOCUMENTS} from '../../constants/dbRef';
 import {APP_FONT_SIZE} from '../../constants/number';
 import {
   QRAPP_USER_TYPES,
+  RESPONDER_TYPES,
   pleaseProvideSupportingDocuments,
   pleaseSelectUserType,
   registrationWasSuccessfull,
@@ -28,6 +36,7 @@ import {useUserCredentials} from '../../hooks/useUserHooks';
 import {useAccountContext} from '../../providers/AccountProvider';
 import {RegistrationDTO} from '../../types/Registration.type';
 import {uploadImage} from '../../utils/imageManipulation';
+import FontAwesome6Icon from 'react-native-vector-icons/FontAwesome6';
 
 export default function Registration(props: any) {
   const {activeUserInformation} = useAccountContext();
@@ -45,7 +54,9 @@ export default function Registration(props: any) {
     responderType: '',
   };
   const [dropdownValue, setDropDownValue] = useState<string>('Register as');
+  const [responderType, setResponderType] = useState<string>('Responder Type');
   const [isFocus, setIsFocus] = useState<boolean>(false);
+  const [secureText, setSecureText] = useState<boolean>(true);
   const [hasProvideSupportingDocument, setHasProvideSupportingDocument] =
     useState<boolean>(false);
   const [uploadSupportingDocuments, setUploadSupportingDocuments] =
@@ -85,7 +96,7 @@ export default function Registration(props: any) {
 
       resetForm();
       values.userType = dropdownValue as UserType;
-      values.responderType = values.responderType ?? 'N/A';
+      values.responderType = responderType ?? 'N/A';
 
       const result = (await sendRegisterQRUser(values)) as any;
 
@@ -202,7 +213,7 @@ export default function Registration(props: any) {
                 keyboardType="email-address"
                 error={errors?.email}
               />
-              <TextInputComponent
+              {/* <TextInputComponent
                 label="Password"
                 borderRadius={10}
                 textMode={TextInputEnum.OUTLINED}
@@ -210,7 +221,41 @@ export default function Registration(props: any) {
                 onChangeText={handleChange('password')}
                 secureTextEntry
                 error={errors.password}
-              />
+                
+              /> */}
+              <View
+                style={{
+                  flexDirection: 'row',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  borderRadius: 8,
+                  // paddingHorizontal: 14,
+                }}>
+                <TextInputComponent
+                  label="Password"
+                  borderRadius={10}
+                  textMode={TextInputEnum.OUTLINED}
+                  value={values.password}
+                  onChangeText={handleChange('password')}
+                  secureTextEntry={secureText}
+                  error={errors.password}
+                />
+                <TextLabel title=" " />
+                <TouchableOpacity
+                  onPress={() => setSecureText(!secureText)}
+                  style={{
+                    position: 'absolute',
+                    right: 0,
+                    top: 0,
+                    marginRight: 10,
+                    marginTop: 30,
+                  }}>
+                  <FontAwesome6Icon
+                    name={secureText ? 'eye' : 'eye-slash'}
+                    size={25}
+                  />
+                </TouchableOpacity>
+              </View>
               <DividerComponent margin="5px 0 0 0" />
               <TextLabel
                 title="Register as"
@@ -239,17 +284,29 @@ export default function Registration(props: any) {
                       textColor={COLOR_LISTS.RED}
                     />
                   )}
-                  <TextInputComponent
-                    label="Type"
-                    borderRadius={10}
-                    textMode={TextInputEnum.OUTLINED}
-                    value={values.responderType}
-                    onChangeText={handleChange('responderType')}
+                  <DividerComponent margin="5px 0 0 0" />
+                  <Dropdown
+                    data={RESPONDER_TYPES}
+                    value={responderType}
+                    placeholder={responderType}
+                    style={dropDownStyle()}
+                    labelField={'label'}
+                    valueField={'value'}
+                    onFocus={() => setIsFocus(true)}
+                    onBlur={() => setIsFocus(false)}
+                    onChange={item => {
+                      setResponderType(item?.label);
+                    }}
                   />
+                  <DividerComponent margin="5px 0 0 0" />
                   <ButtonComponent
                     title={uploadSupportingDocuments}
                     onPress={onUploadSupportingDocuments}
                     width={100}
+                    backgroundColor={COLOR_LISTS.GREY_300}
+                    padding="5"
+                    textAlign="center"
+                    borderRadius="5"
                   />
                 </>
               )}

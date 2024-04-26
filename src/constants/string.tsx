@@ -28,9 +28,7 @@ export const DASHBOARD = {
   INBOX: {
     name: 'Inbox',
     headerTitle: 'Inbox',
-    tabBarIcon: (
-      <Feather name="inbox" size={25} color={COLOR_LISTS.GREEN} />
-    ),
+    tabBarIcon: <Feather name="inbox" size={25} color={COLOR_LISTS.GREEN} />,
   },
   FIRST_AID: {
     name: 'First Aid',
@@ -63,8 +61,10 @@ export const DASHBOARD = {
   SERVICES: {
     name: 'Services',
     headerTitle: 'QRApp Services',
-    tabBarIcon: <FontAwesome6 name="sim-card" size={25} color={COLOR_LISTS.RED} />,
-  }
+    tabBarIcon: (
+      <FontAwesome6 name="sim-card" size={25} color={COLOR_LISTS.RED} />
+    ),
+  },
 };
 
 export enum TextAlignmentEnum {
@@ -93,3 +93,9 @@ export const registrationWasSuccessfull = 'Your registration was successful!';
 export const sometingWentWrong = 'Something went wrong';
 export const emptyFields = 'Empty fields';
 export const yourFeedBackWasValues = 'Your feedback was valued!';
+export const RESPONDER_TYPES: {label: string; value: number}[] = [
+  {label: 'MEDICAL', value: 0},
+  {label: 'POLICE', value: 1},
+  {label: 'FIREFIGHTER', value: 2},
+  {label: 'RESCUER', value: 3},
+];
