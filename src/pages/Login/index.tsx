@@ -64,6 +64,7 @@ export default function Login(props: any) {
 
         if (!isActive) {
           Alert.alert('Oops', 'Your account is inactive.');
+          setIsPassed(false);
           return;
         }
         const stringifyFBID = JSON.stringify(fbID);
@@ -85,7 +86,7 @@ export default function Login(props: any) {
             loginPassword: password,
           },
         });
-        
+
         setAsyncStorage(STORAGE_KEY.ACTIVE_USER_EMAIL, email);
         setAsyncStorage(STORAGE_KEY.FB_ID, fbID);
         setIsPassed(false);
