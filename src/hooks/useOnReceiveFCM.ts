@@ -3,10 +3,12 @@ import {EmergencyDto} from '../dto/Emergency.dto';
 import {UserType} from '../enums/User.enum';
 import {useAccountContext} from '../providers/AccountProvider';
 import {useAlertContext} from '../providers/AlertProvider';
+import {useUserAlertContext} from '../providers/UserResponseProvider';
 
 export function useOnReceiveFirebaseCloudMessaging() {
   const {setAlertRecords} = useAlertContext();
   const {activeUserInformation} = useAccountContext();
+  const {setUserAlert} = useUserAlertContext();
 
   const onReceive = () => {
     const message = messaging().onMessage(async (remoteMessage: any) => {
@@ -40,6 +42,13 @@ export function useOnReceiveFirebaseCloudMessaging() {
           emergencyID: emergencyId,
           emergency: payload,
         });
+      } else {
+        setUserAlert({
+          title,
+          body: body,
+          isOpen: true,
+          emergencyId: emergencyId,
+        });
       }
     });
 
@@ -68,13 +77,24 @@ export function useOnReceiveFirebaseCloudMessaging() {
         console.log('REMOTE >> backgroundMessage');
         console.log(remoteMessage);
 
-        setAlertRecords({
-          title,
-          body,
-          isActive: true,
-          emergencyID: emergencyId,
-          emergency: payload,
-        });
+        if (activeUserInformation?.account?.userType === UserType.RESPONDER) {
+          console.log('IM IN responder');
+
+          setAlertRecords({
+            title,
+            body,
+            isActive: true,
+            emergencyID: emergencyId,
+            emergency: payload,
+          });
+        } else {
+          setUserAlert({
+            title,
+            body: body,
+            isOpen: true,
+            emergencyId: emergencyId,
+          });
+        }
       },
     );
 

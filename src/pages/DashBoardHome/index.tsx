@@ -17,7 +17,6 @@ export default function HomeDashBoard() {
   const {activeUserInformation} = useAccountContext();
   const [emergencyType, setEmergencyType] = useState<string>('');
   const {coordiantes} = useGetActiveUserCoordinates();
-  console.log(coordiantes);
 
   const onPressAlertNavigationGeneric = async (
     emergencyType: EmergencyType,
