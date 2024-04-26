@@ -33,7 +33,9 @@ export default function ViewEmergency(props: any) {
   const [message, setMessage] = useState<string>('');
   const [isOpenModal, setIsOpenModal] = useState<boolean>(false);
   const [isDisable, setIsDisabled] = useState<boolean>(false);
-
+  console.log('====================================');
+  console.log('ROUTE', id);
+  console.log('====================================');
   const isLoginSender =
     emergency?.sender?.userID === JSON.parse(user?.account?.fbID as string);
 
