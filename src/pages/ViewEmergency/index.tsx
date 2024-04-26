@@ -21,6 +21,11 @@ import {useAccountContext} from '../../providers/AccountProvider';
 import {acceptEmergency} from '../../service/emergency/Emergency.service';
 import {sendMessage} from '../../service/message/message.service';
 import {MessageUserDto} from '../../types/Message.type';
+import {
+  gerUserTokenByEmail,
+  sendNotification,
+} from '../../service/token/DeviceInfo.service';
+import {NotificationDto} from '../../dto/Notification.dto';
 
 const FooterHeight = Dimensions.get('window').height * 0.5;
 const MapsHeight = Dimensions.get('window').height;
@@ -58,7 +63,6 @@ export default function ViewEmergency(props: any) {
         lastname: user?.account?.lastname as string,
       };
       const isSend = await sendMessage(reciever, sender, message);
-      console.log('GG', isSend);
 
       setMessage('');
       setIsDisabled(false);
@@ -87,7 +91,24 @@ export default function ViewEmergency(props: any) {
         email: credentials?.loginEmail as string,
       };
 
+      const name =
+        payload.firstname + ' ' + payload.middlename + ' ' + payload.lastname;
+      const ref: NotificationDto = {
+        title: `${name} has been respond`,
+        body: 'Responder is on the way',
+        date: emergency?.date as string,
+      };
+
+      const userTokenData = await gerUserTokenByEmail(
+        emergency?.sender?.email as string,
+      );
       await acceptEmergency(id, payload);
+
+      await sendNotification(
+        ref,
+        userTokenData.token,
+        emergency?.emergencyId as string,
+      );
       await sendRequest();
       await Alert.prompt('Successfully Update');
     } catch (error) {
