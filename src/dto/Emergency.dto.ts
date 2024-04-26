@@ -11,7 +11,7 @@ export interface EmergencyDto {
   emergencyStatus: EmergencyStatus;
   coordinate: CoordinateDto;
   date: string;
-
+  isActive: boolean,
 }
 
 

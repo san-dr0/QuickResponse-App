@@ -23,7 +23,6 @@ import {
 import {getCurrentDate} from '../../utils/date.utils';
 import {getNotificationByEmergency} from '../../utils/notification.utils';
 import * as S from './style';
-import QRAMap from '../../components/Map';
 
 export default function HomeDashBoard() {
   const {activeUserInformation} = useAccountContext();
@@ -57,6 +56,7 @@ export default function HomeDashBoard() {
         responder: [],
         emergencyStatus: EmergencyStatus.ACTIVE,
         date: getCurrentDate(),
+        isActive: true,
       };
 
       const savedEmergencyResponse = await saveEmergency(emergency);
