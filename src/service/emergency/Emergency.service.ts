@@ -87,3 +87,18 @@ export const saveResponderUponAcceptingAnEmergency = async (
     console.log(error?.message);
   }
 };
+
+export const getActiveEmergency = async () => {
+  const resp = await firestore()
+    .collection(EMERGENCY_TABLE)
+    .where('isActive', '==', true)
+    .get();
+
+  let tempArr: EmergencyDto[] = [];
+
+  resp.forEach(val => {
+    tempArr.push({emergencyId: val.id, ...val.data()} as EmergencyDto);
+  });
+
+  return tempArr;
+};

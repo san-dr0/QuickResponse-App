@@ -28,12 +28,6 @@ export default function Home(props: any) {
   const {alerts, setAlertRecords} = useAlertContext();
   const {userAlert} = useUserAlertContext();
 
-  const {onReceiveBackgroundMessage, onReceive} =
-    useOnReceiveFirebaseCloudMessaging();
-
-  onReceive();
-  onReceiveBackgroundMessage();
-
   const checkIfUserHasLoggedInAlready = async () => {
     try {
       const fbID: string = (await getAsyncStorage(STORAGE_KEY.FB_ID)) as string;
