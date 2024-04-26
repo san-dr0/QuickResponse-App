@@ -4,13 +4,13 @@ import {useState} from 'react';
 import {
   Alert,
   ScrollView,
-  TextInput,
   ToastAndroid,
   TouchableOpacity,
   View,
 } from 'react-native';
 import DocumentPicker from 'react-native-document-picker';
 import {Dropdown} from 'react-native-element-dropdown';
+import FontAwesome6Icon from 'react-native-vector-icons/FontAwesome6';
 import * as Yup from 'yup';
 import {ButtonComponent} from '../../components/Buttons';
 import DivComponent from '../../components/DivContainer';
@@ -36,7 +36,6 @@ import {useUserCredentials} from '../../hooks/useUserHooks';
 import {useAccountContext} from '../../providers/AccountProvider';
 import {RegistrationDTO} from '../../types/Registration.type';
 import {uploadImage} from '../../utils/imageManipulation';
-import FontAwesome6Icon from 'react-native-vector-icons/FontAwesome6';
 
 export default function Registration(props: any) {
   const {activeUserInformation} = useAccountContext();
@@ -251,7 +250,7 @@ export default function Registration(props: any) {
                     marginTop: 30,
                   }}>
                   <FontAwesome6Icon
-                    name={secureText ? 'eye' : 'eye-slash'}
+                    name={!secureText ? 'eye' : 'eye-slash'}
                     size={25}
                   />
                 </TouchableOpacity>

@@ -5,6 +5,7 @@ import {AlertNavigationModal} from '../../components/AlertNavigationModal';
 import {ButtonComponent} from '../../components/Buttons';
 import DivComponent from '../../components/DivContainer';
 import DividerComponent from '../../components/Divider';
+import QRAMap from '../../components/Map';
 import TextLabel from '../../components/TextLabel';
 import {COLOR_LISTS} from '../../constants/colors';
 import {CoordinateDto} from '../../dto/Coordinate.dto';
@@ -101,7 +102,7 @@ export default function HomeDashBoard() {
 
   return (
     <S.DashBoardHomeContainer>
-      {/* <QRAMap /> */}
+      <QRAMap />
       <Modal isVisible={verifyRequest}>
         <S.AlertModal>
           <TextLabel
