@@ -1,5 +1,5 @@
 import {useEffect} from 'react';
-import {Alert, Dimensions, View} from 'react-native';
+import {Alert, Dimensions, Text, View} from 'react-native';
 import Modal from 'react-native-modal';
 import {ButtonComponent} from '../../components/Buttons';
 import DividerComponent from '../../components/Divider';
@@ -18,12 +18,15 @@ import {useAccountContext} from '../../providers/AccountProvider';
 import {useAlertContext} from '../../providers/AlertProvider';
 import {createNewDeviceToken, getAsyncStorage} from '../../utils/utility';
 import * as S from './style';
-
+import {useUserAlertContext} from '../../providers/UserResponseProvider';
+import Button from '../../components/Button';
+const height = Dimensions.get('window').height;
 export default function Home(props: any) {
   const {navigation} = props;
   const {sendActiveUserInformation} = useUserCredentials();
   const {setActiveUserInformationFunction} = useAccountContext();
   const {alerts, setAlertRecords} = useAlertContext();
+  const {userAlert} = useUserAlertContext();
 
   const {onReceiveBackgroundMessage, onReceive} =
     useOnReceiveFirebaseCloudMessaging();
@@ -120,6 +123,22 @@ export default function Home(props: any) {
           </S.AlertModal>
         </Modal>
       )}
+
+      <Modal isVisible={userAlert?.isOpen}>
+        <View style={{height: height * 0.5, padding: 10}}>
+          <Text>{userAlert?.title}</Text>
+          <Text>{userAlert?.body}</Text>
+          <Button
+            title="View Emergency"
+            onPress={() => {
+              navigation.navigate('View-Emergency', {
+                emergencyId: alerts?.emergencyID,
+                emergency: alerts?.emergency,
+              });
+            }}
+          />
+        </View>
+      </Modal>
       <View>
         <ImageComponent
           borderRadius={50}

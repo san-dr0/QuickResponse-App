@@ -21,6 +21,7 @@ import FeedBackAndRating from './src/pages/FeedBack';
 import Emergency from './src/pages/Emergency';
 import FirstAidDashBoard from './src/pages/FirstAids';
 import Messages from './src/pages/Messages';
+import {UserRespondProvider} from './src/providers/UserResponseProvider';
 
 const StackNavigator = createNativeStackNavigator();
 function App() {
@@ -30,102 +31,107 @@ function App() {
     <MenuProvider>
       <AccountProvider>
         <AlertProvider>
-          <NavigationContainer>
-            <StackNavigator.Navigator
-              initialRouteName="Home"
-              screenOptions={{
-                contentStyle: {backgroundColor: COLOR_LISTS.WHITE},
-              }}>
-              <StackNavigator.Screen
-                name="Home"
-                component={Home}
-                options={{
-                  title: 'QR-App',
-                  headerShown: false,
-                }}
-              />
-              <StackNavigator.Screen
-                name="Login"
-                component={Login}
-                options={{
-                  headerBackVisible: false,
-                  headerShown: false,
-                }}
-              />
-              <StackNavigator.Screen name="Register" component={Registration} />
-              <StackNavigator.Screen
-                name="Dashboard"
-                component={DashBoard}
-                options={{
-                  headerBackVisible: false,
-                  headerShown: false,
-                }}
-              />
-              <StackNavigator.Screen
-                name="Edit Profile"
-                component={EditPersonalInformationComponent}
-              />
-              <StackNavigator.Screen
-                name="FirstAid-Information"
-                component={FirstAidInformation}
-                options={{title: 'First Aid Information'}}
-              />
-              <StackNavigator.Screen
-                name="Responder"
-                component={Responder}
-                options={{headerShown: false}}
-              />
-              <StackNavigator.Screen
-                name="View-Emergency"
-                component={ViewEmergency}
-              />
-              <StackNavigator.Screen
-                name="CreateNewsFeed"
-                component={CreateNewsFeed}
-                options={{
-                  headerBackVisible: false,
-                }}
-              />
-              <StackNavigator.Screen
-                name="ViewNewsFeed"
-                component={ViewNewsFeed}
-                options={{
-                  headerTitle: 'View News Feed',
-                }}
-              />
-              <StackNavigator.Screen
-                name="View-User-Info"
-                component={ViewUserInfo}
-                options={{headerTitle: 'User Info'}}
-              />
-              <StackNavigator.Screen
-                name="View-Other-Responder"
-                component={ViewOtherResponder}
-                options={{headerTitle: 'List of Responder'}}
-              />
-              {/* FEEDBACK SCREEN */}
-              <StackNavigator.Screen
-                name="Feedback-And-Rating"
-                component={FeedBackAndRating}
-                options={{headerTitle: 'List of Responder'}}
-              />
-              <StackNavigator.Screen
-                name="Emergency-Logs"
-                component={Emergency}
-                options={{headerTitle: 'List of Responder'}}
-              />
-              <StackNavigator.Screen
-                name="First-Aid"
-                component={FirstAidDashBoard}
-                options={{headerTitle: 'First-Aid'}}
-              />
-              <StackNavigator.Screen
-                name="Messages"
-                component={Messages}
-                options={{headerTitle: 'Convo'}}
-              />
-            </StackNavigator.Navigator>
-          </NavigationContainer>
+          <UserRespondProvider>
+            <NavigationContainer>
+              <StackNavigator.Navigator
+                initialRouteName="Home"
+                screenOptions={{
+                  contentStyle: {backgroundColor: COLOR_LISTS.WHITE},
+                }}>
+                <StackNavigator.Screen
+                  name="Home"
+                  component={Home}
+                  options={{
+                    title: 'QR-App',
+                    headerShown: false,
+                  }}
+                />
+                <StackNavigator.Screen
+                  name="Login"
+                  component={Login}
+                  options={{
+                    headerBackVisible: false,
+                    headerShown: false,
+                  }}
+                />
+                <StackNavigator.Screen
+                  name="Register"
+                  component={Registration}
+                />
+                <StackNavigator.Screen
+                  name="Dashboard"
+                  component={DashBoard}
+                  options={{
+                    headerBackVisible: false,
+                    headerShown: false,
+                  }}
+                />
+                <StackNavigator.Screen
+                  name="Edit Profile"
+                  component={EditPersonalInformationComponent}
+                />
+                <StackNavigator.Screen
+                  name="FirstAid-Information"
+                  component={FirstAidInformation}
+                  options={{title: 'First Aid Information'}}
+                />
+                <StackNavigator.Screen
+                  name="Responder"
+                  component={Responder}
+                  options={{headerShown: false}}
+                />
+                <StackNavigator.Screen
+                  name="View-Emergency"
+                  component={ViewEmergency}
+                />
+                <StackNavigator.Screen
+                  name="CreateNewsFeed"
+                  component={CreateNewsFeed}
+                  options={{
+                    headerBackVisible: false,
+                  }}
+                />
+                <StackNavigator.Screen
+                  name="ViewNewsFeed"
+                  component={ViewNewsFeed}
+                  options={{
+                    headerTitle: 'View News Feed',
+                  }}
+                />
+                <StackNavigator.Screen
+                  name="View-User-Info"
+                  component={ViewUserInfo}
+                  options={{headerTitle: 'User Info'}}
+                />
+                <StackNavigator.Screen
+                  name="View-Other-Responder"
+                  component={ViewOtherResponder}
+                  options={{headerTitle: 'List of Responder'}}
+                />
+                {/* FEEDBACK SCREEN */}
+                <StackNavigator.Screen
+                  name="Feedback-And-Rating"
+                  component={FeedBackAndRating}
+                  options={{headerTitle: 'List of Responder'}}
+                />
+                <StackNavigator.Screen
+                  name="Emergency-Logs"
+                  component={Emergency}
+                  options={{headerTitle: 'List of Responder'}}
+                />
+                <StackNavigator.Screen
+                  name="First-Aid"
+                  component={FirstAidDashBoard}
+                  options={{headerTitle: 'First-Aid'}}
+                />
+                <StackNavigator.Screen
+                  name="Messages"
+                  component={Messages}
+                  options={{headerTitle: 'Convo'}}
+                />
+              </StackNavigator.Navigator>
+            </NavigationContainer>
+          </UserRespondProvider>
         </AlertProvider>
       </AccountProvider>
     </MenuProvider>

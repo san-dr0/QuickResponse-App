@@ -1,4 +1,4 @@
-import { EmergencyDto } from "../dto/Emergency.dto";
+import {EmergencyDto} from '../dto/Emergency.dto';
 
 export type AlertTypeDTO = {
   totalAlerts: boolean;
@@ -13,6 +13,18 @@ export type AlertItemDTO = {
 };
 
 export type AlertContextTypeDTO = {
-  alerts?: AlertItemDTO,
+  alerts?: AlertItemDTO;
   setAlertRecords: (param: AlertItemDTO) => void;
+};
+
+export type AlertUserDataDto = {
+  title: string;
+  body: string;
+  isOpen: boolean;
+  emergencyId: string;
+};
+
+export type AlertUserContextDto = {
+  userAlert: AlertUserDataDto | undefined;
+  setUserAlert: (params: AlertUserDataDto) => void;
 };
