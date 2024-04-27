@@ -5,9 +5,10 @@ import {ConversationDto} from '../../../../types/Message.type';
 
 export default function Inbox(props: any) {
   const {navigation} = props;
+  const [refresh, setRefresh] = useState<boolean>(false);
   const {activeUserInformation: user} = useAccountContext();
   const {conversation} = useGetConversationById({
-    id: user?.account?.fbID as string,
+    id: user?.account?.fbID as string, refresh: refresh
   });
 
   const renderItem = ({

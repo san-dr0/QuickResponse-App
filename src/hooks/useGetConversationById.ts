@@ -4,10 +4,11 @@ import { ConversationDto } from "../types/Message.type";
 
 type Props = {
     id: string;
+    refresh: boolean;
 }
 
 export default function useGetConversationById(props: Props) {
-    const { id } = props;
+    const { id, refresh } = props;
     const [conversation, setConversation] = useState<ConversationDto[]>([])
 
     const sendRequest = useCallback(async () => {
@@ -22,7 +23,7 @@ export default function useGetConversationById(props: Props) {
 
     useEffect(() => {
         sendRequest()
-    }, [id])
+    }, [id, refresh])
 
     return {
         conversation,
