@@ -1,7 +1,8 @@
-import {FlatList, Image, Text, TouchableOpacity, View} from 'react-native';
+import {FlatList, Image, RefreshControl, Text, TouchableOpacity, View} from 'react-native';
 import useGetConversationById from '../../../../hooks/useGetConversationById';
 import {useAccountContext} from '../../../../providers/AccountProvider';
 import {ConversationDto} from '../../../../types/Message.type';
+import { useState } from 'react';
 
 export default function Inbox(props: any) {
   const {navigation} = props;
@@ -9,6 +10,7 @@ export default function Inbox(props: any) {
   const {conversation} = useGetConversationById({
     id: user?.account?.fbID as string,
   });
+  const [refresh, setRefresh] = useState<boolean>(false);
 
   const renderItem = ({
     item,
@@ -78,6 +80,13 @@ export default function Inbox(props: any) {
     );
   };
 
+  const onRefreshMessages = () => {
+    setRefresh(true);
+    setTimeout(() => {
+      setRefresh(false);
+    }, 1000);
+  };
+  
   return (
     <View style={{flex: 1}}>
       <FlatList
@@ -85,6 +94,9 @@ export default function Inbox(props: any) {
         data={conversation}
         keyExtractor={val => val.id as string}
         renderItem={renderItem}
+        refreshControl={
+          <RefreshControl refreshing={refresh} onRefresh={onRefreshMessages} />
+        }
       />
     </View>
   );

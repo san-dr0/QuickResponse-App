@@ -36,9 +36,12 @@ import {useUserCredentials} from '../../hooks/useUserHooks';
 import {useAccountContext} from '../../providers/AccountProvider';
 import {RegistrationDTO} from '../../types/Registration.type';
 import {uploadImage} from '../../utils/imageManipulation';
+import Modal from 'react-native-modal';
+import { TermsAndCondition } from '../../components/TermsAndCondition';
 
 export default function Registration(props: any) {
   const {activeUserInformation} = useAccountContext();
+  const {navigation} = props;
   const initValues: RegistrationDTO = {
     profile: '',
     firstname: '',
@@ -64,6 +67,7 @@ export default function Registration(props: any) {
     undefined,
   );
   const {sendRegisterQRUser} = useUserCredentials();
+  const [isTACModalIsOpened, setIsTACModalIsOpened] = useState<boolean>(true);
 
   const registrationValidationSchema = Yup.object().shape({
     firstname: Yup.string().required('Firstname is required'),
@@ -137,8 +141,19 @@ export default function Registration(props: any) {
     }
   };
 
+  const onAcceptTermsAndCondition = () => {
+    setIsTACModalIsOpened(false);
+  };
+  const onCloseTermsAndCondition = () => {
+    setIsTACModalIsOpened(false);
+    navigation.navigate("Home");
+  };
+
   return (
     <ScrollView>
+      <Modal isVisible={isTACModalIsOpened}>
+        <TermsAndCondition onAcceptButton={onAcceptTermsAndCondition} onCloseButton={onCloseTermsAndCondition} />
+      </Modal>
       <View
         style={{
           justifyContent: 'center',

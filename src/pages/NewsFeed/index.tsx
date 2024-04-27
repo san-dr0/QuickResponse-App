@@ -1,4 +1,4 @@
-import {Alert, FlatList, ToastAndroid, View} from 'react-native';
+import {Alert, FlatList, ToastAndroid, TouchableOpacity, View} from 'react-native';
 import {
   Menu,
   MenuOption,
@@ -18,15 +18,16 @@ import TextInputEnum from '../../enums/TextInput.enum';
 import DividerComponent from '../../components/Divider';
 import {NewsFeedDTO} from '../../dto/NewsFeed.dto';
 import {useAccountContext} from '../../providers/AccountProvider';
-import {sometingWentWrong} from '../../constants/string';
 import {Badge} from 'react-native-paper';
 import FontAwesome6Icon from 'react-native-vector-icons/FontAwesome6';
+import { useState } from 'react';
 
 export default function NewsFeedDashBoard(props: any) {
   const {navigation} = props;
-  const {newsFeedData, sendRemoveNewsFeed, searchFromNewsFeed, setNewsData} =
+  const {newsFeedData, requestMessage, setRequestMessage, getNewsFeed, sendRemoveNewsFeed, searchFromNewsFeed, setNewsData} =
     useNewsFeed();
   const {activeUserInformation} = useAccountContext();
+  const [searchKeyWord, setSearchKeyWord] = useState<string>('');
 
   const onCreateNewsFeed = () => {
     navigation.navigate('CreateNewsFeed', {
@@ -77,8 +78,9 @@ export default function NewsFeedDashBoard(props: any) {
 
   const onSearchNewsFeed = async (e: any) => {
     try {
+      setSearchKeyWord(e);
       const result = await searchFromNewsFeed(e, e, e);
-
+     
       setNewsData(result);
     } catch (error: any) {
       console.log('ERR >> ', error?.message);
@@ -154,15 +156,43 @@ export default function NewsFeedDashBoard(props: any) {
     );
   };
 
+  const onRemoveSearchKeyWord = () => {
+    setSearchKeyWord("");
+    getNewsFeed(); // we really inteded to retrigger this.
+  };
+
   return (
     <>
-      <TextInputComponent
-        textMode={TextInputEnum.FLAT}
-        label="Search"
-        width="90%"
-        align="center"
-        onChangeText={e => onSearchNewsFeed(e)}
-      />
+      <View style={{
+            flexDirection: 'row',
+            alignItems: 'center',
+            justifyContent: 'center',
+            borderRadius: 8,
+            // paddingHorizontal: 14,
+          }}>
+        <TextInputComponent
+          textMode={TextInputEnum.FLAT}
+          label="Search"
+          width="90%"
+          align="center"
+          value={searchKeyWord}
+          onChangeText={(e) => onSearchNewsFeed(e)}
+        />
+        <TouchableOpacity
+          onPress={onRemoveSearchKeyWord}
+          style={{
+            position: 'absolute',
+            right: 0,
+            top: 0,
+            marginRight: 30,
+            marginTop: 25,
+          }}>
+          <FontAwesome6Icon name="xmark"
+            size={25}
+          />
+        </TouchableOpacity>
+      </View>
+
       <DividerComponent margin="5px 0 0 0" />
       <S.NewsFeedParentContainer>
         <View style={{height: APP_HEIGHT - 180}}>
@@ -171,7 +201,7 @@ export default function NewsFeedDashBoard(props: any) {
           ) : (
             <View style={{padding: 5}}>
               <TextLabel
-                title={'No records to show.'}
+                title={requestMessage}
                 textAlign="center"
                 fontSize={18}
               />

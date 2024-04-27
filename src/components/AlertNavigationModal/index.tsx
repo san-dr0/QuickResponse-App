@@ -28,7 +28,7 @@ export const AlertNavigationModal = (props: EmergencyTypeProps) => {
     <>
       <S.Arrow display={displayEmergencyList} onPress={onToggleArrow}>
         <FontAwesome6Icon
-          name="angles-down"
+          name={!displayEmergencyList? "angles-up" : "angles-down"}
           size={50}
           style={{
             alignSelf: 'center',

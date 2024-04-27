@@ -99,3 +99,15 @@ export const RESPONDER_TYPES: {label: string; value: number}[] = [
   {label: 'FIREFIGHTER', value: 2},
   {label: 'RESCUER', value: 3},
 ];
+export const TEMRS_AND_CONDITION = `
+For Users:
+
+Users must provide accurate and truthful information during emergencies.
+Users are solely responsible for their own safety and well-being.
+Users agree to comply with our Privacy Policy regarding their personal information.
+For Responders:
+
+Responders agree to provide assistance promptly and to the best of their abilities.
+Responders are required to maintain confidentiality regarding user information.
+Responders must adhere to ethical standards and guidelines while providing assistance.
+`;

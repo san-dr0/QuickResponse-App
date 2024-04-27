@@ -7,6 +7,7 @@ import {CardComponent} from '../../components/Card';
 import {DivContainer} from '../../components/DivContainer/style';
 import {DividerContainer} from '../../components/Divider/style';
 import {displayIconBasedOnEmergencyType} from '../../utils/format-display';
+import { COLOR_LISTS } from '../../constants/colors';
 
 export default function DashBoardAlerts() {
   
@@ -39,12 +40,17 @@ export default function DashBoardAlerts() {
     ++counter;
 
     return (
-      <CardComponent width={'100%'} padding={10} margin={margin}>
+      <CardComponent width={'100%'} padding={8} margin={margin}>
         <DivContainer justifyContent="center" alignItems="center">
           {displayIconBasedOnEmergencyType(item?.type)}
           <DividerContainer margin="10px 0 0 0" />
-          <TextLabel title={item?.type} />
-          <TextLabel title={item?.date} />
+          <TextLabel title={item?.type} fontWeight="bold" />
+          <CardComponent backgroundColor={COLOR_LISTS.GREY_300} width="250" padding={5} borderRadius={5}>
+            <TextLabel title="Location" fontWeight="bold" />
+            <TextLabel title={`Lat: ${item?.coordinate?.latitude}`} />
+            <TextLabel title={`Long: ${item?.coordinate?.longitude}`} />
+            <TextLabel title={`Created At: ${item?.date}`} />
+          </CardComponent>
         </DivContainer>
       </CardComponent>
     );
@@ -53,10 +59,12 @@ export default function DashBoardAlerts() {
   return (
     <View>
       {activeEmergency?.length > 0 ? (
-        <FlatList
-          data={activeEmergency}
-          renderItem={renderActiveEmergencyAlerts}
-        />
+        <View style={{padding: 10}}>
+          <FlatList
+            data={activeEmergency}
+            renderItem={renderActiveEmergencyAlerts}
+          />
+        </View>
       ) : (
         <TextLabel
           title="No records to show."
