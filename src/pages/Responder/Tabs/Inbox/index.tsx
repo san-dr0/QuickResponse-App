@@ -2,6 +2,7 @@ import {FlatList, Image, Text, TouchableOpacity, View} from 'react-native';
 import useGetConversationById from '../../../../hooks/useGetConversationById';
 import {useAccountContext} from '../../../../providers/AccountProvider';
 import {ConversationDto} from '../../../../types/Message.type';
+import { useState } from 'react';
 
 export default function Inbox(props: any) {
   const {navigation} = props;
