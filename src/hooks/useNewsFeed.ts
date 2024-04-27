@@ -7,8 +7,11 @@ import { RatingDTO } from '../types/FeedAndRating.type';
 
 export const useNewsFeed = () => {
   const [newsFeedData, setNewsData] = useState<NewsFeedDTO[]>([]);
+  const [requestMessage, setRequestMessage] = useState<string>('No records to show.');
 
   const getNewsFeed = () => {
+    setRequestMessage('Please wait...');
+
     let newsFeed = firebase()
       .collection(NEWS_FEED_TABLE)
       .orderBy('date', 'desc');
@@ -25,6 +28,10 @@ export const useNewsFeed = () => {
           newsFeedList.push(newsFeedRecord);
         }
       });
+      
+      if (newsFeedList.length === 0) {
+        setRequestMessage('No records to show...');
+      }
       setNewsData(newsFeedList);
     });
   };
@@ -157,21 +164,27 @@ export const useNewsFeed = () => {
     lastname?: string,
     date?: string,
   ) => {
-    console.log(firstname, lastname, date);
+    setRequestMessage('Please wait...');
 
     const queryFirstname = await firebase()
       .collection(NEWS_FEED_TABLE)
-      .where('firstname', '==', firstname)
+      .orderBy('date', 'desc')
+      .where('firstname', '>=', firstname)
+      .where('firstname', '<=', firstname)
       .get();
 
     const queryLastname = await firebase()
       .collection(NEWS_FEED_TABLE)
-      .where('firstname', '==', lastname)
+      .orderBy('date', 'desc')
+      .where('lastname', '>=', lastname)
+      .where('lastname', '<=', lastname)
       .get();
 
     const queryDate = await firebase()
       .collection(NEWS_FEED_TABLE)
-      .where('date', '==', date)
+      .orderBy('date', 'desc')
+      .where('date', '>=', date)
+      .where('date', '<=', date)
       .get();
 
     const joinQuery = await Promise.all([
@@ -186,16 +199,14 @@ export const useNewsFeed = () => {
       if (records?.docs.length > 0) {
         records?.docs?.map(record => {
           const data = record?.data() as NewsFeedDTO;
-          if (
-            newsFeedRecord.filter(record => record.userID === data?.userID)
-              .length > 0
-          ) {
-            return;
-          }
           newsFeedRecord.push(data);
         });
       }
     });
+
+    if (newsFeedRecord.length === 0) {
+      setRequestMessage('No records found...');
+    }
 
     return newsFeedRecord;
   };
@@ -244,6 +255,9 @@ export const useNewsFeed = () => {
   return {
     newsFeedData,
     setNewsData,
+    requestMessage,
+    setRequestMessage,
+    getNewsFeed,
     sendGetCertainNewsFeed,
     sendThumbsUp,
     sendDisLike,

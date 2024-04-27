@@ -30,7 +30,7 @@ export default function DashBoard(props: any) {
         name={DASHBOARD.NEWS_FEEDS.name}
         component={NewsFeedDashBoard}
         options={{
-          title: DASHBOARD.NEWS_FEEDS.headerTitle,
+          headerTitle: DASHBOARD.NEWS_FEEDS.headerTitle,
           tabBarIcon: () => DASHBOARD.NEWS_FEEDS.tabBarIcon,
         }}
       />

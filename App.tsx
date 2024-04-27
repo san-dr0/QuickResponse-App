@@ -112,12 +112,12 @@ function App() {
                 <StackNavigator.Screen
                   name="Feedback-And-Rating"
                   component={FeedBackAndRating}
-                  options={{headerTitle: 'List of Responder'}}
+                  options={{headerTitle: 'Feedback and Ratings'}}
                 />
                 <StackNavigator.Screen
                   name="Emergency-Logs"
                   component={Emergency}
-                  options={{headerTitle: 'List of Responder'}}
+                  options={{headerTitle: 'Emergency Logs'}}
                 />
                 <StackNavigator.Screen
                   name="First-Aid"
@@ -127,7 +127,7 @@ function App() {
                 <StackNavigator.Screen
                   name="Messages"
                   component={Messages}
-                  options={{headerTitle: 'Convo'}}
+                  options={{headerTitle: 'Conversations'}}
                 />
               </StackNavigator.Navigator>
             </NavigationContainer>

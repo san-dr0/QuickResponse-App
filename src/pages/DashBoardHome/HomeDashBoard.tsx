@@ -21,7 +21,7 @@ import {
   getUsersTokens,
   sendNotifViaAxios,
 } from '../../service/token/DeviceInfo.service';
-import {getCurrentDate} from '../../utils/date.utils';
+import {getCurrentDate, getCurrentDateWithTime} from '../../utils/date.utils';
 import {getNotificationByEmergency} from '../../utils/notification.utils';
 import * as S from './style';
 
@@ -56,7 +56,7 @@ export default function HomeDashBoard() {
         coordinate: coordiantes as CoordinateDto,
         responder: [],
         emergencyStatus: EmergencyStatus.ACTIVE,
-        date: getCurrentDate(),
+        date: getCurrentDateWithTime(),
         isActive: true,
       };
 
