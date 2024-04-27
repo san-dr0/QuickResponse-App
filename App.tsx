@@ -4,23 +4,24 @@ import {MenuProvider} from 'react-native-popup-menu';
 import {COLOR_LISTS} from './src/constants/colors';
 import useNotificationPermission from './src/hooks/useNotificationPermission';
 import DashBoard from './src/pages/Dashboard';
+import Emergency from './src/pages/Emergency';
+import FeedBackAndRating from './src/pages/FeedBack';
+import FirstAidDashBoard from './src/pages/FirstAids';
 import FirstAidInformation from './src/pages/FirstAids/FirstAid-Information';
 import Home from './src/pages/Home';
+import LoadingPage from './src/pages/LoadingPage';
 import Login from './src/pages/Login';
+import Messages from './src/pages/Messages';
 import {CreateNewsFeed} from './src/pages/NewsFeed/CreateNewsFeed';
 import ViewNewsFeed from './src/pages/NewsFeed/ViewNewsFeed';
 import EditPersonalInformationComponent from './src/pages/Profile/EditPersonalInformation';
 import Registration from './src/pages/Register';
 import Responder from './src/pages/Responder';
 import ViewEmergency from './src/pages/ViewEmergency';
+import ViewOtherResponder from './src/pages/ViewOtherResponder';
 import ViewUserInfo from './src/pages/ViewUserInfo';
 import {AccountProvider} from './src/providers/AccountProvider';
 import {AlertProvider} from './src/providers/AlertProvider';
-import ViewOtherResponder from './src/pages/ViewOtherResponder';
-import FeedBackAndRating from './src/pages/FeedBack';
-import Emergency from './src/pages/Emergency';
-import FirstAidDashBoard from './src/pages/FirstAids';
-import Messages from './src/pages/Messages';
 import {UserRespondProvider} from './src/providers/UserResponseProvider';
 
 const StackNavigator = createNativeStackNavigator();
@@ -128,6 +129,11 @@ function App() {
                   name="Messages"
                   component={Messages}
                   options={{headerTitle: 'Convo'}}
+                />
+                <StackNavigator.Screen
+                  name="Loading"
+                  component={LoadingPage}
+                  options={{headerShown: false}}
                 />
               </StackNavigator.Navigator>
             </NavigationContainer>
