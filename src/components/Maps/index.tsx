@@ -12,6 +12,7 @@ type Props = {
   height?: number;
   isShowCurrentUserMarker: boolean;
   coordinateProps?: CoordinateDto;
+  onHandleGetCoordinate?: (coordinate: CoordinateDto) => void;
 };
 
 export default function Maps(props: Props) {
@@ -31,6 +32,9 @@ export default function Maps(props: Props) {
     }
 
     const location = await getLocation();
+    if (props.onHandleGetCoordinate) {
+      props?.onHandleGetCoordinate(location);
+    }
     setCoordinate(location);
   }
 
@@ -46,6 +50,7 @@ export default function Maps(props: Props) {
     }
     return (
       <MapView
+        googleRenderer="LEGACY"
         provider={PROVIDER_GOOGLE} // remove if not using Google Maps
         style={{...styles.maps, height: height}}
         region={{
