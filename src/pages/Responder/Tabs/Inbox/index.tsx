@@ -11,7 +11,6 @@ export default function Inbox(props: any) {
   const {conversation} = useGetConversationById({
     id: user?.account?.fbID as string, refresh: refresh
   });
-  const [refresh, setRefresh] = useState<boolean>(false);
 
   const renderItem = ({
     item,
