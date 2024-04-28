@@ -6,17 +6,64 @@ import useGetConversationId from '../../hooks/useGetConversationId';
 import {useAccountContext} from '../../providers/AccountProvider';
 import {sendMessage} from '../../service/message/message.service';
 import {MessageDto, MessageUserDto} from '../../types/Message.type';
+import {Name} from '../../enums/Name.type';
 
 export default function Messages(props: any) {
   const {route, navigation} = props;
   const id = route.params.id;
+  const receiver = route.params.receiver as Name;
   const {activeUserInformation: user} = useAccountContext();
-  const {data} = useGetConversationId({id: id});
+  const {data} = useGetConversationId({
+    id: id ? id : undefined,
+    receiver: receiver?.userID,
+  });
   const [message, setMessage] = useState<string>('');
   const [isDisable, setIsDisable] = useState<boolean>(false);
 
   async function handleSendMessage() {
     try {
+      console.log('====================================');
+      console.log(receiver);
+      console.log('====================================');
+      if (!data) {
+        console.log('HAN');
+        setIsDisable(true);
+        const senderUser: MessageUserDto = {
+          id: JSON.parse(user?.account?.fbID as string) as string,
+          profile: user?.account?.profile as string,
+          firstname: user?.account?.firstname as string,
+          middlename: user?.account?.middlename as string,
+          lastname: user?.account?.lastname as string,
+        };
+
+        const receiverUser: MessageUserDto = {
+          id: receiver?.userID,
+          profile: receiver?.profile,
+          firstname: receiver?.firstname,
+          middlename: receiver?.middlename,
+          lastname: receiver?.lastname,
+        };
+        console.log('RECIEVER', receiverUser);
+        console.log('SENDER', senderUser);
+
+        console.log(message);
+        if (!message) {
+          ToastAndroid.show('Please input message', ToastAndroid.LONG);
+          setIsDisable(false);
+          return;
+        }
+        console.log('RECIEVER', receiverUser);
+        console.log('SENDER', senderUser);
+        await sendMessage(
+          receiverUser as MessageUserDto,
+          senderUser as MessageUserDto,
+          message,
+        );
+        console.log('EWE');
+        setMessage('');
+        setIsDisable(false);
+        return;
+      }
       setIsDisable(true);
       let sender = null;
       let reciever = null;
@@ -45,7 +92,9 @@ export default function Messages(props: any) {
       );
       setMessage('');
       setIsDisable(false);
-    } catch (error) {}
+    } catch (error) {
+      console.log('ERROR', error);
+    }
   }
 
   const renderItem = ({item, index}: {item: MessageDto; index: number}) => {

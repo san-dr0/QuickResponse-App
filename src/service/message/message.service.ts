@@ -69,7 +69,6 @@ export const getConversationByUserId = async (id: string) => {
     conversation.push({id: element.id, ...element.data()} as ConversationDto);
   });
 
-  console.log('WEW');
   return conversation;
 };
 
@@ -80,4 +79,26 @@ export const getConversationById = async (id: string) => {
     id: resp.id,
     ...resp.data(),
   } as ConversationDto;
+};
+
+export const getByUsersId = async (userId: string, receiverId: string) => {
+  const userIncluded = [userId, receiverId];
+  const dataEqualToUserIncluded = await firestore()
+    .collection(CONVERSATIONS)
+    .get();
+
+  let conversation: ConversationDto[] = [];
+
+  dataEqualToUserIncluded.forEach(element => {
+    const {users} = element.data();
+
+    const rspns = users.sort().toString();
+    const usrincld = userIncluded.sort().toString();
+
+    if (rspns === usrincld) {
+      conversation.push({id: element.id, ...element.data()} as ConversationDto);
+    }
+  });
+
+  return conversation;
 };
