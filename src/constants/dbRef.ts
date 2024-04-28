@@ -7,3 +7,4 @@ export const FEEDACK_TABLE = 'Feedback';
 export const RATING_TABLE = 'Rating';
 export const CONVERSATIONS = 'Conversations';
 export const TOKEN_TABLE = 'Tokens';
+export const FLAGGING = 'Flagging';

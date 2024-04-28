@@ -15,6 +15,13 @@ export type AccountDTO = {
   userType?: string;
 };
 
+export type AccountFlaggingDTO = {
+  userID?: string;
+  name?: string;
+  email?: string;
+  profile?: string;
+}
+
 export type UserDTO = {
   email: string;
   password: string;
