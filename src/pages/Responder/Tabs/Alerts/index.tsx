@@ -1,17 +1,30 @@
 import messaging from '@react-native-firebase/messaging';
 import {useEffect, useMemo, useState} from 'react';
-import {Dimensions, Image, Text, TouchableOpacity, View} from 'react-native';
+import {
+  Alert,
+  Dimensions,
+  Image,
+  Text,
+  TouchableOpacity,
+  View,
+} from 'react-native';
 import {Marker} from 'react-native-maps';
 import Modal from 'react-native-modal';
 import MaterialIcon from 'react-native-vector-icons/MaterialCommunityIcons';
 import Button from '../../../../components/Button';
 import Maps from '../../../../components/Maps';
 import {CoordinateDto} from '../../../../dto/Coordinate.dto';
-import {EmergencyDto} from '../../../../dto/Emergency.dto';
+import {EmergencyDto, EmergencyResponder} from '../../../../dto/Emergency.dto';
 import {NotificationDto} from '../../../../dto/Notification.dto';
 import useGetActiveEmergency from '../../../../hooks/useGetActiveEmergency';
 import {useAccountContext} from '../../../../providers/AccountProvider';
 import {emergencyIcon, getMarkerIcon} from '../../../../utils/markerIcon.utils';
+import {acceptEmergency} from '../../../../service/emergency/Emergency.service';
+import {
+  gerUserTokenByEmail,
+  sendNotification,
+} from '../../../../service/token/DeviceInfo.service';
+import {EmergencyType} from '../../../../enums/EmergencyType.enum';
 
 type ModalData = {
   notification: NotificationDto;
@@ -116,7 +129,9 @@ export default function Alerts(props: any) {
       <View style={{height: height * 0.3, paddingHorizontal: 14}}>
         <View
           style={{width: '100%', alignItems: 'flex-end', paddingVertical: 5}}>
-          <MaterialIcon name="close-circle" size={20} color={'red'} />
+          <TouchableOpacity onPress={() => setSelectedData(null)}>
+            <MaterialIcon name="close-circle" size={20} color={'red'} />
+          </TouchableOpacity>
         </View>
         <View style={{flexDirection: 'row', gap: 15}}>
           <Image
@@ -148,35 +163,122 @@ export default function Alerts(props: any) {
             marginBottom: 10,
             gap: 15,
           }}>
-          <MaterialIcon
-            name="message-reply-text-outline"
-            size={20}
-            color={'white'}
-            style={{backgroundColor: 'blue', padding: 7, borderRadius: 100}}
-          />
-          <MaterialIcon
-            name="account-circle-outline"
-            size={20}
-            color={'white'}
-            style={{backgroundColor: 'blue', padding: 7, borderRadius: 100}}
-          />
+          <TouchableOpacity
+            onPress={() =>
+              navigation.navigate('Messages', {
+                id: undefined,
+                receiver: selectedData?.sender,
+              })
+            }>
+            <MaterialIcon
+              name="message-reply-text-outline"
+              size={20}
+              color={'white'}
+              style={{backgroundColor: 'blue', padding: 7, borderRadius: 100}}
+            />
+          </TouchableOpacity>
+
+          <TouchableOpacity
+            onPress={() =>
+              navigation.navigate('View-User-Info', {
+                id: selectedData?.sender?.userID,
+              })
+            }>
+            <MaterialIcon
+              name="account-circle-outline"
+              size={20}
+              color={'white'}
+              style={{backgroundColor: 'blue', padding: 7, borderRadius: 100}}
+            />
+          </TouchableOpacity>
         </View>
         {isUserIncludedToResponder ? (
-          <Button title="View All Responder" />
+          <Button
+            title={`View Other Responder ${responderCount}`}
+            onPress={() =>
+              navigation.navigate('View-Other-Responder', {
+                id: selectedData?.emergencyId as string,
+              })
+            }
+          />
         ) : (
-          <Button title="Accept" />
+          <Button title="Accept" onPress={handleAccept} />
         )}
       </View>
     );
   }, [selectedData]);
 
+  async function handleAccept() {
+    try {
+      if (!user) {
+        return;
+      }
+
+      const {credentials} = user;
+
+      const payload: EmergencyResponder = {
+        id: user?.account?.fbID as string,
+        responderType: user?.account?.responderType as string,
+        firstname: user?.account?.firstname as string,
+        middlename: user?.account?.middlename as string,
+        lastname: user?.account?.lastname as string,
+        email: credentials?.loginEmail as string,
+      };
+
+      const name =
+        payload.firstname + ' ' + payload.middlename + ' ' + payload.lastname;
+      const ref: NotificationDto = {
+        title: `${name} has been respond`,
+        body: 'Responder is on the way',
+        date: selectedData?.date as string,
+      };
+
+      const userTokenData = await gerUserTokenByEmail(
+        selectedData?.sender?.email as string,
+      );
+      await acceptEmergency(
+        selectedData?.emergencyId ? selectedData.emergencyId : '',
+        payload,
+      );
+
+      await sendNotification(
+        ref,
+        userTokenData.token,
+        selectedData?.emergencyId as string,
+      );
+      await sendRequest();
+      await Alert.prompt('Successfully Update');
+    } catch (error) {
+      console.log(error);
+    }
+  }
   return (
     <View style={{flex: 1}}>
       <Modal isVisible={isOpen}>
-        <View style={{height: height * 0.3, backgroundColor: 'white'}}>
-          <Text>{modalData?.notification?.title}</Text>
-          <Text>{modalData?.notification.body}</Text>
-          <Button title="View Respond" onPress={() => setIsOpen(false)} />
+        <View
+          style={{height: height * 0.2, backgroundColor: 'white', padding: 10}}>
+          <View style={{flexDirection: 'row', gap: 10}}>
+            <Image
+              source={emergencyIcon(
+                (modalData?.emergency.type ?? '') as EmergencyType,
+              )}
+              style={{width: 60, height: 60, borderRadius: 100}}
+            />
+            <View style={{padding: 8}}>
+              <Text style={{fontSize: 24, fontWeight: 'bold'}}>
+                {modalData?.notification?.title}
+              </Text>
+              <Text style={{fontSize: 16}}>{modalData?.notification.body}</Text>
+            </View>
+          </View>
+          <View style={{height: 15}} />
+          <Button
+            title="View Respond"
+            onPress={() => {
+              setSelectedData(modalData?.emergency as EmergencyDto);
+              setIsOpen(false);
+            }}
+          />
         </View>
       </Modal>
       <Maps

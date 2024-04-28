@@ -1,7 +1,7 @@
-import { EmergencyStatus } from '../enums/EmergencyStatus.enum';
-import { EmergencyType } from '../enums/EmergencyType.enum';
-import { Name } from '../enums/Name.type';
-import { CoordinateDto } from './Coordinate.dto';
+import {EmergencyStatus} from '../enums/EmergencyStatus.enum';
+import {EmergencyType} from '../enums/EmergencyType.enum';
+import {Name} from '../enums/Name.type';
+import {CoordinateDto} from './Coordinate.dto';
 
 export interface EmergencyDto {
   emergencyId?: string;
@@ -11,9 +11,8 @@ export interface EmergencyDto {
   emergencyStatus: EmergencyStatus;
   coordinate: CoordinateDto;
   date: string;
-  isActive: boolean,
+  isActive: boolean;
 }
-
 
 export interface EmergencyResponder {
   id: string;
