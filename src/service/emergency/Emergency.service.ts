@@ -1,7 +1,8 @@
 import firestore from '@react-native-firebase/firestore';
-import {EMERGENCY_TABLE} from '../../constants/dbRef';
+import {EMERGENCY_TABLE, FLAGGING} from '../../constants/dbRef';
 import {EmergencyDto, EmergencyResponder} from '../../dto/Emergency.dto';
 import {EmergencyType} from '../../enums/EmergencyType.enum';
+import { AccountDTO, AccountFlaggingDTO } from '../../types/User.type';
 
 export const saveEmergency = async (payload: EmergencyDto) => {
   const response = await firestore().collection(EMERGENCY_TABLE).add(payload);
@@ -101,4 +102,10 @@ export const getActiveEmergency = async () => {
   });
 
   return tempArr;
+};
+
+export const reportUser = async (userInformation: AccountFlaggingDTO) => {
+  const result = await firestore().collection(FLAGGING).add(userInformation);
+
+  return result;
 };
