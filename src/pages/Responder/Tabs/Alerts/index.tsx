@@ -1,22 +1,66 @@
-import {Image, Text, View} from 'react-native';
-import Maps from '../../../../components/Maps';
-import useGetActiveEmergency from '../../../../hooks/useGetActiveEmergency';
-import {useEffect, useMemo, useState} from 'react';
 import messaging from '@react-native-firebase/messaging';
-import {EmergencyDto} from '../../../../dto/Emergency.dto';
-import {CoordinateDto} from '../../../../dto/Coordinate.dto';
+import {useEffect, useMemo, useState} from 'react';
+import {Dimensions, Image, Text, TouchableOpacity, View} from 'react-native';
 import {Marker} from 'react-native-maps';
-import {getMarkerIcon} from '../../../../utils/markerIcon.utils';
+import Modal from 'react-native-modal';
+import MaterialIcon from 'react-native-vector-icons/MaterialCommunityIcons';
+import Button from '../../../../components/Button';
+import Maps from '../../../../components/Maps';
+import {CoordinateDto} from '../../../../dto/Coordinate.dto';
+import {EmergencyDto} from '../../../../dto/Emergency.dto';
+import {NotificationDto} from '../../../../dto/Notification.dto';
+import useGetActiveEmergency from '../../../../hooks/useGetActiveEmergency';
+import {useAccountContext} from '../../../../providers/AccountProvider';
+import {emergencyIcon, getMarkerIcon} from '../../../../utils/markerIcon.utils';
 
-export default function Alerts() {
+type ModalData = {
+  notification: NotificationDto;
+  emergency: EmergencyDto;
+};
+
+const height = Dimensions.get('window').height;
+
+export default function Alerts(props: any) {
+  const {routes, navigation} = props;
   // const {alerts} = useAlertContext();
   const {data, sendRequest, setData} = useGetActiveEmergency();
   const [coordinate, setCoordinate] = useState<CoordinateDto | null>(null);
+  const {activeUserInformation: user} = useAccountContext();
   const [selectedData, setSelectedData] = useState<EmergencyDto | null>(null);
+  const [modalData, setModalData] = useState<ModalData | null>(null);
+
+  const [isOpen, setIsOpen] = useState<boolean>(false);
 
   useEffect(() => {
-    const unsubscribe = messaging().onMessage(async val => {
+    const unsubscribe = messaging().onMessage(async (remoteMessage: any) => {
+      console.log('REMOTE0', remoteMessage);
+
+      const parseMessage = remoteMessage;
+      const payload: EmergencyDto = {
+        emergencyId: parseMessage?.data?.emergencyId,
+        type: parseMessage?.data?.type,
+        sender: JSON.parse(parseMessage?.data?.sender),
+        responder: [],
+        emergencyStatus: parseMessage?.data?.emergencyStatus,
+        coordinate: JSON.parse(parseMessage?.data?.coordinate),
+        date: parseMessage?.data?.date,
+        isActive: parseMessage?.data?.isActive,
+      };
+      const title = JSON.parse(remoteMessage?.data?.notification)?.title;
+      const body = JSON.parse(remoteMessage?.data?.notification)?.body;
+      const data: ModalData = {
+        notification: {
+          title,
+          body,
+        },
+        emergency: payload,
+      };
       sendRequest();
+      if (user?.account?.userType === 'Responder') {
+        setIsOpen(true);
+        setModalData(data);
+        return;
+      }
     });
 
     return unsubscribe;
@@ -37,33 +81,112 @@ export default function Alerts() {
   const displayMarker = useMemo(() => {
     return data.map((val: EmergencyDto, i: number) => {
       return (
-        <Marker
-          tracksViewChanges={false}
-          key={i.toString()}
-          style={{width: 60, height: 60}}
-          coordinate={val.coordinate}
-          onPress={() => setSelectedData(val)}>
-          <Image
-            source={getMarkerIcon(val.type)}
-            style={{
-              width: 50,
-              height: 50,
-            }}
-            resizeMode="center"
-          />
-        </Marker>
+        <TouchableOpacity onPress={() => setSelectedData(val)}>
+          <Marker
+            key={i.toString()}
+            style={{width: 60, height: 60}}
+            coordinate={val.coordinate}
+            onPress={() => setSelectedData(val)}>
+            <Image
+              source={getMarkerIcon(val.type)}
+              style={{
+                width: 50,
+                height: 50,
+              }}
+              resizeMode="center"
+            />
+          </Marker>
+        </TouchableOpacity>
       );
     });
-  }, [data, setSelectedData]);
+  }, [data, setData]);
+
+  const viewOption = useMemo(() => {
+    if (!selectedData) {
+      return;
+    }
+
+    const responderCount = selectedData.responder.length;
+
+    const isUserIncludedToResponder = selectedData.responder.some(
+      val => val.id === JSON.parse(user?.account?.fbID as string),
+    );
+
+    return (
+      <View style={{height: height * 0.3, paddingHorizontal: 14}}>
+        <View
+          style={{width: '100%', alignItems: 'flex-end', paddingVertical: 5}}>
+          <MaterialIcon name="close-circle" size={20} color={'red'} />
+        </View>
+        <View style={{flexDirection: 'row', gap: 15}}>
+          <Image
+            source={emergencyIcon(selectedData.type)}
+            style={{width: 60, height: 60, borderRadius: 100}}
+          />
+          <View>
+            <Text style={{fontSize: 18, fontWeight: 'bold'}}>
+              {selectedData.type} Alert
+            </Text>
+            <Text style={{fontSize: 10, marginBottom: 8}}>
+              {selectedData.date}
+            </Text>
+            <Text style={{fontSize: 14, fontWeight: '400'}}>
+              <Text style={{fontWeight: 'bold'}}>Sender: </Text>
+              {selectedData.sender.firstname +
+                ' ' +
+                selectedData.sender.middlename +
+                ' ' +
+                selectedData.sender.lastname}
+            </Text>
+          </View>
+        </View>
+        <View style={{height: 12}} />
+        <View
+          style={{
+            flexDirection: 'row',
+            justifyContent: 'center',
+            marginBottom: 10,
+            gap: 15,
+          }}>
+          <MaterialIcon
+            name="message-reply-text-outline"
+            size={20}
+            color={'white'}
+            style={{backgroundColor: 'blue', padding: 7, borderRadius: 100}}
+          />
+          <MaterialIcon
+            name="account-circle-outline"
+            size={20}
+            color={'white'}
+            style={{backgroundColor: 'blue', padding: 7, borderRadius: 100}}
+          />
+        </View>
+        {isUserIncludedToResponder ? (
+          <Button title="View All Responder" />
+        ) : (
+          <Button title="Accept" />
+        )}
+      </View>
+    );
+  }, [selectedData]);
 
   return (
     <View style={{flex: 1}}>
+      <Modal isVisible={isOpen}>
+        <View style={{height: height * 0.3, backgroundColor: 'white'}}>
+          <Text>{modalData?.notification?.title}</Text>
+          <Text>{modalData?.notification.body}</Text>
+          <Button title="View Respond" onPress={() => setIsOpen(false)} />
+        </View>
+      </Modal>
       <Maps
-        isShowCurrentUserMarker={true}
+        isShowCurrentUserMarker={false}
         coordinateProps={currentCoordinate}
-        onHandleGetCoordinate={setCoordinate}>
+        onHandleGetCoordinate={setCoordinate}
+        height={height * 7}>
         {displayMarker}
       </Maps>
+      {viewOption}
     </View>
   );
 }

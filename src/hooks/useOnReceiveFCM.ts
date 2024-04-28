@@ -1,20 +1,19 @@
 import messaging from '@react-native-firebase/messaging';
-import {EmergencyDto} from '../dto/Emergency.dto';
-import {UserType} from '../enums/User.enum';
-import {useAccountContext} from '../providers/AccountProvider';
-import {useAlertContext} from '../providers/AlertProvider';
-import {useUserAlertContext} from '../providers/UserResponseProvider';
+import { EmergencyDto } from '../dto/Emergency.dto';
+import { UserType } from '../enums/User.enum';
+import { useAccountContext } from '../providers/AccountProvider';
+import { useAlertContext } from '../providers/AlertProvider';
+import { useUserAlertContext } from '../providers/UserResponseProvider';
 
 export function useOnReceiveFirebaseCloudMessaging() {
-  const {setAlertRecords} = useAlertContext();
-  const {activeUserInformation} = useAccountContext();
-  const {setUserAlert} = useUserAlertContext();
+  const { setAlertRecords } = useAlertContext();
+  const { activeUserInformation } = useAccountContext();
+  const { setUserAlert } = useUserAlertContext();
 
   const onReceive = () => {
     const message = messaging().onMessage(async (remoteMessage: any) => {
       const parseMessage = remoteMessage;
 
-      console.log('wew', JSON.parse(parseMessage.data?.coordinate));
 
       const payload: EmergencyDto = {
         type: parseMessage?.data?.type,
@@ -23,6 +22,7 @@ export function useOnReceiveFirebaseCloudMessaging() {
         emergencyStatus: parseMessage?.data?.emergencyStatus,
         coordinate: JSON.parse(parseMessage?.data?.coordinate),
         date: parseMessage?.data?.date,
+        isActive: parseMessage?.data?.isActive
       };
       const emergencyId = parseMessage?.data?.emergencyId;
       const title = JSON.parse(remoteMessage?.data?.notification)?.title;
@@ -69,6 +69,7 @@ export function useOnReceiveFirebaseCloudMessaging() {
           emergencyStatus: parseMessage?.data?.emergencyStatus,
           coordinate: JSON.parse(parseMessage?.data?.coordinate),
           date: parseMessage?.data?.date,
+          isActive: parseMessage?.data?.isActive
         };
         //const emergency =
         const emergencyId = remoteMessage?.data?.emergencyId;
@@ -101,5 +102,5 @@ export function useOnReceiveFirebaseCloudMessaging() {
     return backgroundMessage;
   };
 
-  return {onReceive, onReceiveBackgroundMessage};
+  return { onReceive, onReceiveBackgroundMessage };
 }

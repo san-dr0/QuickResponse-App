@@ -50,7 +50,6 @@ export default function Maps(props: Props) {
     }
     return (
       <MapView
-        googleRenderer="LEGACY"
         provider={PROVIDER_GOOGLE} // remove if not using Google Maps
         style={{...styles.maps, height: height}}
         region={{
@@ -63,11 +62,10 @@ export default function Maps(props: Props) {
         {isShowCurrentUserMarker && (
           <Marker coordinate={newCoordinate as LatLng} />
         )}
-
         {children}
       </MapView>
     );
-  }, [coordinate, coordinateProps, isShowCurrentUserMarker]);
+  }, [coordinate, coordinateProps, isShowCurrentUserMarker, children]);
 
   return <View style={{...styles.container, height}}>{displayMaps}</View>;
 }
