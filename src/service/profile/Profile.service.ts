@@ -1,3 +1,4 @@
+import { CONTACT_TABLE } from '../../constants/dbRef';
 import {
   AllergyDTO,
   BloodTypeDTO,
@@ -119,7 +120,7 @@ export const addNewContacts = async (
 
 export const getAllContactsFromDB = async (activeUserID: string) => {
   const result = await firestore()
-    .collection('Contacts')
+    .collection(CONTACT_TABLE)
     .doc(activeUserID)
     .get();
 

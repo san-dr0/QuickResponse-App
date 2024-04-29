@@ -1,5 +1,5 @@
-import React, {useEffect, useMemo, useState} from 'react';
-import {ScrollView, ToastAndroid, TouchableOpacity, View} from 'react-native';
+import React, {useEffect, useId, useMemo, useState} from 'react';
+import {FlatList, ScrollView, ToastAndroid, TouchableOpacity, View} from 'react-native';
 import TextLabel from '../../../../components/TextLabel';
 import {COLOR_LISTS} from '../../../../constants/colors';
 import {APP_HEIGHT, APP_WIDTH} from '../../../../constants/dimensions';
@@ -14,24 +14,13 @@ import EditContacts from '../Edit';
 import {APP_FONT_SIZE} from '../../../../constants/number';
 
 export default function ViewContacts() {
-  const {sendGetAllContacts, deleteContactInformation} = useUserProfile();
   const {activeUserInformation} = useAccountContext();
-  const [contactRecords, setContactRecords] = useState<ContactDTO[]>([]);
+  const {sendGetAllContacts , deleteContactInformation} = useUserProfile();
+  const [contactRecord, setContactRecord] = useState<ContactDTO[]>([]);
   const [editCertainContact, setEditCertainContact] =
     useState<ContactDTO | null>(null);
   const [isEditAction, setIsEditAction] = useState<boolean>(false);
   const [editCertainContactID, setEditCertainContactID] = useState<number>(0);
-
-  const getAllContacts = async (activeUserID: string) => {
-    const result = await sendGetAllContacts(activeUserID);
-    const records = result?.data()?.contacts as ContactDTO[];
-
-    setContactRecords(records);
-  };
-
-  useEffect(() => {
-    getAllContacts(activeUserInformation?.account?.fbID ?? '');
-  }, []);
 
   const onEditContact = (record: ContactDTO, index: number) => {
     setIsEditAction(true);
@@ -44,86 +33,81 @@ export default function ViewContacts() {
   };
 
   const onRemoveCertainContact = async (record: ContactDTO) => {
-    await deleteContactInformation(
+    const newRecord = await deleteContactInformation(
       activeUserInformation?.account?.fbID ?? '',
       record,
-      contactRecords,
+      contactRecord,
     );
-
+    
+    setContactRecord(newRecord);
     ToastAndroid.show('Contact was removed.', ToastAndroid.SHORT);
   };
 
-  const listOfContacts = useMemo(() => {
-    if (contactRecords) {
-      return contactRecords.map((record: ContactDTO, i: number) => {
-        return (
-          <CardComponent
-            key={i}
-            width={100}
-            height={20}
+  const renderContactList = ({item}: any) => {
+    
+    return (
+      <>
+        <CardComponent>
+          <DivComponent
+            flexDirection="row"
+            justifyContent="space-evenly"
+            width="100"
             backgroundColor={COLOR_LISTS.BLUE_500}
-            padding={10}
-            borderRadius={6}
-            margin="3px 0 0 0">
-            <DivComponent
-              flexDirection="row"
-              justifyContent="space-evenly"
-              width="100"
-              backgroundColor={COLOR_LISTS.RED}>
-              <DivComponent backgroundColor={COLOR_LISTS.BLUE_500} width="80">
-                <TextLabel title={`Name: ${record.name}`} fontSize={18} />
-                <TextLabel
-                  title={`Contactno: ${record.contactno}`}
-                  fontSize={18}
-                />
-              </DivComponent>
-              <DivComponent
-                backgroundColor={COLOR_LISTS.BLUE_500}
-                width="22"
-                flexDirection="row"
-                justifyContent="center"
-                alignItems="center">
-                <TouchableOpacity onPress={() => onEditContact(record, i)}>
-                  <FontAwesome6Icon
-                    name={'pen'}
-                    size={20}
-                    color={COLOR_LISTS.WHITE}
-                  />
-                </TouchableOpacity>
-                <DividerComponent margin="0 10px 0 0" />
-                <TouchableOpacity
-                  onPress={() => onRemoveCertainContact(record)}>
-                  <FontAwesome6Icon
-                    name={'trash'}
-                    size={20}
-                    color={COLOR_LISTS.WHITE}
-                  />
-                </TouchableOpacity>
-              </DivComponent>
+            padding='10'  
+          >
+            <DivComponent backgroundColor={COLOR_LISTS.BLUE_500} width="80">
+              <TextLabel title={`Name: ${item.name}`} fontSize={18} textColor={COLOR_LISTS.WHITE} />
+              <TextLabel
+                title={`Contactno: ${item.contactno}`} textColor={COLOR_LISTS.WHITE}
+                fontSize={18}
+              />
             </DivComponent>
-          </CardComponent>
-        );
-      });
-    } else {
-      return (
-        <DivComponent>
-          <DividerComponent margin="20px 0 0 0" />
-          <TextLabel
-            title="No contact records."
-            fontSize={APP_FONT_SIZE.FIFTEN}
-          />
-        </DivComponent>
-      );
-    }
-  }, [contactRecords]);
+            <DivComponent
+              backgroundColor={COLOR_LISTS.BLUE_500}
+              width="22"
+              flexDirection="row"
+              justifyContent="center"
+              alignItems="center">
+              <TouchableOpacity onPress={() => onEditContact(item, 0)}>
+                <FontAwesome6Icon
+                  name={'pen'}
+                  size={20}
+                  color={COLOR_LISTS.WHITE}
+                />
+              </TouchableOpacity>
+              <DividerComponent margin="0 10px 0 0" />
+              <TouchableOpacity
+                onPress={() => onRemoveCertainContact(item)}>
+                <FontAwesome6Icon
+                  name={'trash'}
+                  size={20}
+                  color={COLOR_LISTS.WHITE}
+                />
+              </TouchableOpacity>
+            </DivComponent>
+          </DivComponent>
+        </CardComponent>
+        <DividerComponent margin="5px 0 0 0" />
+      </>
+    );
+  };
+
+  const getAllContacts = async (userID: string) => {
+    const resp = await sendGetAllContacts(userID);
+    const data = resp?.data()?.contacts as ContactDTO[];
+    setContactRecord(data);
+  };
+
+  useEffect(() => {
+    getAllContacts(activeUserInformation?.account?.fbID as string);
+  }, [activeUserInformation?.account?.fbID]);
 
   return (
-    <ScrollView>
       <View
         style={{
           backgroundColor: COLOR_LISTS.WHITE,
           width: APP_WIDTH,
-          height: APP_HEIGHT / 2,
+          height: (APP_HEIGHT / 2) - 50,
           padding: 10,
         }}>
         <TextLabel
@@ -131,16 +115,15 @@ export default function ViewContacts() {
           fontSize={APP_FONT_SIZE.TWENTY_FIVE}
           textAlign="center"
         />
-        {!isEditAction && listOfContacts}
+        {!isEditAction && <FlatList data={contactRecord} renderItem={renderContactList} />}
         {isEditAction && (
           <EditContacts
             contactRecords={editCertainContact}
-            originalContactInfo={contactRecords}
+            originalContactInfo={contactRecord}
             index={editCertainContactID}
             onCancelEdit={onCancelEdit}
           />
         )}
       </View>
-    </ScrollView>
   );
 }

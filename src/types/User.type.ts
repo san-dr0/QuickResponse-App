@@ -51,6 +51,6 @@ export type BloodTypeDTO = {
 };
 
 export type ContactDTO = {
-  name: string;
-  contactno: string;
+  name?: string;
+  contactno?: string;
 }
