@@ -4,6 +4,7 @@ import { UserType } from '../../enums/User.enum';
 import { RegistrationDTO } from '../../types/Registration.type';
 import { LoginDTO, UpdateProfileDTO, UserDTO } from '../../types/User.type';
 import { createNewDeviceToken, validateIfUserExists } from '../../utils/utility';
+import { ALLERGIES_TABLE, BLOODTYPE_TABLE, CONDITIONS_TABLE, MEDICAL_AID_TABLE, USER_TABLE } from '../../constants/dbRef';
 
 export const registrationUser = async (loginFormValues: RegistrationDTO) => {
   const {
@@ -134,11 +135,32 @@ export const setActiveUserInformation = async (id: string) => {
   return record;
 };
 
-
 export const getUserById = async (id: string) => {
-  const resp = await firestore().collection("Users").doc(id).get();
-
-
+  const resp = await firestore().collection(USER_TABLE).doc(id).get();
 
   return { id: resp.id, ...resp.data() };
 }
+
+export const getUserAllergiesById = async (id: string) => {
+  const resp = await firestore().collection(ALLERGIES_TABLE).doc(JSON.stringify(id)).get();
+
+  return {id: resp.id, ...resp.data()};
+};
+
+export const getUserConiditionsById = async (id: string) => {
+  const resp = await firestore().collection(CONDITIONS_TABLE).doc(JSON.stringify(id)).get();
+
+  return {id: resp.id, ...resp.data()};
+};
+
+export const getUserBloodTypeById = async (id: string) => {
+  const resp = await firestore().collection(BLOODTYPE_TABLE).doc(JSON.stringify(id)).get();
+
+  return {id: resp.id, ...resp.data()};
+};
+
+export const getUserMedicalAidById = async (id: string) => {
+  const resp = await firestore().collection(MEDICAL_AID_TABLE).doc(JSON.stringify(id)).get();
+
+  return {id: resp.id, ...resp.data()};
+};

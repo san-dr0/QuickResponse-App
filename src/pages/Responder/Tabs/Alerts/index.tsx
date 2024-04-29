@@ -122,8 +122,8 @@ export default function Alerts(props: any) {
     const responderCount = selectedData.responder.length;
 
     const isUserIncludedToResponder = selectedData.responder.some(
-      val => val.id === JSON.parse(user?.account?.fbID as string),
-    );
+      val => JSON.parse(val.id) === JSON.parse(user?.account?.fbID as string),
+    );    
 
     return (
       <View style={{height: height * 0.3, paddingHorizontal: 14}}>
@@ -206,7 +206,7 @@ export default function Alerts(props: any) {
         )}
       </View>
     );
-  }, [selectedData]);
+  }, [selectedData, data, user]);
 
   async function handleAccept() {
     try {
@@ -247,7 +247,14 @@ export default function Alerts(props: any) {
         selectedData?.emergencyId as string,
       );
       await sendRequest();
-      await Alert.prompt('Successfully Update');
+
+      if(!selectedData){
+        return;
+      }
+      const updateArr = [...selectedData.responder,payload];
+
+      setSelectedData({...selectedData,responder:updateArr});
+    
     } catch (error) {
       console.log(error);
     }

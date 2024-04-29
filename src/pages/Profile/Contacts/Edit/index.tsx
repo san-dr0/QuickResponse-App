@@ -25,8 +25,8 @@ export default function EditContacts(props: EditContactsProps) {
     name: contactRecords?.name as string,
     contactno: contactRecords?.contactno as string,
   };
-  const {sendEditContacts} = useUserProfile();
   const {activeUserInformation} = useAccountContext();
+  const {sendEditContacts} = useUserProfile();
 
   const onEditContacts = async (values: ContactDTO) => {
     initValues.name = values.name;

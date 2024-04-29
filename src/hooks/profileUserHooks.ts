@@ -1,3 +1,4 @@
+import { useEffect, useState } from 'react';
 import {
   addNewAllergies,
   addNewBloodType,
@@ -20,6 +21,7 @@ import {
 } from '../types/User.type';
 
 export const useUserProfile = () => {
+  const [activeUserContacts, setActiveUserContacts] = useState<ContactDTO[]>([]);
   const sendAddNewAllergies = async (
     activeUserID: string,
     allergy: AllergyDTO,
@@ -130,7 +132,7 @@ export const useUserProfile = () => {
       newContactRecord,
     );
 
-    return result;
+    return newContactRecord;
   };
 
   return {

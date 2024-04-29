@@ -44,11 +44,12 @@ export default function DashBoardAlerts() {
           {displayIconBasedOnEmergencyType(item?.type)}
           <DividerContainer margin="10px 0 0 0" />
           <TextLabel title={item?.type} fontWeight="bold" />
-          <CardComponent backgroundColor={COLOR_LISTS.GREY_300} width="250" padding={5} borderRadius={5}>
+          <CardComponent backgroundColor={COLOR_LISTS.GREY_300} width="280" padding={5} borderRadius={5}>
             <TextLabel title="Location" fontWeight="bold" />
             <TextLabel title={`Lat: ${item?.coordinate?.latitude}`} />
             <TextLabel title={`Long: ${item?.coordinate?.longitude}`} />
             <TextLabel title={`Created At: ${item?.date}`} />
+            <TextLabel title={`Total Responded: ${item?.responder?.length}`} />
           </CardComponent>
         </DivContainer>
       </CardComponent>

@@ -14,7 +14,7 @@ export default function ViewUserInfo(props: any) {
   const {route, navigation} = props;
 
   const id = route.params.id;
-  const {data} = useGetUserInfo({id});
+  const {data, condition, allergies, bloodType, medicalAid} = useGetUserInfo({id});
 
   const displayImageComponent = useMemo(() => {
     return !data?.account?.profile ? (
@@ -106,6 +106,43 @@ export default function ViewUserInfo(props: any) {
             />
           </S.ProfileBadgeContainer>
           <DividerComponent margin="10px 0 0 0" />
+
+          <S.ProfileBadgeContainer width="90" backgroundColor={COLOR_LISTS.RED_400}>
+            <TextLabel title="Medical Information" fontSize={16} textAlign="center" textColor={COLOR_LISTS.WHITE} />
+          </S.ProfileBadgeContainer>
+
+          <DividerComponent margin="5px 0 0 0" />
+          <S.ProfileBadgeContainer borderColor={COLOR_LISTS.RED_400} width="90">
+            <TextLabel title="Allergies" fontSize={16} />
+            {
+              condition?.allergies? condition?.allergies?.map((rec: any) => (<TextLabel title={rec} fontSize={10} />))
+              :
+              <TextLabel title="N/A" />
+            }
+          </S.ProfileBadgeContainer>
+
+          <DividerComponent margin="5px 0 0 0" />
+          <S.ProfileBadgeContainer borderColor={COLOR_LISTS.RED_400} width="90">
+            <TextLabel title="Conditions" fontSize={16} />
+            {
+              allergies?.allergies ? allergies?.allergies?.map((allergy: any) => (<TextLabel title={allergy} fontSize={10} />))
+              :
+              <TextLabel title="N/A" />
+            }
+          </S.ProfileBadgeContainer>
+          
+          <DividerComponent margin="5px 0 0 0" />
+          <S.ProfileBadgeContainer borderColor={COLOR_LISTS.RED_400} width="90">
+            <TextLabel title="Blood Type" fontSize={16} />
+            <TextLabel title={bloodType?.bloodType ? bloodType?.bloodType : "N/A"} />
+          </S.ProfileBadgeContainer>
+
+          <DividerComponent margin="5px 0 0 0" />
+          <S.ProfileBadgeContainer borderColor={COLOR_LISTS.RED_400} width="90">
+            <TextLabel title="Do you have Medical Aid" fontSize={16} />
+            <TextLabel title={medicalAid?.medicalAid ? "YES" : "N/A"} textColor={medicalAid?.medicalAid ? COLOR_LISTS.RED_400 : COLOR_LISTS.GREEN} />
+          </S.ProfileBadgeContainer>
+        
         </View>
       </View>
     </ScrollView>

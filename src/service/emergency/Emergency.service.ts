@@ -33,7 +33,7 @@ export const acceptEmergency = async (
     emergencyId: response.id,
     ...(response.data() as EmergencyDto),
   };
-
+  
   const arr = [...(resp.responder as EmergencyResponder[]), responder];
 
   console.log('GG', arr);
