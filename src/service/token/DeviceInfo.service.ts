@@ -63,7 +63,7 @@ export const sendNotifViaAxios = async (
           'Content-Type': 'application/json',
           Authorization: [
             'key',
-            'AAAA_-_KRhA:APA91bFjpjRzCVlFJwVKFOwI6m3cIhSSWsiKDAwiHMXUHTv2jznNOltpZht7qxPVXk3NpU60HEH29rv5ycKeip-qzauPpf0T2TNlQxPpRGWT_vm3p-JNFfZxQTQ_CKwz5F3tJius7mdX',
+            'AAAAlzgqhdk:APA91bFO-0FMylepXawpf4pC6wHkzoh4hfgNGLSPC88YL3jiWFWABUebkA2ufok6Euuh3xoPyV0X3CBp1Kd_a_wXoP0m3AEyJLzVjk7J-trMCYLwBUOBEJ3qwh6gXa6pO-dOl7hTzrc0'
           ].join('='),
         },
       },
@@ -93,7 +93,7 @@ export const sendNotification = async (
           'Content-Type': 'application/json',
           Authorization: [
             'key',
-            'AAAA_-_KRhA:APA91bFjpjRzCVlFJwVKFOwI6m3cIhSSWsiKDAwiHMXUHTv2jznNOltpZht7qxPVXk3NpU60HEH29rv5ycKeip-qzauPpf0T2TNlQxPpRGWT_vm3p-JNFfZxQTQ_CKwz5F3tJius7mdX',
+            'AAAAlzgqhdk:APA91bFO-0FMylepXawpf4pC6wHkzoh4hfgNGLSPC88YL3jiWFWABUebkA2ufok6Euuh3xoPyV0X3CBp1Kd_a_wXoP0m3AEyJLzVjk7J-trMCYLwBUOBEJ3qwh6gXa6pO-dOl7hTzrc0'
           ].join('='),
         },
       },

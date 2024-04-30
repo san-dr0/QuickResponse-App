@@ -252,7 +252,7 @@ export default function Registration(props: any) {
                   value={values.password}
                   onChangeText={handleChange('password')}
                   secureTextEntry={secureText}
-                  error={errors.password}
+                  // error={errors.password}
                 />
                 <TextLabel title=" " />
                 <TouchableOpacity
