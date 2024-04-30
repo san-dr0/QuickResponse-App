@@ -5,6 +5,8 @@ import ProfileDashBoard from '../Profile';
 import Alerts from './Tabs/Alerts';
 import Inbox from './Tabs/Inbox';
 import EmergencyHistory from './EmergencyHistory';
+import { DASHBOARD } from '../../constants/string';
+import NewsFeedDashBoard from '../NewsFeed';
 
 const BottomTabNavigation = createBottomTabNavigator();
 
@@ -18,6 +20,14 @@ export default function Responder() {
         options={{
           title: responderRoutes.PROFILE.headerTitle,
           tabBarIcon: () => responderRoutes.PROFILE.tabBarIcon,
+        }}
+      />
+      <BottomTabNavigation.Screen
+        name={DASHBOARD.NEWS_FEEDS.name}
+        component={NewsFeedDashBoard}
+        options={{
+          headerTitle: DASHBOARD.NEWS_FEEDS.headerTitle,
+          tabBarIcon: () => DASHBOARD.NEWS_FEEDS.tabBarIcon,
         }}
       />
       <BottomTabNavigation.Screen
