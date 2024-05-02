@@ -1,4 +1,4 @@
-import {useState} from 'react';
+import {useEffect, useState} from 'react';
 import {ToastAndroid} from 'react-native';
 import Modal from 'react-native-modal';
 import {AlertNavigationModal} from '../../components/AlertNavigationModal';
@@ -24,6 +24,7 @@ import {
 import {getCurrentDate, getCurrentDateWithTime} from '../../utils/date.utils';
 import {getNotificationByEmergency} from '../../utils/notification.utils';
 import * as S from './style';
+import messaging from '@react-native-firebase/messaging';
 
 export default function HomeDashBoard() {
   const {activeUserInformation} = useAccountContext();
@@ -99,6 +100,15 @@ export default function HomeDashBoard() {
     setEmergencyTypeChooseByUser(emergencyType);
     setVerifyRequest(true);
   };
+
+  useEffect(() => {
+    const unSubscribeMessages = messaging().onMessage((message) => {
+      console.log('RECORD >>');
+      console.log(message);
+
+      return unSubscribeMessages;
+    });
+  }, []);
 
   return (
     <S.DashBoardHomeContainer>

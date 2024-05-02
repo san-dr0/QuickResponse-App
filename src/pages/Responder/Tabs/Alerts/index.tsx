@@ -22,9 +22,11 @@ import {emergencyIcon, getMarkerIcon} from '../../../../utils/markerIcon.utils';
 import {acceptEmergency} from '../../../../service/emergency/Emergency.service';
 import {
   gerUserTokenByEmail,
+  sendNotifViaAxios,
   sendNotification,
 } from '../../../../service/token/DeviceInfo.service';
 import {EmergencyType} from '../../../../enums/EmergencyType.enum';
+import { getCurrentDateWithTime } from '../../../../utils/date.utils';
 
 type ModalData = {
   notification: NotificationDto;
@@ -73,6 +75,9 @@ export default function Alerts(props: any) {
         setIsOpen(true);
         setModalData(data);
         return;
+      } else {
+        console.log('FOR PLAIN USER');
+        
       }
     });
 
@@ -232,10 +237,12 @@ export default function Alerts(props: any) {
         body: 'Responder is on the way',
         date: selectedData?.date as string,
       };
-
+      
       const userTokenData = await gerUserTokenByEmail(
         selectedData?.sender?.email as string,
       );
+      console.log('USER TOKEN >>');
+      console.log(userTokenData?.token);
       await acceptEmergency(
         selectedData?.emergencyId ? selectedData.emergencyId : '',
         payload,
