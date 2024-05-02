@@ -109,3 +109,13 @@ export const reportUser = async (userInformation: AccountFlaggingDTO) => {
 
   return result;
 };
+
+export const getSpecificUserWhoCreateEmergency = async (emergencyID: string) => {
+  const result = await firestore().collection(EMERGENCY_TABLE).doc(emergencyID).get();
+
+  return result;
+};
+
+export const getTheTotalOfAllResponderWhoRespondedToMyEmergency = async (activeUserID: string) => {
+
+};

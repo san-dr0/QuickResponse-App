@@ -75,9 +75,6 @@ export default function Alerts(props: any) {
         setIsOpen(true);
         setModalData(data);
         return;
-      } else {
-        console.log('FOR PLAIN USER');
-        
       }
     });
 

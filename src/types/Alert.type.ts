@@ -28,3 +28,12 @@ export type AlertUserContextDto = {
   userAlert: AlertUserDataDto | undefined;
   setUserAlert: (params: AlertUserDataDto) => void;
 };
+
+export type UserNotificationContextDataDTO = {
+  isActive?: boolean;
+};
+
+export type UserNotificationContextDTO = {
+  isActiveUserNotification: UserNotificationContextDataDTO | undefined;
+  setIsActiveUserNotification: (param: UserNotificationContextDataDTO) => void;
+};

@@ -62,7 +62,7 @@ export const DASHBOARD = {
     name: 'Services',
     headerTitle: 'QRApp Services',
     tabBarIcon: (
-      <FontAwesome6 name="sim-card" size={25} color={COLOR_LISTS.RED} />
+      <FontAwesome6 name="sim-card" size={25} color={COLOR_LISTS.AMBER} />
     ),
   },
 };

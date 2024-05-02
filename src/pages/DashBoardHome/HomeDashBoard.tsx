@@ -1,4 +1,4 @@
-import {useEffect, useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import {ToastAndroid} from 'react-native';
 import Modal from 'react-native-modal';
 import {AlertNavigationModal} from '../../components/AlertNavigationModal';
@@ -16,15 +16,19 @@ import {EmergencyType} from '../../enums/EmergencyType.enum';
 import {UserType} from '../../enums/User.enum';
 import {useGetActiveUserCoordinates} from '../../hooks/useGetActiveUserCoordinates';
 import {useAccountContext} from '../../providers/AccountProvider';
-import {saveEmergency} from '../../service/emergency/Emergency.service';
+import {
+  getSpecificUserWhoCreateEmergency,
+  saveEmergency,
+} from '../../service/emergency/Emergency.service';
 import {
   getUsersTokens,
   sendNotifViaAxios,
 } from '../../service/token/DeviceInfo.service';
-import {getCurrentDate, getCurrentDateWithTime} from '../../utils/date.utils';
+import {getCurrentDateWithTime} from '../../utils/date.utils';
 import {getNotificationByEmergency} from '../../utils/notification.utils';
 import * as S from './style';
 import messaging from '@react-native-firebase/messaging';
+import {userUserNotificationContext} from '../../providers/UserNotificationProvider';
 
 export default function HomeDashBoard() {
   const {activeUserInformation} = useAccountContext();
@@ -32,6 +36,8 @@ export default function HomeDashBoard() {
   const [verifyRequest, setVerifyRequest] = useState<boolean>(false);
   const [emergencyTypeChooseByUser, setEmergencyTypeChooseByUser] =
     useState<EmergencyType>(EmergencyType.CAR_ACCIDENT);
+
+  const {setIsActiveUserNotification} = userUserNotificationContext();
 
   const onPressCancelEmergency = () => {
     setVerifyRequest(false);
@@ -101,11 +107,24 @@ export default function HomeDashBoard() {
     setVerifyRequest(true);
   };
 
-  useEffect(() => {
-    const unSubscribeMessages = messaging().onMessage((message) => {
-      console.log('RECORD >>');
-      console.log(message);
+  async function fetch(emergencyId: string) {
+    const response = await getSpecificUserWhoCreateEmergency(emergencyId);
+    const userID = response?.data()?.sender.userID as string;
+    const activeUserID = JSON.parse(
+      activeUserInformation?.account?.fbID as string,
+    );
 
+    if (userID === activeUserID) {
+      setIsActiveUserNotification({isActive: true});
+    }
+  }
+
+  useEffect(() => {
+    const unSubscribeMessages = messaging().onMessage(emergencyMessage => {
+      const {data} = emergencyMessage;
+      const {emergencyId} = data;
+
+      fetch(emergencyId);
       return unSubscribeMessages;
     });
   }, []);
