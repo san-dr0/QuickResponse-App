@@ -111,7 +111,7 @@ export default function Login(props: any) {
     <ScrollView>
       <View>
         <ImageComponent
-          imageSrc={require('../../assets/QRApp-img2.jpeg')}
+          imageSrc={require('../../assets/QRAPP-LOGO.jpg')}
           width={APP_WIDTH}
           borderRadius={50}
           height={200}

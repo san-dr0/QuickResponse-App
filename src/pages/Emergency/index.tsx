@@ -93,7 +93,7 @@ export default function Emergency(props: any) {
         />
       </CardComponent>
       {emergencyList.length > 0 ? (
-        <>
+        <View style={{height: APP_HEIGHT - 110}}>
           <DividerComponent margin="5px 0 0 0" />
           <FlatList
             data={emergencyList}
@@ -105,7 +105,7 @@ export default function Emergency(props: any) {
               />
             }
           />
-        </>
+        </View>
       ) : (
         <>
           <DividerComponent margin="50px 0 0 0" />

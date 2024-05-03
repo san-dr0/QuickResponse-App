@@ -43,6 +43,8 @@ export function useOnReceiveFirebaseCloudMessaging() {
           emergency: payload,
         });
       } else {
+        console.log('IM IN USER >> PLAIN');
+        
         setUserAlert({
           title,
           body: body,
@@ -89,6 +91,8 @@ export function useOnReceiveFirebaseCloudMessaging() {
             emergency: payload,
           });
         } else {
+          console.log('RESPONDED TO USER');
+          
           setUserAlert({
             title,
             body: body,

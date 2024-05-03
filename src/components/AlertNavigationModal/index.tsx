@@ -60,11 +60,6 @@ export const AlertNavigationModal = (props: EmergencyTypeProps) => {
           onPressAlertNavigationGeneric={onPressAlertNavigationGeneric}
         />
       </S.AlertNavigationContainer>
-      <View>
-        <TouchableOpacity>
-          <TextLabel title="wewe" />
-        </TouchableOpacity>
-      </View>
     </>
   );
 };

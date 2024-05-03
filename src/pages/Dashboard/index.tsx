@@ -1,3 +1,4 @@
+import React from 'react';
 import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
 import {View} from 'react-native';
 import {DASHBOARD} from '../../constants/string';
@@ -9,11 +10,14 @@ import ProfileDashBoard from '../Profile';
 import Inbox from '../Responder/Tabs/Inbox';
 import QRAppServices from '../Services';
 import * as S from './style';
+import {userUserNotificationContext} from '../../providers/UserNotificationProvider';
+import TextLabel from '../../components/TextLabel';
 
 const BottomTabNavigation = createBottomTabNavigator();
 
 export default function DashBoard(props: any) {
   const {alerts} = useAlertContext();
+  const {isActiveUserNotification} = userUserNotificationContext();
 
   return (
     <BottomTabNavigation.Navigator>
@@ -101,7 +105,15 @@ export default function DashBoard(props: any) {
         component={QRAppServices}
         options={{
           headerTitle: DASHBOARD.SERVICES.headerTitle,
-          tabBarIcon: () => DASHBOARD.SERVICES.tabBarIcon,
+          tabBarIcon: () => 
+          <>
+            {
+              isActiveUserNotification?.isActive
+                &&
+                <S.UserNotificationBadge />
+            }
+            {DASHBOARD.SERVICES.tabBarIcon}
+          </>
         }}
       />
     </BottomTabNavigation.Navigator>

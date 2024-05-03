@@ -21,13 +21,15 @@ import {useUserAlertContext} from '../../providers/UserResponseProvider';
 import {createNewDeviceToken, getAsyncStorage} from '../../utils/utility';
 import * as S from './style';
 const height = Dimensions.get('window').height;
+
 export default function Home(props: any) {
   const {navigation} = props;
   const {sendActiveUserInformation} = useUserCredentials();
   const {setActiveUserInformationFunction} = useAccountContext();
   const {alerts, setAlertRecords} = useAlertContext();
   const {userAlert, setUserAlert} = useUserAlertContext();
-
+  const {onReceive} = useOnReceiveFirebaseCloudMessaging();
+  
   const checkIfUserHasLoggedInAlready = async () => {
     try {
       const fbID: string = (await getAsyncStorage(STORAGE_KEY.FB_ID)) as string;
@@ -98,7 +100,7 @@ export default function Home(props: any) {
   }
 
   return (
-    <View>
+    <View style={{flex: 1}}>
       {alerts?.isActive && (
         <Modal isVisible>
           <S.AlertModal>
@@ -139,10 +141,10 @@ export default function Home(props: any) {
           />
         </View>
       </Modal>
-      <View>
+      <View style={{flex: 1, justifyContent: "center"}}>
         <ImageComponent
           borderRadius={50}
-          imageSrc={require('../../assets/QRApp-img1.jpeg')}
+          imageSrc={require('../../assets/QRAPP-LOGO.jpg')}
           width={APP_WIDTH}
           height={210}
         />
