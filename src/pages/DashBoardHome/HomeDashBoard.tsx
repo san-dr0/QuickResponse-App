@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from 'react';
+import React, {useCallback, useEffect, useMemo, useState} from 'react';
 import {ToastAndroid} from 'react-native';
 import Modal from 'react-native-modal';
 import {AlertNavigationModal} from '../../components/AlertNavigationModal';
@@ -29,6 +29,7 @@ import {getNotificationByEmergency} from '../../utils/notification.utils';
 import * as S from './style';
 import messaging from '@react-native-firebase/messaging';
 import {userUserNotificationContext} from '../../providers/UserNotificationProvider';
+import { getMarkerIcon } from '../../utils/markerIcon.utils';
 
 export default function HomeDashBoard() {
   const {activeUserInformation} = useAccountContext();
@@ -36,6 +37,7 @@ export default function HomeDashBoard() {
   const [verifyRequest, setVerifyRequest] = useState<boolean>(false);
   const [emergencyTypeChooseByUser, setEmergencyTypeChooseByUser] =
     useState<EmergencyType>(EmergencyType.CAR_ACCIDENT);
+  const [userHasTriggerEmergency, setUserHasTriggerEmergency] = useState<any>(undefined);
 
   const {setIsActiveUserNotification} = userUserNotificationContext();
 
@@ -93,6 +95,7 @@ export default function HomeDashBoard() {
         );
       });
       setVerifyRequest(false);
+      setUserHasTriggerEmergency(getMarkerIcon(emergencyTypeChooseByUser));
       ToastAndroid.show('Your emergency has been send', ToastAndroid.LONG);
     } catch (error: any) {
       console.log('ERROR >>>');
@@ -119,6 +122,10 @@ export default function HomeDashBoard() {
     }
   }
 
+  const reTriggeredQRAppMap = useMemo(() => {
+    return <QRAMap userHasTriggerEmergency={userHasTriggerEmergency} emergencyType={emergencyTypeChooseByUser}  />
+  }, [userHasTriggerEmergency]);
+
   useEffect(() => {
     const unSubscribeMessages = messaging().onMessage(emergencyMessage => {
       const {data} = emergencyMessage;
@@ -131,7 +138,6 @@ export default function HomeDashBoard() {
 
   return (
     <S.DashBoardHomeContainer>
-      <QRAMap />
       <Modal isVisible={verifyRequest}>
         <S.AlertModal>
           <TextLabel
@@ -171,7 +177,7 @@ export default function HomeDashBoard() {
           </DivComponent>
         </S.AlertModal>
       </Modal>
-
+      {reTriggeredQRAppMap}
       <AlertNavigationModal
         onPressAlertNavigationGeneric={onPressAlertNavigationGeneric}
       />
