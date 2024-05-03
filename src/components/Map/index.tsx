@@ -1,4 +1,4 @@
-import { StyleSheet, View } from "react-native";
+import { Image, StyleSheet, View } from "react-native";
 import MapView, { Marker, PROVIDER_GOOGLE } from "react-native-maps";
 import { APP_HEIGHT, APP_WIDTH } from "../../constants/dimensions";
 import { checkToGetActiveUserPermission } from "../../utils/utility";
@@ -7,6 +7,8 @@ import GeoLocaiton from 'react-native-geolocation-service';
 import { CoordinatesDTO } from "../../types/Coordinate.type";
 import { useAccountContext } from "../../providers/AccountProvider";
 import { formatActiveUserDisplayInformationToRenderOnMap } from "../../utils/format-display";
+import { getMarkerIcon } from "../../utils/markerIcon.utils";
+import { EmergencyType } from "../../enums/EmergencyType.enum";
 
 const styles = StyleSheet.create({
   container: {
@@ -21,10 +23,16 @@ const styles = StyleSheet.create({
   },
 });
 
-export default function QRAMap() {
+type QRAMapProps = {
+  userHasTriggerEmergency: any;
+  emergencyType: EmergencyType;
+};
+
+export default function QRAMap(props: QRAMapProps) {
     const [isPermissionAccepted, setIsPermissionAccepted] = useState<boolean>(false);
     const [activeUserCoordiantes, setActiveUserCoordinates] = useState<CoordinatesDTO>();
     const {activeUserInformation} = useAccountContext();
+    const {userHasTriggerEmergency, emergencyType} = props;
     
     useEffect(() => {
         checkPermissionFirst();
@@ -71,7 +79,17 @@ export default function QRAMap() {
           longitudeDelta: 0.0121,
         }}
         zoomTapEnabled>
-            <Marker title={`${formatActiveUserDisplayInformationToRenderOnMap(activeUserInformation?.account)}`} coordinate={activeUserCoordiantes} />
+            <Marker title={`${formatActiveUserDisplayInformationToRenderOnMap(activeUserInformation?.account)}`} coordinate={activeUserCoordiantes}>
+              {
+                userHasTriggerEmergency && 
+                <Image source={userHasTriggerEmergency}
+                  style={{
+                    width: 50,
+                    height: 50,
+                  }}
+                  resizeMode="center"/>
+              }
+            </Marker>
         </MapView>}
     </View>
   );

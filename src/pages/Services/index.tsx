@@ -45,7 +45,10 @@ export default function QRAppServices(props: any) {
                 <DivComponent flexDirection="row">
                     <TextLabel title={name} fontSize={18} />
                     <FontAwesome6Icon name="chevron-right" size={20} style={{position: 'absolute', right: 0}} />
-                    {route === "Emergency-Logs" && <Badge style={{position: 'absolute', right: 0, marginRight: 20, alignSelf: "center", backgroundColor: COLOR_LISTS.RED}}>{totalRespondedOfMyEmergency}</Badge>}
+                    {(route === "Emergency-Logs" && totalRespondedOfMyEmergency > 0)  && 
+                        <Badge style={{position: 'absolute', right: 0, marginRight: 20, alignSelf: "center", backgroundColor: COLOR_LISTS.RED}}>{totalRespondedOfMyEmergency}
+                        </Badge>
+                    }
                 </DivComponent>
             </CardComponent>
         </TouchableOpacity>

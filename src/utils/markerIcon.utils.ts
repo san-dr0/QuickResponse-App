@@ -15,6 +15,7 @@ export function getMarkerIcon(type: EmergencyType) {
       break;
     case EmergencyType.FLOOD:
       icons = MARKER.FLOOD;
+      break;
     case EmergencyType.MEDICAL:
       icons = MARKER.MEDICAL;
       break;
