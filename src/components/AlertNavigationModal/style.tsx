@@ -32,7 +32,7 @@ export const Arrow = styled(TouchableOpacity)<AlertNavigationContainerProps>`
   position: absolute;
   bottom: 0;
   margin-bottom: ${(props: AlertNavigationContainerProps) =>
-    !props.display ? '-616px' : '300px'};
+    !props.display ? '-635px' : '280px'};
   align-self: center;
   border-radius: 100px;
 `;

@@ -3,6 +3,7 @@ import {EMERGENCY_TABLE, FLAGGING} from '../../constants/dbRef';
 import {EmergencyDto, EmergencyResponder} from '../../dto/Emergency.dto';
 import {EmergencyType} from '../../enums/EmergencyType.enum';
 import { AccountDTO, AccountFlaggingDTO } from '../../types/User.type';
+import { Alert, ToastAndroid } from 'react-native';
 
 export const saveEmergency = async (payload: EmergencyDto) => {
   const response = await firestore().collection(EMERGENCY_TABLE).add(payload);
@@ -117,5 +118,21 @@ export const getSpecificUserWhoCreateEmergency = async (emergencyID: string) => 
 };
 
 export const getTheTotalOfAllResponderWhoRespondedToMyEmergency = async (activeUserID: string) => {
+  try{    
+    const result = await firestore().collection(EMERGENCY_TABLE).where("sender.userID", "==", JSON.parse(activeUserID)).get();
+    let counter: number = 0;
+    result?.docs?.map((res) => {
+      console.log(res.data()?.responder);
+      const responder = res?.data()?.responder;
 
+      if (responder.length > 0) {
+        counter+=1;
+      }
+    });
+    
+    return counter;
+  }
+  catch(error: any) {
+    Alert.alert("Oops", error?.message);
+  }
 };
