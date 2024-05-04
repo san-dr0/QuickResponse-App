@@ -12,8 +12,17 @@ import { CardComponent } from '../../../components/Card';
 import DivComponent from '../../../components/DivContainer';
 import { displayConfiguredRatingBar } from '../../../utils/format-display';
 
+type ResponderListDTO = {
+  email: string, 
+  firstname: string, 
+  id: string, 
+  lastname: string, 
+  middlename: string, 
+  responderType: string
+} & {date: string, ratingCount: number};
+
 export const Rate = () => {
-  const {sendRatingFeedBack, sendGetAllRatingFeedBack} = useNewsFeed();
+  const {sendRatingFeedBack, sendGetAllRatingFeedBack, getAllResponderWhoRespondToMyEmergency, getCertainRespondedRating} = useNewsFeed();
   const {activeUserInformation} = useAccountContext();
   const [qrAppRating, setQrAppRating] = useState<{ratingID: number, activeColor: string, defaultColor: string, isActive: boolean, ratingCount: number}[]>(
     [
@@ -58,6 +67,8 @@ export const Rate = () => {
   const [isVisibleModal, setIsVisibleModal] = useState<boolean>(false);
   const [ratingRecords, setRatingRecords] = useState<{ratingCount: number, userID: string}[]>([]);
   const [refresh, setRefresh] = useState<boolean>(false);
+  const [responderRespondedToMyEmergencyList, setResponderRespondedToMyEmergencyList] = useState<ResponderListDTO[]>([]);
+  const [giveRateToCertainResponder, setGiveRateToCertainResponder] = useState<{responderID: string, responderFullName: string}>();
 
   const onSetRating = (ratingID: number, ratingCount: number) => {
     setMaxRating(ratingCount);
@@ -97,14 +108,15 @@ export const Rate = () => {
       
       const activeUserFullName = `${activeUserInformation?.account?.lastname}, ${activeUserInformation?.account?.firstname}`;
 
-      const result = await sendRatingFeedBack(maxRating, activeUserInformation?.account?.fbID as string, activeUserFullName);
+      const result = await sendRatingFeedBack(maxRating, activeUserInformation?.account?.fbID as string, activeUserFullName, giveRateToCertainResponder?.responderID as string, giveRateToCertainResponder?.responderFullName as string);
 
       if (result) {
         setQrAppRating(rating);
         setIsVisibleModal(false);
         ToastAndroid.show('Your rating was successfully sent.', ToastAndroid.SHORT);
       } else {
-        ToastAndroid.show('You already sent a rating to Us.', ToastAndroid.SHORT);
+        ToastAndroid.show('You already sent a rating to this responder.', ToastAndroid.SHORT);
+        setMaxRating(1);
       }
     }
     catch(error: any) {
@@ -114,9 +126,21 @@ export const Rate = () => {
 
   const onCloseRating = () => {
     setIsVisibleModal(false);
+    setMaxRating(1);
+    qrAppRating.map((rating, i) => {
+      if (i === 0) {
+        rating.isActive = true;
+      } else {
+        rating.isActive = false;
+      }
+      return rating;
+    });
   };
 
-  const onToggleModal = () => {
+  const onToggleModal = (item: ResponderListDTO) => {
+    const {lastname, firstname, id} = item;
+    let parseResponderID = JSON.parse(id);
+    setGiveRateToCertainResponder({responderID: parseResponderID, responderFullName: `${lastname}, ${firstname}`})
     setIsVisibleModal(true);
   };
 
@@ -132,43 +156,85 @@ export const Rate = () => {
     }, 1000);
   };
 
+  const getResponderRespondedToMyEmergency = async () => {
+    const respondedList = await getAllResponderWhoRespondToMyEmergency(activeUserInformation?.account?.fbID as string);
+    respondedList?.docs.map(async(responded) => {
+      const data = responded?.data();
+      const responderList = data?.responder;
+      const date = data?.date;
+
+      let tempResponderList: ResponderListDTO [] = [];
+
+      if (responderList.length > 0 ){
+        responderList?.map(async(responder: ResponderListDTO) => {
+          responder.date = date;
+          
+          const responderID = JSON.parse(responder?.id);
+          
+          if (tempResponderList.filter(rec => rec.id === responderID).length === 0) {
+            const res = await getCertainRespondedRating(responderID);
+            responder.ratingCount = 0;
+            if (res.length > 0) {
+              responder.ratingCount = res[0].data()?.ratingCount;
+            }
+            
+            tempResponderList.push(responder);
+          }
+        });
+        
+        setTimeout(() => {
+          setResponderRespondedToMyEmergencyList(tempResponderList);
+        }, 1000);
+      }      
+    })
+  };
+
   useEffect(() => {
-    getAllRatingFeedBack();
+    // getAllRatingFeedBack();
+    getResponderRespondedToMyEmergency();
   }, [refresh]);
 
-  const renderRatingRecords = ({item}: any) => {
-    const {ratingCount, fullName, userID, date} = item;
+  const renderRatingRecords = ({item}: any) => {    
+    const {firstname, lastname, id, date, ratingCount} = item;
+    
     const ratingList = displayConfiguredRatingBar(ratingCount);
 
-    return <CardComponent margin='5px 0 0 0' borderRadius={5} padding={10} backgroundColor={COLOR_LISTS.WHITE}>
-      <DivComponent alignItems='center'>
-        <TextLabel title={fullName} fontSize={20} />
-        <TextLabel title={'User'} fontSize={10} />
-        <DivComponent flexDirection='row' justifyContent='center'>
-          {
-            ratingList.map((rating) => {
-              return rating;
-            })
-          }
-        </DivComponent>
-        <TextLabel title={date} />
-      </DivComponent>
+    return <CardComponent key={id} margin='5px 0 0 0' borderRadius={5} padding={10} backgroundColor={COLOR_LISTS.WHITE}>
+        <TouchableOpacity onPress={() => onToggleModal(item)}>
+          <DivComponent alignItems='center'>
+            <TextLabel title={`${lastname}, ${firstname}`} fontSize={20} />
+            <TextLabel title={'Responder'} fontSize={10} />
+            <DivComponent flexDirection='row' justifyContent='center'>
+              {
+                ratingList.map((rating) => {
+                  return rating;
+                })
+              }
+            </DivComponent>
+            <TextLabel title={`${date}`} />
+          </DivComponent>
+        </TouchableOpacity>
     </CardComponent>
   };
 
   return <View style={{height: '100%', padding: 5, backgroundColor: COLOR_LISTS.GREY_300}}>
-    <FlatList 
-      data={ratingRecords}
+    {
+      responderRespondedToMyEmergencyList.length > 0 ?
+      <FlatList 
+      data={responderRespondedToMyEmergencyList}
       renderItem={renderRatingRecords}
       refreshControl={
         <RefreshControl refreshing={refresh} onRefresh={onRefreshRating} />
       }
     />
+    :
+    <TextLabel title="No records to show" textAlign="center" fontSize={20} fontWeight="bold" />
+    }
     
-    <ActionButton onPress={onToggleModal} />
+    {/* <ActionButton onPress={onToggleModal} /> */}
     <View style={{justifyContent: 'center', alignContent: 'center', alignSelf: 'center', height: '100%', position: 'absolute'}}>
       <S.CustomizeContainerModal isVisible={isVisibleModal}>
-        <TextLabel title="Rate your experience." fontSize={18} textAlign="center" />
+        <TextLabel title={`Rate your experience, from the responder ${giveRateToCertainResponder?.responderFullName}`} fontSize={18} textAlign="center" />
         <View style={{flexDirection: 'row', justifyContent: 'space-evenly', marginTop: 40, alignContent: 'center', alignItems: 'center'}}>
           {
             qrAppRating.map(rating => {

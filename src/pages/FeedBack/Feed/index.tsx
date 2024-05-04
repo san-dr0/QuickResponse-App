@@ -44,7 +44,7 @@ export const Feed = () => {
   };
 
   const renderFeedBackItem = ({item}: any) => {
-    return <CardComponent margin='5px 0 0 0' padding={10} borderRadius={5}>
+    return <CardComponent key={item?.date} margin='5px 0 0 0' padding={10} borderRadius={5}>
         <TextLabel title={item?.date} fontSize={10} />
         <TextLabel title={item?.comment} fontSize={18} />
         <TextLabel title={item?.fullName} fontSize={10} />

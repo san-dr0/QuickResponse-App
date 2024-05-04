@@ -67,11 +67,12 @@ export default function HomeDashBoard() {
         emergencyStatus: EmergencyStatus.ACTIVE,
         date: getCurrentDateWithTime(),
         isActive: true,
+        isView: false,
       };
 
       const savedEmergencyResponse = await saveEmergency(emergency);
-      console.log('SAVED EM >>');
-      console.log(savedEmergencyResponse);
+      // console.log('SAVED EM >>');
+      // console.log(savedEmergencyResponse);
 
       const resp = await getUsersTokens(UserType.RESPONDER);
       emergency.emergencyId = savedEmergencyResponse?.id;

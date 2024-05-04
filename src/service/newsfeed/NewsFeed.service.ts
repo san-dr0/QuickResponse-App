@@ -1,5 +1,5 @@
 import firstore from "@react-native-firebase/firestore"
-import { FEEDACK_TABLE, NEWS_FEED_TABLE, RATING_TABLE } from "../../constants/dbRef"
+import { EMERGENCY_TABLE, FEEDACK_TABLE, NEWS_FEED_TABLE, RATING_TABLE } from "../../constants/dbRef"
 import storage from "@react-native-firebase/storage"
 import { AccountDTO } from "../../types/User.type"
 import { getCurrentDateWithTime } from "../../utils/date.utils"
@@ -69,8 +69,8 @@ export const createFeedBack = async (userID: string, userFullName: string, comme
     result;
 };
 
-export const createRating = async (ratingCount: number, userID: string, fullName: string) => {
-    const hasRecord = await firstore().collection(RATING_TABLE).where('userID', '==', userID).get();    
+export const createRating = async (ratingCount: number, ratingMakerUserID: string, ratingMakerFullName: string, responderRatedID: string, responderRatedFullName: string) => {
+    const hasRecord = await firstore().collection(RATING_TABLE).where('ratingMakerUserID', '==', ratingMakerUserID).get();    
 
     if (hasRecord.docs.length > 0) {
         return false;
@@ -78,8 +78,10 @@ export const createRating = async (ratingCount: number, userID: string, fullName
     
     await firstore().collection(RATING_TABLE).add({
         ratingCount,
-        userID,
-        fullName,
+        ratingMakerUserID,
+        ratingMakerFullName,
+        responderRatedFullName,
+        responderRatedID,
         date: getCurrentDateWithTime()
     });
 
@@ -90,4 +92,16 @@ export const getAllRatingFeedBack = async () => {
     const result = await firstore().collection(RATING_TABLE).get();
 
     return result;
+};
+
+export const getAllRespondedToMyEmergency = async (userID: string) => {
+    const result = await firstore().collection(EMERGENCY_TABLE).where("sender.userID", "==", userID).get();
+
+    return result;
+};
+
+export const getCertainRatingCount = async (ratingMakerUserID: string) => {
+    const result = await firstore().collection(RATING_TABLE).where("responderRatedID", "==", ratingMakerUserID).get();
+
+    return result.docs;
 };

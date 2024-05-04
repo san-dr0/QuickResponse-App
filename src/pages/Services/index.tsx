@@ -8,6 +8,8 @@ import { Badge } from "react-native-paper";
 import { COLOR_LISTS } from "../../constants/colors";
 import { getTheTotalOfAllResponderWhoRespondedToMyEmergency } from "../../service/emergency/Emergency.service";
 import { useAccountContext } from "../../providers/AccountProvider";
+import { useUserAlertContext } from "../../providers/UserResponseProvider";
+import { userUserNotificationContext } from "../../providers/UserNotificationProvider";
 
 type ServiceProps = {
     name: string;
@@ -23,6 +25,7 @@ export default function QRAppServices(props: any) {
         {name: 'First Aid', route: 'First-Aid'}
     ];
     const [totalRespondedOfMyEmergency, setTotalRespondedOfMyEmergency] = useState<number>(0);
+    const {setIsActiveUserNotification} = userUserNotificationContext();
 
     async function getAllTotalOfAllRespondedToMyEmergency() {
         const total = await getTheTotalOfAllResponderWhoRespondedToMyEmergency(activeUserInformation?.account?.fbID as string);
@@ -30,6 +33,7 @@ export default function QRAppServices(props: any) {
     };
 
     useEffect(() => {
+        setIsActiveUserNotification({isActive: false});
         getAllTotalOfAllRespondedToMyEmergency();
     }, []);
 

@@ -14,6 +14,8 @@ import {APP_HEIGHT} from '../../constants/dimensions';
 import {EmergencyDto} from '../../dto/Emergency.dto';
 import {useAccountContext} from '../../providers/AccountProvider';
 import {getAllEmergency} from '../../service/emergency/Emergency.service';
+import { Badge } from 'react-native-paper';
+import DivComponent from '../../components/DivContainer';
 
 export default function Emergency(props: any) {
   const {navigation} = props;
@@ -48,6 +50,7 @@ export default function Emergency(props: any) {
   };
 
   const renderEmergencyLogs = ({item}: any) => {
+    
     return (
       <>
         <DividerComponent margin="5px 0 0 0" />
@@ -62,6 +65,10 @@ export default function Emergency(props: any) {
             <TextLabel title={`Coordinates:`} fontWeight="bold" fontSize={15} />
             <TextLabel title={`Long: ${item?.coordinate?.longitude}`} />
             <TextLabel title={`Latitude: ${item?.coordinate?.longitude}`} />
+            <DivComponent flexDirection="row">
+              <TextLabel title={`Total Responder: `} />
+              <Badge style={{backgroundColor: COLOR_LISTS.AMBER, color: COLOR_LISTS.BLACK}}>{item?.responder?.length}</Badge>
+            </DivComponent>
           </CardComponent>
         </TouchableOpacity>
       </>
