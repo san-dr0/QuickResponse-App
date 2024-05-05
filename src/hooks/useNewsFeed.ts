@@ -2,8 +2,9 @@ import firebase from '@react-native-firebase/firestore';
 import {useEffect, useId, useState} from 'react';
 import {FEEDACK_TABLE, NEWS_FEED_TABLE} from '../constants/dbRef';
 import {FeedBackDTO, NewsFeedDTO} from '../dto/NewsFeed.dto';
-import {createFeedBack, createRating, getAllRatingFeedBack, getCertainNewsFeed} from '../service/newsfeed/NewsFeed.service';
+import {createFeedBack, createRating, getAllRatingFeedBack, getAllRespondedToMyEmergency, getCertainNewsFeed, getCertainRatingCount} from '../service/newsfeed/NewsFeed.service';
 import { RatingDTO } from '../types/FeedAndRating.type';
+import { Alert } from 'react-native';
 
 export const useNewsFeed = () => {
   const [newsFeedData, setNewsData] = useState<NewsFeedDTO[]>([]);
@@ -229,8 +230,10 @@ export const useNewsFeed = () => {
     return feedBackList;
   };
 
-  const sendRatingFeedBack = async (ratingCount: number, userID: string, fullName: string) => {
-    const result = await createRating(ratingCount, userID, fullName);
+  const sendRatingFeedBack = async (ratingCount: number, ratingMakerUserID: string, ratingMakerFullName: string, userType: string) => {
+    //  responderRatedID: string, responderRatedFullName: string PARAMS of this function
+    const result = await createRating(ratingCount, ratingMakerUserID, ratingMakerFullName, userType);
+    // responderRatedID, responderRatedFullName
 
     return result;
   };
@@ -246,6 +249,21 @@ export const useNewsFeed = () => {
     });
     
     return ratingRecords;
+  };
+
+  const getAllResponderWhoRespondToMyEmergency = async (userID: string) => {
+    try{      
+      return await getAllRespondedToMyEmergency(JSON.parse(userID));
+    }
+    catch(error: any) {
+      Alert.alert('Oops', error?.message);
+    }
+  };
+
+  const getCertainRespondedRating = async (ratingMakerUserID: string) => {
+    const result = await getCertainRatingCount(ratingMakerUserID);
+
+    return result;
   };
 
   useEffect(() => {
@@ -269,6 +287,8 @@ export const useNewsFeed = () => {
     sendCreateFeedBack,
     sendGetAllCreatedFeedBack,
     sendRatingFeedBack,
-    sendGetAllRatingFeedBack
+    sendGetAllRatingFeedBack,
+    getAllResponderWhoRespondToMyEmergency,
+    getCertainRespondedRating
   };
 };

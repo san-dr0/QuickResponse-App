@@ -29,7 +29,7 @@ import {getNotificationByEmergency} from '../../utils/notification.utils';
 import * as S from './style';
 import messaging from '@react-native-firebase/messaging';
 import {userUserNotificationContext} from '../../providers/UserNotificationProvider';
-import { getMarkerIcon } from '../../utils/markerIcon.utils';
+import {getMarkerIcon} from '../../utils/markerIcon.utils';
 
 export default function HomeDashBoard() {
   const {activeUserInformation} = useAccountContext();
@@ -37,7 +37,8 @@ export default function HomeDashBoard() {
   const [verifyRequest, setVerifyRequest] = useState<boolean>(false);
   const [emergencyTypeChooseByUser, setEmergencyTypeChooseByUser] =
     useState<EmergencyType>(EmergencyType.CAR_ACCIDENT);
-  const [userHasTriggerEmergency, setUserHasTriggerEmergency] = useState<any>(undefined);
+  const [userHasTriggerEmergency, setUserHasTriggerEmergency] =
+    useState<any>(undefined);
 
   const {setIsActiveUserNotification} = userUserNotificationContext();
 
@@ -67,11 +68,12 @@ export default function HomeDashBoard() {
         emergencyStatus: EmergencyStatus.ACTIVE,
         date: getCurrentDateWithTime(),
         isActive: true,
+        isView: false,
       };
 
       const savedEmergencyResponse = await saveEmergency(emergency);
-      console.log('SAVED EM >>');
-      console.log(savedEmergencyResponse);
+      // console.log('SAVED EM >>');
+      // console.log(savedEmergencyResponse);
 
       const resp = await getUsersTokens(UserType.RESPONDER);
       emergency.emergencyId = savedEmergencyResponse?.id;
@@ -84,6 +86,7 @@ export default function HomeDashBoard() {
         notification: getNotificationByEmergency(
           emergencyTypeChooseByUser,
         ) as NotificationDto,
+        sendBy: 'User',
       };
       resp.forEach(async element => {
         return await sendNotifViaAxios(
@@ -110,28 +113,37 @@ export default function HomeDashBoard() {
     setVerifyRequest(true);
   };
 
-  async function fetch(emergencyId: string) {
+  async function fetch(emergencyId: string, sendBy: string) {
     const response = await getSpecificUserWhoCreateEmergency(emergencyId);
     const userID = response?.data()?.sender.userID as string;
     const activeUserID = JSON.parse(
       activeUserInformation?.account?.fbID as string,
     );
+    console.log(activeUserInformation?.account);
 
-    if (userID === activeUserID) {
+    if (userID === activeUserID && sendBy === 'Responder') {
       setIsActiveUserNotification({isActive: true});
     }
   }
 
   const reTriggeredQRAppMap = useMemo(() => {
-    return <QRAMap userHasTriggerEmergency={userHasTriggerEmergency} emergencyType={emergencyTypeChooseByUser}  />
+    return (
+      <QRAMap
+        userHasTriggerEmergency={userHasTriggerEmergency}
+        emergencyType={emergencyTypeChooseByUser}
+      />
+    );
   }, [userHasTriggerEmergency]);
 
   useEffect(() => {
     const unSubscribeMessages = messaging().onMessage(emergencyMessage => {
       const {data} = emergencyMessage;
-      const {emergencyId} = data;
+      const {emergencyId, sendBy} = data;
+      console.log('WEWE');
+      
+      console.log(sendBy);
 
-      fetch(emergencyId);
+      fetch(emergencyId, sendBy);
       return unSubscribeMessages;
     });
   }, []);

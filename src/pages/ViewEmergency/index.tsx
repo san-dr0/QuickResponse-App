@@ -225,10 +225,10 @@ export default function ViewEmergency(props: any) {
                 </Text>
 
                 <TouchableOpacity
-                  onPress={() =>
+                  onPress={() => 
                     navigation.navigate('View-User-Info', {
                       id: emergency?.sender?.userID
-                        ? JSON.parse(emergency?.sender?.userID)
+                        ? emergency?.sender?.userID
                         : '',
                     })
                   }>

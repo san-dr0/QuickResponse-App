@@ -12,6 +12,7 @@ export interface EmergencyDto {
   coordinate: CoordinateDto;
   date: string;
   isActive: boolean;
+  isView: boolean;
 }
 
 export interface EmergencyResponder {

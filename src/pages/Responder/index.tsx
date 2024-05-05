@@ -7,6 +7,7 @@ import Inbox from './Tabs/Inbox';
 import EmergencyHistory from './EmergencyHistory';
 import { DASHBOARD } from '../../constants/string';
 import NewsFeedDashBoard from '../NewsFeed';
+import ResponderServices from './FeedbackAndRating';
 
 const BottomTabNavigation = createBottomTabNavigator();
 
@@ -56,7 +57,7 @@ export default function Responder() {
       />
       <BottomTabNavigation.Screen
         name={responderRoutes.HISTORY.name}
-        component={EmergencyHistory}
+        component={ResponderServices}
         options={{
           title: responderRoutes.HISTORY.headerTitle,
           tabBarIcon: () => responderRoutes.HISTORY.tabBarIcon,

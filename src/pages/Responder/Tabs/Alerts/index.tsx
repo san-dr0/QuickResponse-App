@@ -26,7 +26,7 @@ import {
   sendNotification,
 } from '../../../../service/token/DeviceInfo.service';
 import {EmergencyType} from '../../../../enums/EmergencyType.enum';
-import { getCurrentDateWithTime } from '../../../../utils/date.utils';
+import {getCurrentDateWithTime} from '../../../../utils/date.utils';
 
 type ModalData = {
   notification: NotificationDto;
@@ -125,7 +125,7 @@ export default function Alerts(props: any) {
 
     const isUserIncludedToResponder = selectedData.responder.some(
       val => JSON.parse(val.id) === JSON.parse(user?.account?.fbID as string),
-    );    
+    );
 
     return (
       <View style={{height: height * 0.3, paddingHorizontal: 14}}>
@@ -234,16 +234,16 @@ export default function Alerts(props: any) {
         body: 'Responder is on the way',
         date: selectedData?.date as string,
       };
-      
+
       const userTokenData = await gerUserTokenByEmail(
         selectedData?.sender?.email as string,
       );
-      console.log('USER TOKEN >>');
-      console.log(userTokenData?.token);
+
       await acceptEmergency(
         selectedData?.emergencyId ? selectedData.emergencyId : '',
         payload,
       );
+      ref.sendBy = 'Responder';
 
       await sendNotification(
         ref,
@@ -252,13 +252,12 @@ export default function Alerts(props: any) {
       );
       await sendRequest();
 
-      if(!selectedData){
+      if (!selectedData) {
         return;
       }
-      const updateArr = [...selectedData.responder,payload];
+      const updateArr = [...selectedData.responder, payload];
 
-      setSelectedData({...selectedData,responder:updateArr});
-    
+      setSelectedData({...selectedData, responder: updateArr});
     } catch (error) {
       console.log(error);
     }

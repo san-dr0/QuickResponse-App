@@ -24,7 +24,7 @@ export const acceptEmergency = async (
   emergencyId: string,
   responder: EmergencyResponder,
 ) => {
-  console.log(emergencyId);
+  console.log(responder);
   const response = await firestore()
     .collection(EMERGENCY_TABLE)
     .doc(emergencyId)
@@ -122,10 +122,10 @@ export const getTheTotalOfAllResponderWhoRespondedToMyEmergency = async (activeU
     const result = await firestore().collection(EMERGENCY_TABLE).where("sender.userID", "==", JSON.parse(activeUserID)).get();
     let counter: number = 0;
     result?.docs?.map((res) => {
-      console.log(res.data()?.responder);
       const responder = res?.data()?.responder;
-
-      if (responder.length > 0) {
+      const isView = res.data()?.isView;
+         
+      if (responder.length > 0 && !isView) {
         counter+=1;
       }
     });
