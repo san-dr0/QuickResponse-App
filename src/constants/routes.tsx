@@ -34,9 +34,9 @@ export const responderRoutes = {
   },
   HISTORY: {
     name: 'Emergency-History',
-    headerTitle: 'Emergency History',
+    headerTitle: 'Services',
     tabBarIcon: (
-      <FontAwesome6 name="message" size={25} color={COLOR_LISTS.RED} />
+      <FontAwesome6 name="sim-card" size={25} color={COLOR_LISTS.RED} />
     ),
   },
 };

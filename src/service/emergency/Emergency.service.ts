@@ -24,7 +24,7 @@ export const acceptEmergency = async (
   emergencyId: string,
   responder: EmergencyResponder,
 ) => {
-  console.log(emergencyId);
+  console.log(responder);
   const response = await firestore()
     .collection(EMERGENCY_TABLE)
     .doc(emergencyId)

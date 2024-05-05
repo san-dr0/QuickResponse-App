@@ -5,6 +5,8 @@ import {useAccountContext} from '../../../providers/AccountProvider';
 import {EmergencyDto} from '../../../dto/Emergency.dto';
 import {EmergencyType} from '../../../enums/EmergencyType.enum';
 import {MARKER} from '../../../constants/image';
+import TextLabel from '../../../components/TextLabel';
+import DividerComponent from '../../../components/Divider';
 
 export default function EmergencyHistory(props: any) {
   const {navigation} = props;
@@ -83,11 +85,23 @@ export default function EmergencyHistory(props: any) {
 
   return (
     <View style={{flex: 1}}>
-      <FlatList
-        data={data}
-        keyExtractor={val => val.emergencyId as string}
-        renderItem={renderItem}
-      />
+      {data.length ? (
+        <FlatList
+          data={data}
+          keyExtractor={val => val.emergencyId as string}
+          renderItem={renderItem}
+        />
+      ) : (
+        <>
+          <DividerComponent margin="20px 0 0 0" />
+          <TextLabel
+            title="No records to show."
+            fontSize={20}
+            textAlign="center"
+            fontWeight="bold"
+          />
+        </>
+      )}
     </View>
   );
 }

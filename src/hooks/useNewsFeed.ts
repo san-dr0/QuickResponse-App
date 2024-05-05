@@ -230,8 +230,10 @@ export const useNewsFeed = () => {
     return feedBackList;
   };
 
-  const sendRatingFeedBack = async (ratingCount: number, ratingMakerUserID: string, ratingMakerFullName: string, responderRatedID: string, responderRatedFullName: string) => {
-    const result = await createRating(ratingCount, ratingMakerUserID, ratingMakerFullName, responderRatedID, responderRatedFullName);
+  const sendRatingFeedBack = async (ratingCount: number, ratingMakerUserID: string, ratingMakerFullName: string, userType: string) => {
+    //  responderRatedID: string, responderRatedFullName: string PARAMS of this function
+    const result = await createRating(ratingCount, ratingMakerUserID, ratingMakerFullName, userType);
+    // responderRatedID, responderRatedFullName
 
     return result;
   };
