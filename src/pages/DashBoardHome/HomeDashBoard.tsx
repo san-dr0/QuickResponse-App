@@ -119,7 +119,6 @@ export default function HomeDashBoard() {
     const activeUserID = JSON.parse(
       activeUserInformation?.account?.fbID as string,
     );
-    console.log(activeUserInformation?.account);
 
     if (userID === activeUserID && sendBy === 'Responder') {
       setIsActiveUserNotification({isActive: true});
@@ -141,7 +140,7 @@ export default function HomeDashBoard() {
       const {emergencyId, sendBy} = data;
       console.log('WEWE');
       
-      console.log(sendBy);
+      console.log(emergencyMessage);
 
       fetch(emergencyId, sendBy);
       return unSubscribeMessages;
