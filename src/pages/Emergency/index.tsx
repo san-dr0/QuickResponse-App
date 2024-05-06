@@ -16,15 +16,18 @@ import {useAccountContext} from '../../providers/AccountProvider';
 import {getAllEmergency} from '../../service/emergency/Emergency.service';
 import { Badge } from 'react-native-paper';
 import DivComponent from '../../components/DivContainer';
+import { userUserNotificationContext } from '../../providers/UserNotificationProvider';
 
 export default function Emergency(props: any) {
   const {navigation} = props;
   const [emergencyList, setEmergencyList] = useState<EmergencyDto[]>([]);
   const {activeUserInformation} = useAccountContext();
   const [refresh, setRefresh] = useState<boolean>(false);
+  const {setTotalRespondedOfMyEmergency} = userUserNotificationContext();
 
   const getEmergency = async () => {
     try {
+      setTotalRespondedOfMyEmergency(0);
       const emergencyResult = await getAllEmergency(
         activeUserInformation?.credentials?.loginEmail as string,
       );

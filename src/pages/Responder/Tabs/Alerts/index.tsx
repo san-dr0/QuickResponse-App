@@ -222,12 +222,11 @@ export default function Alerts(props: any) {
       const name =
         payload.firstname + ' ' + payload.middlename + ' ' + payload.lastname;
       const ref: NotificationDto = {
-        title: `${name} has been respond`,
+        title: `${name} has been respond 123`,
         body: 'Responder is on the way',
         date: selectedData?.date as string,
-        sendBy: 'Responder',
       };
-
+      
       const userTokenData = await gerUserTokenByEmail(
         selectedData?.sender?.email as string,
       );
@@ -236,11 +235,12 @@ export default function Alerts(props: any) {
         selectedData?.emergencyId ? selectedData.emergencyId : '',
         payload,
       );
-
+      
       await sendNotification(
         ref,
         userTokenData.token,
         selectedData?.emergencyId as string,
+        "Responder",
       );
       await sendRequest();
 

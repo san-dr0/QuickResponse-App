@@ -36,4 +36,6 @@ export type UserNotificationContextDataDTO = {
 export type UserNotificationContextDTO = {
   isActiveUserNotification: UserNotificationContextDataDTO | undefined;
   setIsActiveUserNotification: (param: UserNotificationContextDataDTO) => void;
+  totalRespondedOfMyEmergency: number;
+  setTotalRespondedOfMyEmergency: (param: number) => void;
 };

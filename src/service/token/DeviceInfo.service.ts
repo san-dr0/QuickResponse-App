@@ -79,12 +79,16 @@ export const sendNotification = async (
   notification: NotificationDto,
   recieverToken: string,
   emergencyId: string,
+  senderBy: string,
 ) => {
   try {
+    console.log("sendNOTIF >>");
+    console.log(notification);
+    
     const response = await axios.post(
       'https://fcm.googleapis.com/fcm/send',
       {
-        data: {emergencId: emergencyId},
+        data: {emergencyId: emergencyId, senderBy},
         notification: notification,
         to: recieverToken,
       },

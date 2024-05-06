@@ -34,7 +34,9 @@ export default function EditPersonalInformationComponent(props: any) {
 
   const onUpdateUserPersonalInformation = async (values: UpdateProfileDTO) => {
     let hasChangedPassword = values.password;
-
+    values.responderType = activeUserInformation?.account?.responderType as string;
+    values.userType = activeUserInformation?.account?.userType as string;
+    
     try {
       const result = await sendUpdateInfromationOfQRUser(
         JSON.parse(activeUserInformation?.account?.fbID ?? ''),
