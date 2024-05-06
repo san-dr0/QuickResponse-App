@@ -95,9 +95,9 @@ export const updateUserInformation = async (
   profileInformation: UpdateProfileDTO,
   hasChangedPassword: any,
 ): Promise<{ hashPassword: string } | undefined> => {
-  const { firstname, middlename, lastname, mobilenumber } = profileInformation;
+  const { firstname, middlename, lastname, mobilenumber, responderType, userType } = profileInformation;
   let result = null;
-
+  
   if (hasChangedPassword) {
     const { password } = profileInformation;
     let hashPassword = await sha256(password);
@@ -108,6 +108,8 @@ export const updateUserInformation = async (
         middlename,
         lastname,
         mobilenumber,
+        responderType,
+        userType
       },
       password: hashPassword,
     });
@@ -120,6 +122,8 @@ export const updateUserInformation = async (
         middlename,
         lastname,
         mobilenumber,
+        responderType,
+        userType
       },
     });
     return undefined;

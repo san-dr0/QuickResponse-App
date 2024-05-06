@@ -119,9 +119,8 @@ export default function HomeDashBoard() {
     const activeUserID = JSON.parse(
       activeUserInformation?.account?.fbID as string,
     );
-    console.log(activeUserInformation?.account);
-
-    if (userID === activeUserID && sendBy === 'Responder') {
+    
+    if (userID === activeUserID && sendBy === 'Responder' ) {
       setIsActiveUserNotification({isActive: true});
     }
   }
@@ -138,12 +137,9 @@ export default function HomeDashBoard() {
   useEffect(() => {
     const unSubscribeMessages = messaging().onMessage(emergencyMessage => {
       const {data} = emergencyMessage;
-      const {emergencyId, sendBy} = data;
-      console.log('WEWE');
-      
-      console.log(sendBy);
+      const {emergencyId, senderBy} = data;
 
-      fetch(emergencyId, sendBy);
+      fetch(emergencyId, senderBy);
       return unSubscribeMessages;
     });
   }, []);

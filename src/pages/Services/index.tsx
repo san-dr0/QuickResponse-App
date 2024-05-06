@@ -1,6 +1,6 @@
-import { FlatList, TouchableOpacity, View } from "react-native";
+import { FlatList, RefreshControl, TouchableOpacity, View } from "react-native";
 import TextLabel from "../../components/TextLabel";
-import { useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { CardComponent } from "../../components/Card";
 import DivComponent from "../../components/DivContainer";
 import FontAwesome6Icon from "react-native-vector-icons/FontAwesome6";
@@ -24,8 +24,8 @@ export default function QRAppServices(props: any) {
         {name: 'Emergency Logs', route: 'Emergency-Logs'},
         {name: 'First Aid', route: 'First-Aid'}
     ];
-    const [totalRespondedOfMyEmergency, setTotalRespondedOfMyEmergency] = useState<number>(0);
-    const {setIsActiveUserNotification} = userUserNotificationContext();
+    const [refresh, setRefresh] = useState<boolean>(false);
+    const {setIsActiveUserNotification, totalRespondedOfMyEmergency, setTotalRespondedOfMyEmergency} = userUserNotificationContext();
 
     async function getAllTotalOfAllRespondedToMyEmergency() {
         const total = await getTheTotalOfAllResponderWhoRespondedToMyEmergency(activeUserInformation?.account?.fbID as string);
@@ -35,13 +35,13 @@ export default function QRAppServices(props: any) {
     useEffect(() => {
         setIsActiveUserNotification({isActive: false});
         getAllTotalOfAllRespondedToMyEmergency();
-    }, []);
+    }, [refresh]);
 
     const renderQRAppService = ({item}: any) => {
         const {name, route} = item;
         
         const onSelectCertainService = (route: string) => {
-            navigation.navigate(route)
+            navigation.navigate(route);
         };
 
         return <TouchableOpacity onPress={() => onSelectCertainService(route)}>
@@ -58,9 +58,18 @@ export default function QRAppServices(props: any) {
         </TouchableOpacity>
     };
 
-    return <View>
-        <View style={{padding: 10}}>
-            <FlatList data={serviceList} renderItem={renderQRAppService} />
+    const onRefreshServicePage = () => {
+        setRefresh(true);
+        setTimeout(() => {
+            setRefresh(false);
+        }, 1000);
+    };
+
+    return <RefreshControl refreshing={refresh} onRefresh={onRefreshServicePage}>
+            <View>
+            <View style={{padding: 10}}>
+                <FlatList data={serviceList} renderItem={renderQRAppService} />
+            </View>
         </View>
-    </View>
+    </RefreshControl>
 };

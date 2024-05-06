@@ -16,6 +16,7 @@ function UserNotificationProvider(props: UserNotificationProviderProps) {
   const [isActiveUserNotification, setActiveUserNotification] = useState<
     UserNotificationContextDataDTO | undefined
   >();
+  const [totalRespondedOfMyEmergency, setTotalRespondedOfMyEmergency] = useState<number>(0);
 
   function setIsActiveUserNotification(param: UserNotificationContextDataDTO) {
     setActiveUserNotification(param);
@@ -24,6 +25,8 @@ function UserNotificationProvider(props: UserNotificationProviderProps) {
     return {
       isActiveUserNotification,
       setIsActiveUserNotification,
+      totalRespondedOfMyEmergency,
+      setTotalRespondedOfMyEmergency
     };
   }
   return (

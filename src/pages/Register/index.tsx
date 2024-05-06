@@ -25,6 +25,7 @@ import {
   QRAPP_USER_TYPES,
   RESPONDER_TYPES,
   pleaseProvideSupportingDocuments,
+  pleaseSelectResponderType,
   pleaseSelectUserType,
   registrationWasSuccessfull,
   sometingWentWrong,
@@ -90,10 +91,17 @@ export default function Registration(props: any) {
     try {
       if (dropdownValue === 'Register as') {
         Alert.alert('Oops', pleaseSelectUserType);
+        setIsDisabled(false);
+        return;
+      }
+      if (responderType === "Responder Type") {
+        Alert.alert('Oops', pleaseSelectResponderType);
+        setIsDisabled(false);
         return;
       }
       if (dropdownValue === 'Responder' && !hasProvideSupportingDocument) {
         Alert.alert('Oops', pleaseProvideSupportingDocuments);
+        setIsDisabled(false);
         return;
       }
 
@@ -102,7 +110,7 @@ export default function Registration(props: any) {
       values.responderType = responderType ?? 'N/A';
 
       const result = (await sendRegisterQRUser(values)) as any;
-
+      
       if (!result?.hasFailedRegistration) {
         if (values.userType === UserType.RESPONDER) {
           uploadImage(SUPPORTING_DOCUMENTS, uploadedDocuments, result?.fbID); // this upload the supporting document first

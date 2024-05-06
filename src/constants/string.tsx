@@ -89,6 +89,7 @@ export const supportingDocuments = 'Upload supporting documents';
 export const pleaseProvideSupportingDocuments =
   'Please provide a supporting documents to continue.';
 export const pleaseSelectUserType = 'Please select a user type.';
+export const pleaseSelectResponderType = 'Please select a responder type.';
 export const registrationWasSuccessfull = 'Your registration was successful!';
 export const sometingWentWrong = 'Something went wrong';
 export const emptyFields = 'Empty fields';

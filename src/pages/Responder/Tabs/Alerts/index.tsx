@@ -1,13 +1,6 @@
 import messaging from '@react-native-firebase/messaging';
 import {useEffect, useMemo, useState} from 'react';
-import {
-  Alert,
-  Dimensions,
-  Image,
-  Text,
-  TouchableOpacity,
-  View,
-} from 'react-native';
+import {Dimensions, Image, Text, TouchableOpacity, View} from 'react-native';
 import {Marker} from 'react-native-maps';
 import Modal from 'react-native-modal';
 import MaterialIcon from 'react-native-vector-icons/MaterialCommunityIcons';
@@ -22,11 +15,9 @@ import {emergencyIcon, getMarkerIcon} from '../../../../utils/markerIcon.utils';
 import {acceptEmergency} from '../../../../service/emergency/Emergency.service';
 import {
   gerUserTokenByEmail,
-  sendNotifViaAxios,
   sendNotification,
 } from '../../../../service/token/DeviceInfo.service';
 import {EmergencyType} from '../../../../enums/EmergencyType.enum';
-import {getCurrentDateWithTime} from '../../../../utils/date.utils';
 
 type ModalData = {
   notification: NotificationDto;
@@ -36,7 +27,7 @@ type ModalData = {
 const height = Dimensions.get('window').height;
 
 export default function Alerts(props: any) {
-  const {routes, navigation} = props;
+  const {navigation} = props;
   // const {alerts} = useAlertContext();
   const {data, sendRequest, setData} = useGetActiveEmergency();
   const [coordinate, setCoordinate] = useState<CoordinateDto | null>(null);
@@ -60,6 +51,7 @@ export default function Alerts(props: any) {
         coordinate: JSON.parse(parseMessage?.data?.coordinate),
         date: parseMessage?.data?.date,
         isActive: parseMessage?.data?.isActive,
+        isView: false,
       };
       const title = JSON.parse(remoteMessage?.data?.notification)?.title;
       const body = JSON.parse(remoteMessage?.data?.notification)?.body;
@@ -230,11 +222,11 @@ export default function Alerts(props: any) {
       const name =
         payload.firstname + ' ' + payload.middlename + ' ' + payload.lastname;
       const ref: NotificationDto = {
-        title: `${name} has been respond`,
+        title: `${name} has been respond 123`,
         body: 'Responder is on the way',
         date: selectedData?.date as string,
       };
-
+      
       const userTokenData = await gerUserTokenByEmail(
         selectedData?.sender?.email as string,
       );
@@ -243,12 +235,12 @@ export default function Alerts(props: any) {
         selectedData?.emergencyId ? selectedData.emergencyId : '',
         payload,
       );
-      ref.sendBy = 'Responder';
-
+      
       await sendNotification(
         ref,
         userTokenData.token,
         selectedData?.emergencyId as string,
+        "Responder",
       );
       await sendRequest();
 

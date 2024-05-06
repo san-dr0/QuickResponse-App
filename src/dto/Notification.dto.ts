@@ -3,5 +3,4 @@ export interface NotificationDto {
   body: string;
   userId?: string;
   date?: string;
-  sendBy?: string;
 }

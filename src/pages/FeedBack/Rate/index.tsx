@@ -152,7 +152,7 @@ export const Rate = () => {
         );
       } else {
         ToastAndroid.show(
-          'You already sent a rating to this responder.',
+          'You already sent a rating to Us.',
           ToastAndroid.SHORT,
         );
         setMaxRating(1);

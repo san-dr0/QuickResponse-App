@@ -24,7 +24,7 @@ export const acceptEmergency = async (
   emergencyId: string,
   responder: EmergencyResponder,
 ) => {
-  console.log(responder);
+  // console.log(responder);
   const response = await firestore()
     .collection(EMERGENCY_TABLE)
     .doc(emergencyId)
@@ -37,7 +37,7 @@ export const acceptEmergency = async (
   
   const arr = [...(resp.responder as EmergencyResponder[]), responder];
 
-  console.log('GG', arr);
+  // console.log('GG', arr);
   const isUpdate = await firestore()
     .collection(EMERGENCY_TABLE)
     .doc(emergencyId)
@@ -55,7 +55,7 @@ export const acceptEmergency = async (
 
 export const getAllResponderToken = () => {};
 
-export const getAllEmergency = async (currentActiveEmail: string) => {
+export const getAllEmergency = async (currentActiveEmail: string) => {  
   const response = await firestore()
     .collection(EMERGENCY_TABLE)
     .orderBy('date', 'desc')
@@ -63,6 +63,15 @@ export const getAllEmergency = async (currentActiveEmail: string) => {
     .get();
 
   return response.docs;
+};
+
+export const getAllOfYourRespondedEmergency = async (currentActiveEmail: string) => {
+  const response = await firestore()
+  .collection(EMERGENCY_TABLE)
+  .orderBy('date', 'desc')
+  .get();
+
+return response.docs;
 };
 
 export const saveResponderUponAcceptingAnEmergency = async (
