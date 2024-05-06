@@ -25,6 +25,7 @@ import {AccountProvider} from './src/providers/AccountProvider';
 import {AlertProvider} from './src/providers/AlertProvider';
 import {UserRespondProvider} from './src/providers/UserResponseProvider';
 import {UserNotificationProvider} from './src/providers/UserNotificationProvider';
+import EmergencyHistory from './src/pages/Responder/EmergencyHistory';
 
 const StackNavigator = createNativeStackNavigator();
 function App() {
@@ -123,6 +124,13 @@ function App() {
                     component={Emergency}
                     options={{headerTitle: 'Emergency Logs'}}
                   />
+                  {/* USER EMERGENCY LOGS */}
+                  <StackNavigator.Screen
+                    name="Responder-Emergency-Logs"
+                    component={EmergencyHistory}
+                    options={{headerTitle: 'Emergency Logs'}}
+                  />
+                  {/* RESPONDER EMERGENCY LOGS */}
                   <StackNavigator.Screen
                     name="First-Aid"
                     component={FirstAidDashBoard}

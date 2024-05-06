@@ -4,7 +4,6 @@ import FirstAidDashBoard from '../FirstAids';
 import ProfileDashBoard from '../Profile';
 import Alerts from './Tabs/Alerts';
 import Inbox from './Tabs/Inbox';
-import EmergencyHistory from './EmergencyHistory';
 import { DASHBOARD } from '../../constants/string';
 import NewsFeedDashBoard from '../NewsFeed';
 import ResponderServices from './FeedbackAndRating';

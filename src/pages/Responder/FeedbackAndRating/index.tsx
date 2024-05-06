@@ -19,7 +19,7 @@ function ResponderServices(props: any) {
     {
       id: 1001,
       title: 'Emergency History',
-      route: 'Emergency-Logs',
+      route: 'Responder-Emergency-Logs',
     },
     {
       id: 1002,
