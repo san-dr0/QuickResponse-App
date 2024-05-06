@@ -13,7 +13,7 @@ import {COLOR_LISTS} from '../../constants/colors';
 import {APP_HEIGHT} from '../../constants/dimensions';
 import {EmergencyDto} from '../../dto/Emergency.dto';
 import {useAccountContext} from '../../providers/AccountProvider';
-import {getAllEmergency} from '../../service/emergency/Emergency.service';
+import {getAllEmergency, getAllOfYourRespondedEmergency} from '../../service/emergency/Emergency.service';
 import { Badge } from 'react-native-paper';
 import DivComponent from '../../components/DivContainer';
 import { userUserNotificationContext } from '../../providers/UserNotificationProvider';
@@ -25,18 +25,47 @@ export default function Emergency(props: any) {
   const [refresh, setRefresh] = useState<boolean>(false);
   const {setTotalRespondedOfMyEmergency} = userUserNotificationContext();
 
+  // const getEmergency = async () => {
+  //   try {
+  //     setTotalRespondedOfMyEmergency(0);
+  //     const emergencyResult = await getAllEmergency(
+  //       activeUserInformation?.credentials?.loginEmail as string,
+  //     );
+  //     const emergencies: EmergencyDto[] = [];
+      
+  //     emergencyResult.map(result => {
+  //       const data = result.data() as EmergencyDto;
+  //       data.emergencyId = result.id; // emergencyID
+  //       emergencies.push(data);
+  //     });
+
+  //     setEmergencyList(emergencies);
+  //   } catch (error: any) {
+  //     console.log(error?.message);
+  //     Alert.alert('Something went wrong', error?.message);
+  //   }
+  // }; // FIRST IMPLEMENTATION
   const getEmergency = async () => {
     try {
       setTotalRespondedOfMyEmergency(0);
-      const emergencyResult = await getAllEmergency(
+      const emergencyResult = await getAllOfYourRespondedEmergency(
         activeUserInformation?.credentials?.loginEmail as string,
       );
       const emergencies: EmergencyDto[] = [];
-
+      
       emergencyResult.map(result => {
         const data = result.data() as EmergencyDto;
-        data.emergencyId = result.id; // emergencyID
-        emergencies.push(data);
+
+        const responderList = data?.responder;
+
+        responderList.map((responder) => {
+          
+          if (activeUserInformation?.account?.fbID === responder?.id) {            
+            data.emergencyId = result.id; // emergencyID
+            emergencies.push(data);
+          }
+        });
+        
       });
 
       setEmergencyList(emergencies);
@@ -96,7 +125,7 @@ export default function Emergency(props: any) {
         borderRadius={5}
         backgroundColor={COLOR_LISTS.RED}>
         <TextLabel
-          title="All of your created emergency logs."
+          title="Logs of your responded emergency."
           fontSize={15}
           textAlign="center"
           textColor={COLOR_LISTS.WHITE}
