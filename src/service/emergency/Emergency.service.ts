@@ -2,8 +2,8 @@ import firestore from '@react-native-firebase/firestore';
 import {EMERGENCY_TABLE, FLAGGING} from '../../constants/dbRef';
 import {EmergencyDto, EmergencyResponder} from '../../dto/Emergency.dto';
 import {EmergencyType} from '../../enums/EmergencyType.enum';
-import { AccountDTO, AccountFlaggingDTO } from '../../types/User.type';
-import { Alert, ToastAndroid } from 'react-native';
+import {AccountFlaggingDTO} from '../../types/User.type';
+import {Alert} from 'react-native';
 
 export const saveEmergency = async (payload: EmergencyDto) => {
   const response = await firestore().collection(EMERGENCY_TABLE).add(payload);
@@ -34,7 +34,7 @@ export const acceptEmergency = async (
     emergencyId: response.id,
     ...(response.data() as EmergencyDto),
   };
-  
+
   const arr = [...(resp.responder as EmergencyResponder[]), responder];
 
   // console.log('GG', arr);
@@ -55,7 +55,7 @@ export const acceptEmergency = async (
 
 export const getAllResponderToken = () => {};
 
-export const getAllEmergency = async (currentActiveEmail: string) => {  
+export const getAllEmergency = async (currentActiveEmail: string) => {
   const response = await firestore()
     .collection(EMERGENCY_TABLE)
     .orderBy('date', 'desc')
@@ -65,13 +65,15 @@ export const getAllEmergency = async (currentActiveEmail: string) => {
   return response.docs;
 };
 
-export const getAllOfYourRespondedEmergency = async (currentActiveEmail: string) => {
+export const getAllOfYourRespondedEmergency = async (
+  currentActiveEmail: string,
+) => {
   const response = await firestore()
-  .collection(EMERGENCY_TABLE)
-  .orderBy('date', 'desc')
-  .get();
+    .collection(EMERGENCY_TABLE)
+    .orderBy('date', 'desc')
+    .get();
 
-return response.docs;
+  return response.docs;
 };
 
 export const saveResponderUponAcceptingAnEmergency = async (
@@ -120,28 +122,50 @@ export const reportUser = async (userInformation: AccountFlaggingDTO) => {
   return result;
 };
 
-export const getSpecificUserWhoCreateEmergency = async (emergencyID: string) => {
-  const result = await firestore().collection(EMERGENCY_TABLE).doc(emergencyID).get();
+export const getSpecificUserWhoCreateEmergency = async (
+  emergencyID: string,
+) => {
+  const result = await firestore()
+    .collection(EMERGENCY_TABLE)
+    .doc(emergencyID)
+    .get();
 
   return result;
 };
 
-export const getTheTotalOfAllResponderWhoRespondedToMyEmergency = async (activeUserID: string) => {
-  try{    
-    const result = await firestore().collection(EMERGENCY_TABLE).where("sender.userID", "==", JSON.parse(activeUserID)).get();
+export const getTheTotalOfAllResponderWhoRespondedToMyEmergency = async (
+  activeUserID: string,
+) => {
+  try {
+    const result = await firestore()
+      .collection(EMERGENCY_TABLE)
+      .where('sender.userID', '==', JSON.parse(activeUserID))
+      .get();
     let counter: number = 0;
-    result?.docs?.map((res) => {
+    result?.docs?.map(res => {
       const responder = res?.data()?.responder;
       const isView = res.data()?.isView;
-         
+
       if (responder.length > 0 && !isView) {
-        counter+=1;
+        counter += 1;
       }
     });
-    
+
     return counter;
+  } catch (error: any) {
+    Alert.alert('Oops', error?.message);
   }
-  catch(error: any) {
-    Alert.alert("Oops", error?.message);
+};
+
+export const updateAllResponderWhoRespondedToMyEmergency = async (
+  emergencyID: string,
+) => {
+  try {
+    await firestore()
+      .collection(EMERGENCY_TABLE)
+      .doc(emergencyID)
+      .update({isView: true});
+  } catch (error: any) {
+    Alert.alert('Oops', error?.message);
   }
 };
