@@ -6,6 +6,9 @@ import {AccountFlaggingDTO} from '../../types/User.type';
 import {Alert} from 'react-native';
 
 export const saveEmergency = async (payload: EmergencyDto) => {
+  console.log('PAY >>> ');
+  console.log(payload);
+  
   const response = await firestore().collection(EMERGENCY_TABLE).add(payload);
 
   return response;
