@@ -14,7 +14,7 @@ export default function useGetConversationById(props: Props) {
     const sendRequest = useCallback(async () => {
         try {
             const resp = await getConversationByUserId(id as string);
-
+            
             setConversation(resp);
         } catch (error) {
             console.log(error)

@@ -123,6 +123,7 @@ export const updateUserInformation = async (
         middlename,
         lastname,
         mobilenumber,
+        profile,
         responderType,
         userType
       },

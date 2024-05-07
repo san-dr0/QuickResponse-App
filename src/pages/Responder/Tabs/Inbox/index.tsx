@@ -29,8 +29,15 @@ export default function Inbox(props: any) {
       image === ''
         ? require('../../../../assets/QRApp-img1.jpeg')
         : {uri: image};
-
-    if (item.messages[0].sender.id === user?.account?.fbID) {
+    
+    if (item.messages[0].sender.id === JSON.parse(user?.account?.fbID as string)) {
+      displayName =
+        item.messages[0].receiver.firstname +
+        ' ' +
+        item.messages[0].receiver.middlename +
+        ' ' +
+        item.messages[0].receiver.lastname;
+    } else if (item.messages[0].receiver.id === JSON.parse(user?.account?.fbID as string)){
       displayName =
         item.messages[0].sender.firstname +
         ' ' +
@@ -38,8 +45,7 @@ export default function Inbox(props: any) {
         ' ' +
         item.messages[0].sender.lastname;
     } else {
-      displayName =
-        item.messages[0].receiver.firstname +
+      displayName = item.messages[0].receiver.firstname +
         ' ' +
         item.messages[0].receiver.middlename +
         ' ' +
