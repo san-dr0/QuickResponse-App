@@ -88,6 +88,9 @@ function App() {
                   <StackNavigator.Screen
                     name="View-Emergency"
                     component={ViewEmergency}
+                    options={{
+                      headerTitle: "View Emergency"
+                    }}
                   />
                   <StackNavigator.Screen
                     name="CreateNewsFeed"
