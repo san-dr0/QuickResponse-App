@@ -38,7 +38,7 @@ import {useAccountContext} from '../../providers/AccountProvider';
 import {RegistrationDTO} from '../../types/Registration.type';
 import {uploadImage} from '../../utils/imageManipulation';
 import Modal from 'react-native-modal';
-import { TermsAndCondition } from '../../components/TermsAndCondition';
+import {TermsAndCondition} from '../../components/TermsAndCondition';
 
 export default function Registration(props: any) {
   const {activeUserInformation} = useAccountContext();
@@ -94,7 +94,7 @@ export default function Registration(props: any) {
         setIsDisabled(false);
         return;
       }
-      if (responderType === "Responder Type") {
+      if (responderType === 'Responder Type' && dropdownValue !== 'User') {
         Alert.alert('Oops', pleaseSelectResponderType);
         setIsDisabled(false);
         return;
@@ -107,10 +107,15 @@ export default function Registration(props: any) {
 
       resetForm();
       values.userType = dropdownValue as UserType;
-      values.responderType = responderType ?? 'N/A';
+      values.responderType =
+        dropdownValue === 'User'
+          ? 'N/A'
+          : responderType
+          ? responderType
+          : 'N/A';
 
       const result = (await sendRegisterQRUser(values)) as any;
-      
+
       if (!result?.hasFailedRegistration) {
         if (values.userType === UserType.RESPONDER) {
           uploadImage(SUPPORTING_DOCUMENTS, uploadedDocuments, result?.fbID); // this upload the supporting document first
@@ -154,13 +159,16 @@ export default function Registration(props: any) {
   };
   const onCloseTermsAndCondition = () => {
     setIsTACModalIsOpened(false);
-    navigation.navigate("Home");
+    navigation.navigate('Home');
   };
 
   return (
     <ScrollView>
       <Modal isVisible={isTACModalIsOpened}>
-        <TermsAndCondition onAcceptButton={onAcceptTermsAndCondition} onCloseButton={onCloseTermsAndCondition} />
+        <TermsAndCondition
+          onAcceptButton={onAcceptTermsAndCondition}
+          onCloseButton={onCloseTermsAndCondition}
+        />
       </Modal>
       <View
         style={{
@@ -243,7 +251,7 @@ export default function Registration(props: any) {
                 onChangeText={handleChange('password')}
                 secureTextEntry
                 error={errors.password}
-                
+
               /> */}
               <View
                 style={{
