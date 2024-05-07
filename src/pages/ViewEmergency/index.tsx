@@ -1,4 +1,4 @@
-import {useMemo, useState} from 'react';
+import React, {useMemo, useState} from 'react';
 import {
   Alert,
   Dimensions,
@@ -18,7 +18,10 @@ import {EmergencyResponder} from '../../dto/Emergency.dto';
 import {EmergencyType} from '../../enums/EmergencyType.enum';
 import useGetEmergencyById from '../../hooks/useGetEmergencyById';
 import {useAccountContext} from '../../providers/AccountProvider';
-import {acceptEmergency} from '../../service/emergency/Emergency.service';
+import {
+  acceptEmergency,
+  tagEmergencyAsResponded,
+} from '../../service/emergency/Emergency.service';
 import {sendMessage} from '../../service/message/message.service';
 import {MessageUserDto} from '../../types/Message.type';
 import {
@@ -29,6 +32,7 @@ import {NotificationDto} from '../../dto/Notification.dto';
 
 const FooterHeight = Dimensions.get('window').height * 0.5;
 const MapsHeight = Dimensions.get('window').height;
+
 export default function ViewEmergency(props: any) {
   const {route, navigation} = props;
   const id = route.params.emergencyId;
@@ -127,6 +131,7 @@ export default function ViewEmergency(props: any) {
         break;
       case EmergencyType.FLOOD:
         icons = MARKER.FLOOD;
+        break;
       case EmergencyType.MEDICAL:
         icons = MARKER.MEDICAL;
         break;
@@ -168,7 +173,6 @@ export default function ViewEmergency(props: any) {
     if (!emergency) {
       return;
     }
-    console.log('gg');
 
     return (
       <Maps
@@ -189,6 +193,10 @@ export default function ViewEmergency(props: any) {
     const isIncludeToResponder = emergency?.responder?.some(
       val => val.id === user?.account?.fbID,
     );
+
+    const onTagAsResponded = () => {
+      tagEmergencyAsResponded(id);
+    };
 
     return (
       <View
@@ -225,7 +233,7 @@ export default function ViewEmergency(props: any) {
                 </Text>
 
                 <TouchableOpacity
-                  onPress={() => 
+                  onPress={() =>
                     navigation.navigate('View-User-Info', {
                       id: emergency?.sender?.userID
                         ? emergency?.sender?.userID
@@ -243,11 +251,23 @@ export default function ViewEmergency(props: any) {
           </View>
         </View>
         <View style={{height: 20}} />
-        <Button
+        {/* <Button
           title="Message Sender"
           onPress={() => setIsOpenModal(true)}
           type="OUTLINE"
-        />
+        /> */}
+        {user?.account?.userType === 'User' && (
+          <Button
+            title={
+              !emergency?.isActive
+                ? 'Emergency was Cleard out'
+                : 'Tag as Responded'
+            }
+            type="OUTLINE"
+            onPress={() => onTagAsResponded()}
+            isDisable={!emergency?.isActive ? true : false}
+          />
+        )}
         <View style={{height: 8}} />
         {isIncludeToResponder || isLoginSender ? (
           <Button

@@ -15,7 +15,7 @@ export default function useGetEmergencyById(props: Props) {
     try {
       const resposne = await getEmergencyById(emergencyId);
 
-      console.log('geggg', resposne.data());
+      // console.log('geggg', resposne.data());
       setData(resposne.data() as EmergencyDto);
     } catch (error) {
       console.log('err', error);

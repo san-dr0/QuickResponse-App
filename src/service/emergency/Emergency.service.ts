@@ -8,7 +8,7 @@ import {Alert} from 'react-native';
 export const saveEmergency = async (payload: EmergencyDto) => {
   console.log('PAY >>> ');
   console.log(payload);
-  
+
   const response = await firestore().collection(EMERGENCY_TABLE).add(payload);
 
   return response;
@@ -168,6 +168,18 @@ export const updateAllResponderWhoRespondedToMyEmergency = async (
       .collection(EMERGENCY_TABLE)
       .doc(emergencyID)
       .update({isView: true});
+  } catch (error: any) {
+    Alert.alert('Oops', error?.message);
+  }
+};
+
+export const tagEmergencyAsResponded = async (emergencyID: string) => {
+  try {
+    const res = await firestore()
+      .collection(EMERGENCY_TABLE)
+      .doc(emergencyID)
+      .update({isActive: false});
+    return res;
   } catch (error: any) {
     Alert.alert('Oops', error?.message);
   }

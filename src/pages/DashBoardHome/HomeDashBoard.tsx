@@ -70,33 +70,34 @@ export default function HomeDashBoard() {
         isActive: true,
         isView: false,
       };
-      
+
       const savedEmergencyResponse = await saveEmergency(emergency);
       // console.log('SAVED EM >>');
       // console.log(savedEmergencyResponse);
 
-      // const resp = await getUsersTokens(UserType.RESPONDER);
-      // emergency.emergencyId = savedEmergencyResponse?.id;
+      const resp = await getUsersTokens(UserType.RESPONDER);
+      emergency.emergencyId = savedEmergencyResponse?.id;
 
-      // if (resp.length < 1) {
-      //   return;
-      // }
-      // const payload = {
-      //   ...emergency,
-      //   notification: getNotificationByEmergency(
-      //     emergencyTypeChooseByUser,
-      //   ) as NotificationDto,
-      //   sendBy: 'User',
-      // };
-      // resp.forEach(async element => {
-      //   return await sendNotifViaAxios(
-      //     payload,
-      //     element.token,
-      //     getNotificationByEmergency(
-      //       emergencyTypeChooseByUser,
-      //     ) as NotificationDto,
-      //   );
-      // });
+      if (resp.length < 1) {
+        return;
+      }
+      const payload = {
+        ...emergency,
+        notification: getNotificationByEmergency(
+          emergencyTypeChooseByUser,
+        ) as NotificationDto,
+        sendBy: 'User',
+      };
+      resp.forEach(async element => {
+        return await sendNotifViaAxios(
+          payload,
+          element.token,
+          getNotificationByEmergency(
+            emergencyTypeChooseByUser,
+          ) as NotificationDto,
+        );
+      });
+
       setVerifyRequest(false);
       setUserHasTriggerEmergency(getMarkerIcon(emergencyTypeChooseByUser));
       ToastAndroid.show('Your emergency has been send', ToastAndroid.LONG);
@@ -119,8 +120,8 @@ export default function HomeDashBoard() {
     const activeUserID = JSON.parse(
       activeUserInformation?.account?.fbID as string,
     );
-    
-    if (userID === activeUserID && sendBy === 'Responder' ) {
+
+    if (userID === activeUserID && sendBy === 'Responder') {
       setIsActiveUserNotification({isActive: true});
     }
   }
