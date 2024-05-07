@@ -45,7 +45,7 @@ export default function ViewEmergency(props: any) {
   const isLoginSender =
     emergency?.sender?.userID === JSON.parse(user?.account?.fbID as string);
 
-  async function handleSendMessage() {
+    async function handleSendMessage() {
     try {
       setIsDisabled(true);
       const reciever: MessageUserDto = {
