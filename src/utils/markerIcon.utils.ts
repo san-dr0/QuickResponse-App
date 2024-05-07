@@ -3,6 +3,9 @@ import { EmergencyType } from '../enums/EmergencyType.enum';
 
 export function getMarkerIcon(type: EmergencyType) {
   let icons = null;
+  console.log("TYPE >>");
+  console.log(type);
+  
   switch (type) {
     case EmergencyType.FIRE:
       icons = MARKER.FIRE;
@@ -44,6 +47,7 @@ export const emergencyIcon = (type: EmergencyType) => {
       break;
     case EmergencyType.FLOOD:
       icons = require('../assets/icons/FloodIcon.png');
+      break;
     case EmergencyType.MEDICAL:
       icons = require('../assets/icons/MedicalIcon.png');
       break;

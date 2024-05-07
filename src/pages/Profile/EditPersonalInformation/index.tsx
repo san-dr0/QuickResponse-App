@@ -36,6 +36,7 @@ export default function EditPersonalInformationComponent(props: any) {
     let hasChangedPassword = values.password;
     values.responderType = activeUserInformation?.account?.responderType as string;
     values.userType = activeUserInformation?.account?.userType as string;
+    values.profile = activeUserInformation?.account?.profile as string;
     
     try {
       const result = await sendUpdateInfromationOfQRUser(
