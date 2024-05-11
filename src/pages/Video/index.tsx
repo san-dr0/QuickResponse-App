@@ -17,13 +17,22 @@ import {
 import { createMeeting, token } from "../../service/video/Video.service";
 import { MeetingView } from "./Meeting";
 import { JoinScreen } from "./JoinScreen";
+import TextLabel from "../../components/TextLabel";
 
 const VideoApp = () => {
-    const [meetingId, setMeetingId] = useState(null);
+    const [meetingId, setMeetingId] = useState('');
 
   const getMeetingId = async (id?: string) => {
-    const meetingId = id == null ? await createMeeting({ token }) : id;
-    setMeetingId(meetingId);
+    try{
+      const meetingId = id == null ? await createMeeting({ token }) : id;
+      console.log(`meetingID --> `, meetingId);
+      
+      setMeetingId(meetingId);
+    }
+    catch(error: any) {
+      console.log("ERROR -> getting meetingID ");
+      console.log("Mess: ", error?.message);
+    }
   };
 
   return meetingId ? (
@@ -41,7 +50,10 @@ const VideoApp = () => {
       </MeetingProvider>
     </SafeAreaView>
   ) : (
-    <JoinScreen getMeetingId={getMeetingId} meetingVal={meetingId} setMeetingVal={setMeetingId}  />
+    <>
+      <TextLabel title="empty" />
+      <JoinScreen getMeetingId={getMeetingId} meetingVal={meetingId ?? ""} setMeetingID={setMeetingId} />
+    </>
   );
 };
 

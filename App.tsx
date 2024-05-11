@@ -26,136 +26,139 @@ import {AlertProvider} from './src/providers/AlertProvider';
 import {UserRespondProvider} from './src/providers/UserResponseProvider';
 import {UserNotificationProvider} from './src/providers/UserNotificationProvider';
 import EmergencyHistory from './src/pages/Responder/EmergencyHistory';
+import VideoApp from './src/pages/Video';
 
 const StackNavigator = createNativeStackNavigator();
+
 function App() {
   useNotificationPermission();
 
   return (
-    <MenuProvider>
-      <AccountProvider>
-        <AlertProvider>
-          <UserRespondProvider>
-            <UserNotificationProvider>
-              <NavigationContainer>
-                <StackNavigator.Navigator
-                  initialRouteName="Home"
-                  screenOptions={{
-                    contentStyle: {backgroundColor: COLOR_LISTS.WHITE},
-                  }}>
-                  <StackNavigator.Screen
-                    name="Home"
-                    component={Home}
-                    options={{
-                      title: 'QR-App',
-                      headerShown: false,
-                    }}
-                  />
-                  <StackNavigator.Screen
-                    name="Login"
-                    component={Login}
-                    options={{
-                      headerBackVisible: false,
-                      headerShown: false,
-                    }}
-                  />
-                  <StackNavigator.Screen
-                    name="Register"
-                    component={Registration}
-                  />
-                  <StackNavigator.Screen
-                    name="Dashboard"
-                    component={DashBoard}
-                    options={{
-                      headerBackVisible: false,
-                      headerShown: false,
-                    }}
-                  />
-                  <StackNavigator.Screen
-                    name="Edit Profile"
-                    component={EditPersonalInformationComponent}
-                  />
-                  <StackNavigator.Screen
-                    name="FirstAid-Information"
-                    component={FirstAidInformation}
-                    options={{title: 'First Aid Information'}}
-                  />
-                  <StackNavigator.Screen
-                    name="Responder"
-                    component={Responder}
-                    options={{headerShown: false}}
-                  />
-                  <StackNavigator.Screen
-                    name="View-Emergency"
-                    component={ViewEmergency}
-                    options={{
-                      headerTitle: "View Emergency"
-                    }}
-                  />
-                  <StackNavigator.Screen
-                    name="CreateNewsFeed"
-                    component={CreateNewsFeed}
-                    options={{
-                      headerBackVisible: false,
-                    }}
-                  />
-                  <StackNavigator.Screen
-                    name="ViewNewsFeed"
-                    component={ViewNewsFeed}
-                    options={{
-                      headerTitle: 'View News Feed',
-                    }}
-                  />
-                  <StackNavigator.Screen
-                    name="View-User-Info"
-                    component={ViewUserInfo}
-                    options={{headerTitle: 'User Info'}}
-                  />
-                  <StackNavigator.Screen
-                    name="View-Other-Responder"
-                    component={ViewOtherResponder}
-                    options={{headerTitle: 'List of Responder'}}
-                  />
-                  {/* FEEDBACK SCREEN */}
-                  <StackNavigator.Screen
-                    name="Feedback-And-Rating"
-                    component={FeedBackAndRating}
-                    options={{headerTitle: 'Feedback and Ratings'}}
-                  />
-                  <StackNavigator.Screen
-                    name="Emergency-Logs"
-                    component={Emergency}
-                    options={{headerTitle: 'Emergency Logs'}}
-                  />
-                  {/* USER EMERGENCY LOGS */}
-                  <StackNavigator.Screen
-                    name="Responder-Emergency-Logs"
-                    component={EmergencyHistory}
-                    options={{headerTitle: 'Emergency Logs'}}
-                  />
-                  {/* RESPONDER EMERGENCY LOGS */}
-                  <StackNavigator.Screen
-                    name="First-Aid"
-                    component={FirstAidDashBoard}
-                    options={{headerTitle: 'First-Aid'}}
-                  />
-                  <StackNavigator.Screen
-                    name="Messages"
-                    component={Messages}
-                    options={{headerTitle: 'Conversations'}}
-                  />
-                  <StackNavigator.Screen
-                    name="Loading"
-                    component={LoadingPage}
-                    options={{headerShown: false}}
-                  />
-                </StackNavigator.Navigator>
-              </NavigationContainer>
-            </UserNotificationProvider>
-          </UserRespondProvider>
-        </AlertProvider>
-      </AccountProvider>
-    </MenuProvider>
+    <VideoApp />
+    // <MenuProvider>
+    //   <AccountProvider>
+    //     <AlertProvider>
+    //       <UserRespondProvider>
+    //         <UserNotificationProvider>
+    //           <NavigationContainer>
+    //             <StackNavigator.Navigator
+    //               initialRouteName="Home"
+    //               screenOptions={{
+    //                 contentStyle: {backgroundColor: COLOR_LISTS.WHITE},
+    //               }}>
+    //               <StackNavigator.Screen
+    //                 name="Home"
+    //                 component={Home}
+    //                 options={{
+    //                   title: 'QR-App',
+    //                   headerShown: false,
+    //                 }}
+    //               />
+    //               <StackNavigator.Screen
+    //                 name="Login"
+    //                 component={Login}
+    //                 options={{
+    //                   headerBackVisible: false,
+    //                   headerShown: false,
+    //                 }}
+    //               />
+    //               <StackNavigator.Screen
+    //                 name="Register"
+    //                 component={Registration}
+    //               />
+    //               <StackNavigator.Screen
+    //                 name="Dashboard"
+    //                 component={DashBoard}
+    //                 options={{
+    //                   headerBackVisible: false,
+    //                   headerShown: false,
+    //                 }}
+    //               />
+    //               <StackNavigator.Screen
+    //                 name="Edit Profile"
+    //                 component={EditPersonalInformationComponent}
+    //               />
+    //               <StackNavigator.Screen
+    //                 name="FirstAid-Information"
+    //                 component={FirstAidInformation}
+    //                 options={{title: 'First Aid Information'}}
+    //               />
+    //               <StackNavigator.Screen
+    //                 name="Responder"
+    //                 component={Responder}
+    //                 options={{headerShown: false}}
+    //               />
+    //               <StackNavigator.Screen
+    //                 name="View-Emergency"
+    //                 component={ViewEmergency}
+    //                 options={{
+    //                   headerTitle: "View Emergency"
+    //                 }}
+    //               />
+    //               <StackNavigator.Screen
+    //                 name="CreateNewsFeed"
+    //                 component={CreateNewsFeed}
+    //                 options={{
+    //                   headerBackVisible: false,
+    //                 }}
+    //               />
+    //               <StackNavigator.Screen
+    //                 name="ViewNewsFeed"
+    //                 component={ViewNewsFeed}
+    //                 options={{
+    //                   headerTitle: 'View News Feed',
+    //                 }}
+    //               />
+    //               <StackNavigator.Screen
+    //                 name="View-User-Info"
+    //                 component={ViewUserInfo}
+    //                 options={{headerTitle: 'User Info'}}
+    //               />
+    //               <StackNavigator.Screen
+    //                 name="View-Other-Responder"
+    //                 component={ViewOtherResponder}
+    //                 options={{headerTitle: 'List of Responder'}}
+    //               />
+    //               {/* FEEDBACK SCREEN */}
+    //               <StackNavigator.Screen
+    //                 name="Feedback-And-Rating"
+    //                 component={FeedBackAndRating}
+    //                 options={{headerTitle: 'Feedback and Ratings'}}
+    //               />
+    //               <StackNavigator.Screen
+    //                 name="Emergency-Logs"
+    //                 component={Emergency}
+    //                 options={{headerTitle: 'Emergency Logs'}}
+    //               />
+    //               {/* USER EMERGENCY LOGS */}
+    //               <StackNavigator.Screen
+    //                 name="Responder-Emergency-Logs"
+    //                 component={EmergencyHistory}
+    //                 options={{headerTitle: 'Emergency Logs'}}
+    //               />
+    //               {/* RESPONDER EMERGENCY LOGS */}
+    //               <StackNavigator.Screen
+    //                 name="First-Aid"
+    //                 component={FirstAidDashBoard}
+    //                 options={{headerTitle: 'First-Aid'}}
+    //               />
+    //               <StackNavigator.Screen
+    //                 name="Messages"
+    //                 component={Messages}
+    //                 options={{headerTitle: 'Conversations'}}
+    //               />
+    //               <StackNavigator.Screen
+    //                 name="Loading"
+    //                 component={LoadingPage}
+    //                 options={{headerShown: false}}
+    //               />
+    //             </StackNavigator.Navigator>
+    //           </NavigationContainer>
+    //         </UserNotificationProvider>
+    //       </UserRespondProvider>
+    //     </AlertProvider>
+    //   </AccountProvider>
+    // </MenuProvider>
   );
 }
 
