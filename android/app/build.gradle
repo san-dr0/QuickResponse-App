@@ -110,6 +110,11 @@ dependencies {
     implementation("com.facebook.react:flipper-integration")
     implementation(platform("com.google.firebase:firebase-bom:32.7.2"))
 
+    // video begin
+    implementation project(':rnwebrtc')
+    implementation project(':rnfgservice')
+    //video end
+    
     implementation project(':react-native-pager-view')
 
     if (hermesEnabled.toBoolean()) {
