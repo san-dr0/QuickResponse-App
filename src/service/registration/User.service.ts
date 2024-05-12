@@ -1,10 +1,16 @@
 import firestore from '@react-native-firebase/firestore';
-import { sha256 } from 'react-native-sha256';
-import { UserType } from '../../enums/User.enum';
-import { RegistrationDTO } from '../../types/Registration.type';
-import { LoginDTO, UpdateProfileDTO, UserDTO } from '../../types/User.type';
-import { createNewDeviceToken, validateIfUserExists } from '../../utils/utility';
-import { ALLERGIES_TABLE, BLOODTYPE_TABLE, CONDITIONS_TABLE, MEDICAL_AID_TABLE, USER_TABLE } from '../../constants/dbRef';
+import {sha256} from 'react-native-sha256';
+import {UserType} from '../../enums/User.enum';
+import {RegistrationDTO} from '../../types/Registration.type';
+import {LoginDTO, UpdateProfileDTO, UserDTO} from '../../types/User.type';
+import {createNewDeviceToken, validateIfUserExists} from '../../utils/utility';
+import {
+  ALLERGIES_TABLE,
+  BLOODTYPE_TABLE,
+  CONDITIONS_TABLE,
+  MEDICAL_AID_TABLE,
+  USER_TABLE,
+} from '../../constants/dbRef';
 
 export const registrationUser = async (loginFormValues: RegistrationDTO) => {
   const {
@@ -18,7 +24,9 @@ export const registrationUser = async (loginFormValues: RegistrationDTO) => {
     password,
     isActive,
     userType,
-    responderType
+    responderType,
+    agencyFullName,
+    phoneNumber,
   } = loginFormValues;
   const sha256Password = await sha256(password);
 
@@ -27,37 +35,41 @@ export const registrationUser = async (loginFormValues: RegistrationDTO) => {
   if (isUserExists) {
     return {
       fbID: '',
-      hasFailedRegistration: true
+      hasFailedRegistration: true,
     };
   }
 
-  const rec = await firestore().collection('Users').add({
-    email,
-    password: sha256Password,
-    isActive: userType === UserType.RESPONDER ? false : true,
-    account: {
-      profile,
-      firstname,
-      middlename,
-      lastname,
-      mobilenumber,
-      address,
-      userType,
-      responderType,
-    },
-    dateCreated: new Date()
-  });
+  const rec = await firestore()
+    .collection('Users')
+    .add({
+      email,
+      password: sha256Password,
+      isActive: userType === UserType.RESPONDER ? false : true,
+      account: {
+        profile,
+        firstname,
+        middlename,
+        lastname,
+        mobilenumber,
+        address,
+        userType,
+        responderType,
+        agencyFullName: userType === UserType.USER ? 'N/A' : agencyFullName,
+        phoneNumber: userType === UserType.USER ? 'N/A' : phoneNumber,
+      },
+      dateCreated: new Date(),
+    });
 
   return {
     fbID: rec.id,
-    hasFailedRegistration: false
+    hasFailedRegistration: false,
   };
 };
 
 export const loginUser = async (
   loginFormValues: LoginDTO,
 ): Promise<UserDTO> => {
-  const { loginEmail, loginPassword } = loginFormValues;
+  const {loginEmail, loginPassword} = loginFormValues;
 
   const results = await firestore()
     .collection('Users')
@@ -69,7 +81,7 @@ export const loginUser = async (
   }
   const activeUser: UserDTO = results.docs[0].data() as UserDTO;
   activeUser.account.fbID = results?.docs[0]?.id;
-  const { password } = activeUser;
+  const {password} = activeUser;
 
   const loginPassSha256 = await sha256(loginPassword ?? '');
 
@@ -86,7 +98,11 @@ export const loginUser = async (
   //   userType: results?.docs[0]?.data()?.account?.userType,
   // });
 
-  createNewDeviceToken(activeUser?.account?.fbID, loginEmail as string, userType); // this is a service that create a deviceToken, then saved it to firebase;
+  createNewDeviceToken(
+    activeUser?.account?.fbID,
+    loginEmail as string,
+    userType,
+  ); // this is a service that create a deviceToken, then saved it to firebase;
   return activeUser;
 };
 
@@ -94,12 +110,20 @@ export const updateUserInformation = async (
   activeUserID: string,
   profileInformation: UpdateProfileDTO,
   hasChangedPassword: any,
-): Promise<{ hashPassword: string } | undefined> => {
-  const { firstname, middlename, lastname, mobilenumber, responderType, userType, profile } = profileInformation;
+): Promise<{hashPassword: string} | undefined> => {
+  const {
+    firstname,
+    middlename,
+    lastname,
+    mobilenumber,
+    responderType,
+    userType,
+    profile,
+  } = profileInformation;
   let result = null;
-  
+
   if (hasChangedPassword) {
-    const { password } = profileInformation;
+    const {password} = profileInformation;
     let hashPassword = await sha256(password);
 
     result = await firestore().collection('Users').doc(activeUserID).update({
@@ -110,12 +134,12 @@ export const updateUserInformation = async (
         mobilenumber,
         profile,
         responderType,
-        userType
+        userType,
       },
       password: hashPassword,
     });
 
-    return { hashPassword };
+    return {hashPassword};
   } else {
     result = await firestore().collection('Users').doc(activeUserID).update({
       account: {
@@ -125,7 +149,7 @@ export const updateUserInformation = async (
         mobilenumber,
         profile,
         responderType,
-        userType
+        userType,
       },
     });
     return undefined;
@@ -144,29 +168,41 @@ export const setActiveUserInformation = async (id: string) => {
 export const getUserById = async (id: string) => {
   const resp = await firestore().collection(USER_TABLE).doc(id).get();
 
-  return { id: resp.id, ...resp.data() };
-}
+  return {id: resp.id, ...resp.data()};
+};
 
 export const getUserAllergiesById = async (id: string) => {
-  const resp = await firestore().collection(ALLERGIES_TABLE).doc(JSON.stringify(id)).get();
+  const resp = await firestore()
+    .collection(ALLERGIES_TABLE)
+    .doc(JSON.stringify(id))
+    .get();
 
   return {id: resp.id, ...resp.data()};
 };
 
 export const getUserConiditionsById = async (id: string) => {
-  const resp = await firestore().collection(CONDITIONS_TABLE).doc(JSON.stringify(id)).get();
+  const resp = await firestore()
+    .collection(CONDITIONS_TABLE)
+    .doc(JSON.stringify(id))
+    .get();
 
   return {id: resp.id, ...resp.data()};
 };
 
 export const getUserBloodTypeById = async (id: string) => {
-  const resp = await firestore().collection(BLOODTYPE_TABLE).doc(JSON.stringify(id)).get();
+  const resp = await firestore()
+    .collection(BLOODTYPE_TABLE)
+    .doc(JSON.stringify(id))
+    .get();
 
   return {id: resp.id, ...resp.data()};
 };
 
 export const getUserMedicalAidById = async (id: string) => {
-  const resp = await firestore().collection(MEDICAL_AID_TABLE).doc(JSON.stringify(id)).get();
+  const resp = await firestore()
+    .collection(MEDICAL_AID_TABLE)
+    .doc(JSON.stringify(id))
+    .get();
 
   return {id: resp.id, ...resp.data()};
 };
