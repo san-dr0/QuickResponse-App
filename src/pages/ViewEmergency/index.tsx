@@ -29,6 +29,9 @@ import {
   sendNotification,
 } from '../../service/token/DeviceInfo.service';
 import {NotificationDto} from '../../dto/Notification.dto';
+import TextLabel from '../../components/TextLabel';
+import { COLOR_LISTS } from '../../constants/colors';
+import { CardComponent } from '../../components/Card';
 
 const FooterHeight = Dimensions.get('window').height * 0.5;
 const MapsHeight = Dimensions.get('window').height;
@@ -45,7 +48,7 @@ export default function ViewEmergency(props: any) {
   const isLoginSender =
     emergency?.sender?.userID === JSON.parse(user?.account?.fbID as string);
 
-    async function handleSendMessage() {
+  async function handleSendMessage() {
     try {
       setIsDisabled(true);
       const reciever: MessageUserDto = {
@@ -256,18 +259,32 @@ export default function ViewEmergency(props: any) {
           onPress={() => setIsOpenModal(true)}
           type="OUTLINE"
         /> */}
-        {user?.account?.userType === 'User' && (
-          <Button
-            title={
-              !emergency?.isActive
-                ? 'Emergency was Cleard out'
-                : 'Tag as Responded'
-            }
-            type="OUTLINE"
-            onPress={() => onTagAsResponded()}
-            isDisable={!emergency?.isActive ? true : false}
-          />
-        )}
+        {user?.account?.userType === 'User' &&
+          // <Button
+          //   title={
+          //     !emergency?.isActive
+          //       ? 'Emergency was Cleard out'
+          //       : 'Tag as Responded'
+          //   }
+          //   type="OUTLINE"
+          //   onPress={() => onTagAsResponded()}
+          //   isDisable={!emergency?.isActive ? true : false}
+          // />
+
+          (!emergency?.isActive ? (
+            <TextLabel title="This emergency was Cleared out" textAlign="center" fontSize={16} textColor={COLOR_LISTS.GREEN_600} />
+          ) : (
+            <Button
+              title={
+                !emergency?.isActive
+                  ? 'Emergency was Cleard out'
+                  : 'Tag as Responded'
+              }
+              type="OUTLINE"
+              onPress={() => onTagAsResponded()}
+              isDisable={!emergency?.isActive ? true : false}
+            />
+          ))}
         <View style={{height: 8}} />
         {isIncludeToResponder || isLoginSender ? (
           <Button
