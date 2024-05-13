@@ -22,7 +22,8 @@ export default function QRAppServices(props: any) {
     const serviceList: ServiceProps[] = [
         {name: 'Feedback and Rating', route: 'Feedback-And-Rating'},
         {name: 'Emergency Logs', route: 'Emergency-Logs'},
-        {name: 'First Aid', route: 'First-Aid'}
+        {name: 'First Aid', route: 'First-Aid'},
+        {name: 'Emergency Education Resources', route: 'Emergency-Educational-Resources'},
     ];
     const [refresh, setRefresh] = useState<boolean>(false);
     const {setIsActiveUserNotification, totalRespondedOfMyEmergency, setTotalRespondedOfMyEmergency} = userUserNotificationContext();
@@ -66,10 +67,10 @@ export default function QRAppServices(props: any) {
     };
 
     return <RefreshControl refreshing={refresh} onRefresh={onRefreshServicePage}>
-            <View>
-            <View style={{padding: 10}}>
-                <FlatList data={serviceList} renderItem={renderQRAppService} />
+            <View style={{paddingLeft: 10, paddingRight: 10}}>
+                <View>
+                    <FlatList data={serviceList} renderItem={renderQRAppService} />
+                </View>
             </View>
-        </View>
     </RefreshControl>
 };
