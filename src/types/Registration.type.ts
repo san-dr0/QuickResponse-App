@@ -12,6 +12,7 @@ export type RegistrationDTO = {
     isActive: boolean
     userType?: UserType;
     responderType: string;
+    doYouWorkForGovernment?: string;
     agencyFullName?: string;
     phoneNumber?: string;
 }

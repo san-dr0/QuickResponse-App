@@ -31,13 +31,16 @@ export default function Alerts(props: any) {
   // const {alerts} = useAlertContext();
   const {data, sendRequest, setData} = useGetActiveEmergency();
   const [coordinate, setCoordinate] = useState<CoordinateDto | null>(null);
-  const {activeUserInformation: user} = useAccountContext();
+  const {activeUserInformation: user} =
+    useAccountContext();
   const [selectedData, setSelectedData] = useState<EmergencyDto | null>(null);
   const [modalData, setModalData] = useState<ModalData | null>(null);
 
   const [isOpen, setIsOpen] = useState<boolean>(false);
 
   useEffect(() => {
+    console.log('WEWE >>', user);
+    
     const unsubscribe = messaging().onMessage(async (remoteMessage: any) => {
       console.log('REMOTE0', remoteMessage);
 

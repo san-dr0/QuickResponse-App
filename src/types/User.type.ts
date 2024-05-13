@@ -3,6 +3,11 @@ export type LoginDTO = {
   loginPassword?: string;
 };
 
+export type SubscriptionDetailsDTO = {
+  startDate: string;
+  endDate: string
+};
+
 export type AccountDTO = {
   fbID?: string;
   profile?: string;
@@ -27,6 +32,7 @@ export type UserDTO = {
   password: string;
   isActive: boolean;
   account: AccountDTO;
+  subscriptionDetails: SubscriptionDetailsDTO;
 };
 
 export type UpdateProfileDTO = {

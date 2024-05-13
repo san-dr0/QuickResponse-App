@@ -11,6 +11,8 @@ import {
   MEDICAL_AID_TABLE,
   USER_TABLE,
 } from '../../constants/dbRef';
+import {getCurrentDateWithTime} from '../../utils/date.utils';
+import dayjs from 'dayjs';
 
 export const registrationUser = async (loginFormValues: RegistrationDTO) => {
   const {
@@ -27,6 +29,7 @@ export const registrationUser = async (loginFormValues: RegistrationDTO) => {
     responderType,
     agencyFullName,
     phoneNumber,
+    doYouWorkForGovernment,
   } = loginFormValues;
   const sha256Password = await sha256(password);
 
@@ -38,6 +41,9 @@ export const registrationUser = async (loginFormValues: RegistrationDTO) => {
       hasFailedRegistration: true,
     };
   }
+
+  const qrAppInfo = dayjs();
+  const addedMonth = qrAppInfo.add(1, 'month').$d;
 
   const rec = await firestore()
     .collection('Users')
@@ -56,6 +62,11 @@ export const registrationUser = async (loginFormValues: RegistrationDTO) => {
         responderType,
         agencyFullName: userType === UserType.USER ? 'N/A' : agencyFullName,
         phoneNumber: userType === UserType.USER ? 'N/A' : phoneNumber,
+        doYouWorkForGovernment,
+        subscriptionDetails: {
+          startDate: getCurrentDateWithTime(),
+          endDate: doYouWorkForGovernment === 'Yes' ? 'N/A' : addedMonth,
+        },
       },
       dateCreated: new Date(),
     });

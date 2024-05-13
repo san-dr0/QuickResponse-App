@@ -48,7 +48,7 @@ export default function Login(props: any) {
       const loginResponse = await sendLoginQRUser(values);
 
       if (Object.keys(loginResponse).length) {
-        const {email, password, account, isActive}: UserDTO = loginResponse;
+        const {email, password, account, isActive, subscriptionDetails}: UserDTO = loginResponse;
 
         const {
           fbID,
@@ -85,6 +85,7 @@ export default function Login(props: any) {
             loginEmail: email,
             loginPassword: password,
           },
+          subscriptionDetails,
         });
 
         setAsyncStorage(STORAGE_KEY.ACTIVE_USER_EMAIL, email);
