@@ -26,6 +26,8 @@ import {AlertProvider} from './src/providers/AlertProvider';
 import {UserRespondProvider} from './src/providers/UserResponseProvider';
 import {UserNotificationProvider} from './src/providers/UserNotificationProvider';
 import EmergencyHistory from './src/pages/Responder/EmergencyHistory';
+import EmergencyEducationalResources from './src/pages/EmergencyEducationResources';
+import EmergencyGuide from './src/pages/EmergencyEducationResources/EmergencyGuide';
 
 const StackNavigator = createNativeStackNavigator();
 function App() {
@@ -132,6 +134,18 @@ function App() {
                     name="Responder-Emergency-Logs"
                     component={EmergencyHistory}
                     options={{headerTitle: 'Emergency Logs'}}
+                  />
+                  {/* EMERGENCY EDUCATIOANL RESOURCES */}
+                  <StackNavigator.Screen
+                    name="Emergency-Educational-Resources"
+                    component={EmergencyEducationalResources}
+                    options={{headerTitle: "Emergency Resources"}}
+                  />
+                  {/* EMERGENCY GUIDE RESOURCES */}
+                  <StackNavigator.Screen
+                    name="Emergency-Guide"
+                    component={EmergencyGuide}
+                    options={{headerTitle: "Emergency Guide"}}
                   />
                   {/* RESPONDER EMERGENCY LOGS */}
                   <StackNavigator.Screen
