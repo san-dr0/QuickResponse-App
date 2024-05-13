@@ -1,32 +1,34 @@
-import Geolocation from "@react-native-community/geolocation";
-import { useCallback, useEffect, useState } from "react";
-import { CoordinateDto } from "../dto/Coordinate.dto";
+import Geolocation from '@react-native-community/geolocation';
+import {useCallback, useEffect, useState} from 'react';
+import {CoordinateDto} from '../dto/Coordinate.dto';
+import {DEFAULT_COORDINATES} from '../constants/string';
 
 export function useGetActiveUserCoordinates() {
-    const [coordiantes, setCoordinates] = useState<CoordinateDto>();
+  const [coordiantes, setCoordinates] =
+    useState<CoordinateDto>(DEFAULT_COORDINATES);
 
-    const getUserCoordinates = useCallback(async () => {
-        Geolocation.requestAuthorization();
-        Geolocation.getCurrentPosition(
-            position => {
-                setCoordinates({
-                    latitude: position?.coords?.latitude,
-                    longitude: position?.coords?.longitude
-                });
-            },
-            error => {
-                console.error(error);
-            },
-            {
-                enableHighAccuracy: false,
-                timeout: 10000,
-            },
-        );
-    }, []);
+  const getUserCoordinates = useCallback(async () => {
+    Geolocation.requestAuthorization();
+    Geolocation.getCurrentPosition(
+      position => {
+        setCoordinates({
+          latitude: position?.coords?.latitude,
+          longitude: position?.coords?.longitude,
+        });
+      },
+      error => {
+        console.error(error);
+      },
+      {
+        enableHighAccuracy: false,
+        timeout: 10000,
+      },
+    );
+  }, []);
 
-    useEffect(() => {
-        getUserCoordinates();
-    }, []);
+  useEffect(() => {
+    getUserCoordinates();
+  }, []);
 
-    return { coordiantes };
+  return {coordiantes, setCoordinates};
 }

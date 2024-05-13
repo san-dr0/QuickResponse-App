@@ -420,3 +420,8 @@ export const EMERGENCY_EDUCATIONAL_RESOURCES: EmergencyEducationalResourcesDTO[]
     ]
   }
 ];
+
+export const DEFAULT_COORDINATES = {
+  latitude: 10.2975,
+  longitude: 123.897,
+}; // this will POINT TO UC
