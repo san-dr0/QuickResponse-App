@@ -48,8 +48,8 @@ export default function Login(props: any) {
       const loginResponse = await sendLoginQRUser(values);
 
       if (Object.keys(loginResponse).length) {
-        const {email, password, account, isActive}: UserDTO = loginResponse;
-
+        const {email, password, account, isActive, subscriptionDetails}: UserDTO = loginResponse;
+        
         const {
           fbID,
           profile,
@@ -85,8 +85,9 @@ export default function Login(props: any) {
             loginEmail: email,
             loginPassword: password,
           },
+          subscriptionDetails,
         });
-
+        
         setAsyncStorage(STORAGE_KEY.ACTIVE_USER_EMAIL, email);
         setAsyncStorage(STORAGE_KEY.FB_ID, fbID);
         setIsPassed(false);
@@ -96,7 +97,7 @@ export default function Login(props: any) {
           return;
         }
 
-        navigation.navigate('Dashboard');
+        // navigation.navigate('Dashboard');
       } else {
         Alert.alert('Something went wrong', 'Invalid credentials');
         setIsPassed(false);

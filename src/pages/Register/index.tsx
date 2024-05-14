@@ -1,6 +1,6 @@
 /* eslint-disable react-native/no-inline-styles */
 import {Formik} from 'formik';
-import {useState} from 'react';
+import React, {useState} from 'react';
 import {
   Alert,
   ScrollView,
@@ -39,6 +39,8 @@ import {RegistrationDTO} from '../../types/Registration.type';
 import {uploadImage} from '../../utils/imageManipulation';
 import Modal from 'react-native-modal';
 import {TermsAndCondition} from '../../components/TermsAndCondition';
+import {RadioButton, TextInput} from 'react-native-paper';
+import {CardComponent} from '../../components/Card';
 
 export default function Registration(props: any) {
   const {activeUserInformation} = useAccountContext();
@@ -69,6 +71,13 @@ export default function Registration(props: any) {
   );
   const {sendRegisterQRUser} = useUserCredentials();
   const [isTACModalIsOpened, setIsTACModalIsOpened] = useState<boolean>(true);
+  const [agencyOrFullname, setAgencyOrFullname] = useState<string>('');
+  const [phoneNumber, setPhoneNumber] = useState<string>('');
+  const [errorAgencyOrFullName, setErrorAgencyOrFullName] =
+    useState<boolean>(false);
+  const [errorPhoneNumber, setErrorPhoneNumber] = useState<boolean>(false);
+  const [doYouWorkForGovernment, setDoYouWorkForGoverment] =
+    useState<string>('Yes');
 
   const registrationValidationSchema = Yup.object().shape({
     firstname: Yup.string().required('Firstname is required'),
@@ -104,8 +113,25 @@ export default function Registration(props: any) {
         setIsDisabled(false);
         return;
       }
+      if (dropdownValue === 'Responder') {
+        if (agencyOrFullname.length === 0) {
+          setErrorAgencyOrFullName(true);
+          setIsDisabled(false);
+          return;
+        } else {
+          setErrorAgencyOrFullName(false);
+        }
+        if (phoneNumber.length === 0) {
+          setErrorPhoneNumber(true);
+          setIsDisabled(false);
+          return;
+        } else {
+          setErrorPhoneNumber(false);
+        }
+      }
 
       resetForm();
+
       values.userType = dropdownValue as UserType;
       values.responderType =
         dropdownValue === 'User'
@@ -113,6 +139,9 @@ export default function Registration(props: any) {
           : responderType
           ? responderType
           : 'N/A';
+      values.agencyFullName = agencyOrFullname;
+      values.phoneNumber = phoneNumber;
+      values.doYouWorkForGovernment = doYouWorkForGovernment;
 
       const result = (await sendRegisterQRUser(values)) as any;
 
@@ -160,6 +189,10 @@ export default function Registration(props: any) {
   const onCloseTermsAndCondition = () => {
     setIsTACModalIsOpened(false);
     navigation.navigate('Home');
+  };
+
+  const onCheckIfYouWorkForGovernemnt = (param: string) => {
+    setDoYouWorkForGoverment(param);
   };
 
   return (
@@ -261,15 +294,22 @@ export default function Registration(props: any) {
                   borderRadius: 8,
                   // paddingHorizontal: 14,
                 }}>
-                <TextInputComponent
-                  label="Password"
-                  borderRadius={10}
-                  textMode={TextInputEnum.OUTLINED}
-                  value={values.password}
-                  onChangeText={handleChange('password')}
-                  secureTextEntry={secureText}
-                  // error={errors.password}
-                />
+                <DivComponent flexDirection="column">
+                  <TextInputComponent
+                    label="Password"
+                    borderRadius={10}
+                    textMode={TextInputEnum.OUTLINED}
+                    value={values.password}
+                    onChangeText={handleChange('password')}
+                    secureTextEntry={secureText}
+                    // error={errors.password}
+                  />
+                  <TextLabel
+                    title={errors.password}
+                    textColor={COLOR_LISTS.RED}
+                  />
+                </DivComponent>
+
                 <TextLabel title=" " />
                 <TouchableOpacity
                   onPress={() => setSecureText(!secureText)}
@@ -338,6 +378,73 @@ export default function Registration(props: any) {
                     textAlign="center"
                     borderRadius="5"
                   />
+                  <DividerComponent margin="10px 0 0 0" />
+                  <CardComponent>
+                    <TextLabel
+                      title="Do you work for the government"
+                      fontSize={15}
+                    />
+                    <DivComponent flexDirection="row">
+                      <RadioButton
+                        value="Yes"
+                        status={
+                          doYouWorkForGovernment === 'Yes'
+                            ? 'checked'
+                            : 'unchecked'
+                        }
+                        onPress={() => onCheckIfYouWorkForGovernemnt('Yes')}
+                      />
+                      <View style={{backgroundColor: 'red'}} />
+                      <TextLabel title="Yes" fontSize={20} />
+                    </DivComponent>
+                    <DivComponent flexDirection="row">
+                      <RadioButton
+                        value="No"
+                        status={
+                          doYouWorkForGovernment === 'No'
+                            ? 'checked'
+                            : 'unchecked'
+                        }
+                        onPress={() => onCheckIfYouWorkForGovernemnt('No')}
+                      />
+                      <DividerComponent margin="20px 0 0 0" />
+                      <TextLabel title="No" fontSize={20} />
+                    </DivComponent>
+                  </CardComponent>
+                  <TextInput
+                    style={{
+                      backgroundColor: COLOR_LISTS.WHITE,
+                      borderRadius: 10,
+                      marginTop: 10,
+                    }}
+                    onChangeText={setAgencyOrFullname}
+                    mode={'outlined'}
+                    label="Name of Agency / Fullname"
+                  />
+                  {errorAgencyOrFullName && (
+                    <TextLabel
+                      title="Empty Agency / Fullname"
+                      textColor={COLOR_LISTS.RED}
+                    />
+                  )}
+                  <TextInput
+                    style={{
+                      backgroundColor: COLOR_LISTS.WHITE,
+                      borderRadius: 10,
+                      marginTop: 10,
+                    }}
+                    onChangeText={setPhoneNumber}
+                    mode={'outlined'}
+                    label="Phone#"
+                    keyboardType={'phone-pad'}
+                    maxLength={11}
+                  />
+                  {errorPhoneNumber && (
+                    <TextLabel
+                      title="Empty Phone#"
+                      textColor={COLOR_LISTS.RED}
+                    />
+                  )}
                 </>
               )}
               <ButtonComponent

@@ -82,7 +82,7 @@ export default function EmergencyHistory(props: any) {
     );
   };
 
-  console.log(data[0]);
+  // console.log(data[0]);
 
   return (
     <View style={{flex: 1}}>

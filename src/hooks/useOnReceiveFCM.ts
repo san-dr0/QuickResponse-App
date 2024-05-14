@@ -28,12 +28,12 @@ export function useOnReceiveFirebaseCloudMessaging() {
       const title = JSON.parse(remoteMessage?.data?.notification)?.title;
       const body = JSON.parse(remoteMessage?.data?.notification)?.body;
       //const emergency = JSON.parse(remoteMessage?.data);
-      console.log('NOTIF >>>');
-      console.log(remoteMessage?.data);
-      console.log(activeUserInformation?.account);
+      // console.log('NOTIF >>>');
+      // console.log(remoteMessage?.data);
+      // console.log(activeUserInformation?.account);
 
       if (activeUserInformation?.account?.userType === UserType.RESPONDER) {
-        console.log('IM IN responder');
+        // console.log('IM IN responder');
 
         setAlertRecords({
           title,
@@ -43,7 +43,7 @@ export function useOnReceiveFirebaseCloudMessaging() {
           emergency: payload,
         });
       } else {
-        console.log('IM IN USER >> PLAIN');
+        // console.log('IM IN USER >> PLAIN');
         
         setUserAlert({
           title,
@@ -62,7 +62,7 @@ export function useOnReceiveFirebaseCloudMessaging() {
       async (remoteMessage: any) => {
         const parseMessage = remoteMessage;
 
-        console.log('wew', JSON.parse(parseMessage.data?.coordinate));
+        // console.log('wew', JSON.parse(parseMessage.data?.coordinate));
 
         const payload: EmergencyDto = {
           type: parseMessage?.data?.type,
@@ -77,11 +77,11 @@ export function useOnReceiveFirebaseCloudMessaging() {
         const emergencyId = remoteMessage?.data?.emergencyId;
         const title = remoteMessage?.data?.notification?.title;
         const body = remoteMessage?.data?.notification?.body;
-        console.log('REMOTE >> backgroundMessage');
-        console.log(remoteMessage);
+        // console.log('REMOTE >> backgroundMessage');
+        // console.log(remoteMessage);
 
         if (activeUserInformation?.account?.userType === UserType.RESPONDER) {
-          console.log('IM IN responder');
+          // console.log('IM IN responder');
 
           setAlertRecords({
             title,
@@ -91,7 +91,7 @@ export function useOnReceiveFirebaseCloudMessaging() {
             emergency: payload,
           });
         } else {
-          console.log('RESPONDED TO USER');
+          // console.log('RESPONDED TO USER');
           
           setUserAlert({
             title,

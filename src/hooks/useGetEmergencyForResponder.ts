@@ -17,7 +17,7 @@ export default function useGetEmergencyForResponder(props: Props) {
         id,
         responderType as EmergencyType,
       );
-      console.log('RESPON', resp);
+      // console.log('RESPON', resp);
       setData(resp);
     } catch (error) {
       console.log(error);

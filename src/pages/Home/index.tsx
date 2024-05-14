@@ -38,6 +38,7 @@ export default function Home(props: any) {
         const result = await sendActiveUserInformation(fbID);
         const record = result.data();
         const account = result.data()?.account;
+        const subscriptionDetails = result?.data()?.subscriptionDetails;
 
         if (!record?.isActive) {
           Alert.alert('Inactive', 'Your account is inactive');
@@ -59,6 +60,7 @@ export default function Home(props: any) {
             loginEmail: record?.email,
             loginPassword: record?.password,
           },
+          subscriptionDetails,
         });
         createNewDeviceToken(
           JSON.parse(fbID),

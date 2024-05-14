@@ -8,9 +8,9 @@ export default function useGetActiveEmergency() {
 
   const sendRequest = useCallback(async () => {
     try {
-      console.log('====================================');
-      console.log('TRIGGER');
-      console.log('====================================');
+      // console.log('====================================');
+      // console.log('TRIGGER');
+      // console.log('====================================');
       const resp = await getActiveEmergency();
 
       setData(resp);

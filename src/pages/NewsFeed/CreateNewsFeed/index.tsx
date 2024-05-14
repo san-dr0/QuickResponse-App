@@ -47,8 +47,6 @@ export function CreateNewsFeed(props: any) {
             setUploadImageMessage('Image was selected.')
         }
         catch(error: any) {
-            console.log('WEWEW');
-            console.log(error);
             setUploadImageMessage('');
         }
     };
