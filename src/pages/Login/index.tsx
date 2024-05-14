@@ -97,7 +97,7 @@ export default function Login(props: any) {
           return;
         }
 
-        // navigation.navigate('Dashboard');
+        navigation.navigate('Dashboard');
       } else {
         Alert.alert('Something went wrong', 'Invalid credentials');
         setIsPassed(false);
