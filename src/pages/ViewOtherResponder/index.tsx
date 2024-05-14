@@ -7,10 +7,10 @@ export default function ViewOtherResponder(props: any) {
   const {route, navigation} = props;
 
   const id = route.params.id;
-  console.log('lala', id);
+  // console.log('lala', id);
   const {data: emergency} = useGetEmergencyById({emergencyId: id});
 
-  console.log('GG', emergency);
+  // console.log('GG', emergency);
 
   const renderitem = ({
     item,

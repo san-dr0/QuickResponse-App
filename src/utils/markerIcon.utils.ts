@@ -3,8 +3,8 @@ import { EmergencyType } from '../enums/EmergencyType.enum';
 
 export function getMarkerIcon(type: EmergencyType) {
   let icons = null;
-  console.log("TYPE >>");
-  console.log(type);
+  // console.log("TYPE >>");
+  // console.log(type);
   
   switch (type) {
     case EmergencyType.FIRE:

@@ -35,8 +35,8 @@ export default function ViewUserInfo(props: any) {
       />
     );
   }, [data]);
-  console.log('IID', id);
-  console.log('DAT', data);
+  // console.log('IID', id);
+  // console.log('DAT', data);
   return (
     <ScrollView>
       <View style={{flex: 1}}>

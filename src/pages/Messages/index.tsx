@@ -22,11 +22,11 @@ export default function Messages(props: any) {
 
   async function handleSendMessage() {
     try {
-      console.log('====================================');
-      console.log(receiver);
-      console.log('====================================');
+      // console.log('====================================');
+      // console.log(receiver);
+      // console.log('====================================');
       if (!data) {
-        console.log('HAN');
+        // console.log('HAN');
         setIsDisable(true);
         const senderUser: MessageUserDto = {
           id: JSON.parse(user?.account?.fbID as string) as string,
@@ -43,23 +43,23 @@ export default function Messages(props: any) {
           middlename: receiver?.middlename,
           lastname: receiver?.lastname,
         };
-        console.log('RECIEVER', receiverUser);
-        console.log('SENDER', senderUser);
+        // console.log('RECIEVER', receiverUser);
+        // console.log('SENDER', senderUser);
 
-        console.log(message);
+        // console.log(message);
         if (!message) {
           ToastAndroid.show('Please input message', ToastAndroid.LONG);
           setIsDisable(false);
           return;
         }
-        console.log('RECIEVER', receiverUser);
-        console.log('SENDER', senderUser);
+        // console.log('RECIEVER', receiverUser);
+        // console.log('SENDER', senderUser);
         await sendMessage(
           receiverUser as MessageUserDto,
           senderUser as MessageUserDto,
           message,
         );
-        console.log('EWE');
+        // console.log('EWE');
         setMessage('');
         setIsDisable(false);
         return;

@@ -5,7 +5,8 @@ export type LoginDTO = {
 
 export type SubscriptionDetailsDTO = {
   startDate: string;
-  endDate: string
+  endDate: string,
+  isSubscribed: boolean;
 };
 
 export type AccountDTO = {

@@ -57,7 +57,7 @@ export const sendMessage = async (
 };
 
 export const getConversationByUserId = async (id: string) => {
-  console.log([JSON.parse(id)]);
+  // console.log([JSON.parse(id)]);
   const resp = await firestore()
     .collection(CONVERSATIONS)
     .where('users', 'array-contains-any', [JSON.parse(id)])

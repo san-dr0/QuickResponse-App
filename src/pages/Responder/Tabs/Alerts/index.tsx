@@ -1,6 +1,6 @@
 import messaging from '@react-native-firebase/messaging';
 import {useEffect, useMemo, useState} from 'react';
-import {Dimensions, Image, Text, TouchableOpacity, View} from 'react-native';
+import {Dimensions, Image, Text, ToastAndroid, TouchableOpacity, View} from 'react-native';
 import {Marker} from 'react-native-maps';
 import Modal from 'react-native-modal';
 import MaterialIcon from 'react-native-vector-icons/MaterialCommunityIcons';
@@ -18,6 +18,15 @@ import {
   sendNotification,
 } from '../../../../service/token/DeviceInfo.service';
 import {EmergencyType} from '../../../../enums/EmergencyType.enum';
+import TextLabel from '../../../../components/TextLabel';
+import { COLOR_LISTS } from '../../../../constants/colors';
+import { CardComponent } from '../../../../components/Card';
+import DivComponent from '../../../../components/DivContainer';
+import { clearAsyncStorage } from '../../../../utils/utility';
+import { PaymentMethod } from '../../../../components/PaymentMethod';
+import { saveSubscriptionRecord, updateUserSubscription, uploadProofOfPayment } from '../../../../service/payment/Payment.service';
+import dayjs from 'dayjs';
+import { checkIfSubscriptionHasExpired } from '../../../../utils/date.utils';
 
 type ModalData = {
   notification: NotificationDto;
@@ -31,18 +40,25 @@ export default function Alerts(props: any) {
   // const {alerts} = useAlertContext();
   const {data, sendRequest, setData} = useGetActiveEmergency();
   const [coordinate, setCoordinate] = useState<CoordinateDto | null>(null);
-  const {activeUserInformation: user} =
+  const {activeUserInformation: user, setActiveUserInformationFunction} =
     useAccountContext();
   const [selectedData, setSelectedData] = useState<EmergencyDto | null>(null);
   const [modalData, setModalData] = useState<ModalData | null>(null);
+  const [isSubscribed, setIsSubscribed] = useState<boolean>(false);
+  const [openSubscriptionForm, setOpenSubscriptionForm] = useState<boolean>(false);
+  const [proofOfPayment, setProofOfPayment] = useState<any | undefined>(undefined); // hold the image
 
   const [isOpen, setIsOpen] = useState<boolean>(false);
 
   useEffect(() => {
-    console.log('WEWE >>', user);
-    
+    if (checkIfSubscriptionHasExpired(user?.subscriptionDetails?.endDate as string, user?.subscriptionDetails?.isSubscribed as boolean)) {
+      setIsSubscribed(false); // means open the modal need; mo subscribed balik
+    } else {
+      setIsSubscribed(user?.subscriptionDetails?.isSubscribed as boolean);
+    }
+
     const unsubscribe = messaging().onMessage(async (remoteMessage: any) => {
-      console.log('REMOTE0', remoteMessage);
+      // console.log('REMOTE0', remoteMessage);
 
       const parseMessage = remoteMessage;
       const payload: EmergencyDto = {
@@ -257,6 +273,33 @@ export default function Alerts(props: any) {
       console.log(error);
     }
   }
+  
+  const onPressCancelSubscription = () => {
+    setActiveUserInformationFunction({} as any);
+    clearAsyncStorage();
+    navigation.navigate('Home');
+  };
+
+  const onPressSubscritpion = async () => {
+    if (openSubscriptionForm) {
+      // MEANS the user has successfully subscribed to our QRAPP;
+      const param = {
+        userID: user?.account?.fbID as string,
+        fullName: `${user?.account?.lastname}, ${user?.account?.firstname}`,
+        cashTendered: 400,
+      };
+
+      const paymentID = await saveSubscriptionRecord(param);
+      uploadProofOfPayment(proofOfPayment, paymentID);
+      updateUserSubscription(user?.account?.fbID as string, {endDate: user?.subscriptionDetails.endDate as string, startDate: user?.subscriptionDetails?.startDate as string});
+
+      setIsSubscribed(true);
+      ToastAndroid.show("You are subscribed for 1 month", ToastAndroid.LONG);
+    } else {
+      setOpenSubscriptionForm(true);
+    }
+  }
+
   return (
     <View style={{flex: 1}}>
       <Modal isVisible={isOpen}>
@@ -294,6 +337,20 @@ export default function Alerts(props: any) {
         {displayMarker}
       </Maps>
       {viewOption}
+      <Modal isVisible={!isSubscribed}>
+        {/* <TextLabel title={JSON.stringify(user?.subscriptionDetails)+' wewe'} textColor={COLOR_LISTS.WHITE} /> */}
+        <CardComponent borderRadius={5} padding={10} height="auto">
+          <TextLabel title="You need to subscribe first to continue using QRAPP." textAlign="center" fontSize={18} />
+          {
+            openSubscriptionForm && <PaymentMethod setProofOfPayment={setProofOfPayment} />
+          }
+          <View style={{display: "flex", justifyContent: "center", flexDirection: "row", marginTop: 20}}>
+            <Button title={openSubscriptionForm ? "Proceed" : "Subscribe"} background={openSubscriptionForm ? COLOR_LISTS.GREEN : COLOR_LISTS.AMBER_600} type="SOLID" onPress={onPressSubscritpion} />
+            <TextLabel title=" " />
+            <Button title="Cancel" onPress={onPressCancelSubscription} />
+          </View>
+        </CardComponent>
+      </Modal>
     </View>
   );
 }

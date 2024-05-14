@@ -49,7 +49,7 @@ export default function Login(props: any) {
 
       if (Object.keys(loginResponse).length) {
         const {email, password, account, isActive, subscriptionDetails}: UserDTO = loginResponse;
-
+        
         const {
           fbID,
           profile,
@@ -87,7 +87,7 @@ export default function Login(props: any) {
           },
           subscriptionDetails,
         });
-
+        
         setAsyncStorage(STORAGE_KEY.ACTIVE_USER_EMAIL, email);
         setAsyncStorage(STORAGE_KEY.FB_ID, fbID);
         setIsPassed(false);
@@ -97,7 +97,7 @@ export default function Login(props: any) {
           return;
         }
 
-        navigation.navigate('Dashboard');
+        // navigation.navigate('Dashboard');
       } else {
         Alert.alert('Something went wrong', 'Invalid credentials');
         setIsPassed(false);

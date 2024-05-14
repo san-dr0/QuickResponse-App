@@ -13,3 +13,4 @@ export const CONDITIONS_TABLE = 'Conditions';
 export const BLOODTYPE_TABLE = 'BloodType';
 export const MEDICAL_AID_TABLE = 'Medical Aid';
 export const CONTACT_TABLE = 'Contacts';
+export const PAYMENT_TABLE = 'Payment';

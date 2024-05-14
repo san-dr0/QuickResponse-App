@@ -43,8 +43,8 @@ export const registrationUser = async (loginFormValues: RegistrationDTO) => {
   }
 
   const qrAppInfo = dayjs();
-  const addedMonth = qrAppInfo.add(1, 'month').$d;
-
+  const addedMonth = qrAppInfo.add(1, 'month').format('MMMM DD YYYY HH:mm:s');
+  
   const rec = await firestore()
     .collection('Users')
     .add({
@@ -62,11 +62,12 @@ export const registrationUser = async (loginFormValues: RegistrationDTO) => {
         responderType,
         agencyFullName: userType === UserType.USER ? 'N/A' : agencyFullName,
         phoneNumber: userType === UserType.USER ? 'N/A' : phoneNumber,
-        doYouWorkForGovernment,
-        subscriptionDetails: {
-          startDate: getCurrentDateWithTime(),
-          endDate: doYouWorkForGovernment === 'Yes' ? 'N/A' : addedMonth,
-        },
+      },
+      governmentWorker: doYouWorkForGovernment,
+      subscriptionDetails: {
+        startDate: getCurrentDateWithTime(),
+        endDate: doYouWorkForGovernment === 'Yes' ? 'N/A' : addedMonth,
+        isSubscribed: doYouWorkForGovernment === 'Yes' ? true : false,
       },
       dateCreated: new Date(),
     });

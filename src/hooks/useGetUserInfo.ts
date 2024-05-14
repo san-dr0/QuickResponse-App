@@ -39,8 +39,8 @@ export default function useGetUserInfo(props: Props) {
     const sendAllergiesRequest = useCallback(async () => {
         try{
             const resp = await getUserAllergiesById(id);
-            console.log('ALL >>>');
-            console.log(resp);
+            // console.log('ALL >>>');
+            // console.log(resp);
             
             setAllergies(resp as any);
         }
@@ -58,8 +58,8 @@ export default function useGetUserInfo(props: Props) {
     const sendMedicalAidRequest = useCallback(async () => {
         const resp = await getUserMedicalAidById(id);
         setMedicalAid(resp as any);
-        console.log('MED >>> ');
-        console.log(resp);
+        // console.log('MED >>> ');
+        // console.log(resp);
         
     }, []);
 

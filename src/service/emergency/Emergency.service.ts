@@ -48,7 +48,7 @@ export const acceptEmergency = async (
       responder: arr,
     });
 
-  console.log('GG', isUpdate);
+  // console.log('GG', isUpdate);
 
   return isUpdate;
 };

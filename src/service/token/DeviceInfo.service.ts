@@ -82,8 +82,8 @@ export const sendNotification = async (
   senderBy: string,
 ) => {
   try {
-    console.log("sendNOTIF >>");
-    console.log(notification);
+    // console.log("sendNOTIF >>");
+    // console.log(notification);
     
     const response = await axios.post(
       'https://fcm.googleapis.com/fcm/send',
