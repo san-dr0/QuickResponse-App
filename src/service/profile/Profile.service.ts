@@ -1,4 +1,4 @@
-import { CONTACT_TABLE } from '../../constants/dbRef';
+import {CONTACT_TABLE} from '../../constants/dbRef';
 import {
   AllergyDTO,
   BloodTypeDTO,
@@ -160,4 +160,14 @@ export const removeContactInformation = async (
     .update({contacts: contactInformationRecord});
 
   return result;
+};
+
+export const getAllContactsForResponderView = async (certainUserID: string) => {
+  
+  const result = await firestore()
+    .collection('Contacts')
+    .doc(JSON.stringify(certainUserID))
+    .get();
+
+  return result.data();
 };

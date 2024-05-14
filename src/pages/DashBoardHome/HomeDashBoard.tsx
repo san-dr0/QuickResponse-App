@@ -33,7 +33,7 @@ import {getMarkerIcon} from '../../utils/markerIcon.utils';
 
 export default function HomeDashBoard() {
   const {activeUserInformation} = useAccountContext();
-  const {coordiantes} = useGetActiveUserCoordinates();
+  const {coordiantes, setCoordinates} = useGetActiveUserCoordinates();
   const [verifyRequest, setVerifyRequest] = useState<boolean>(false);
   const [emergencyTypeChooseByUser, setEmergencyTypeChooseByUser] =
     useState<EmergencyType>(EmergencyType.CAR_ACCIDENT);
@@ -53,6 +53,7 @@ export default function HomeDashBoard() {
       if (!verifyRequest) {
         return;
       }
+      
       const emergency: EmergencyDto = {
         type: emergencyTypeChooseByUser,
         sender: {
@@ -126,11 +127,16 @@ export default function HomeDashBoard() {
     }
   }
 
+  const setUserDragCoordinates = (e: CoordinateDto) => {
+    setCoordinates(e);
+  };
+
   const reTriggeredQRAppMap = useMemo(() => {
     return (
       <QRAMap
         userHasTriggerEmergency={userHasTriggerEmergency}
         emergencyType={emergencyTypeChooseByUser}
+        setCoordinates={setUserDragCoordinates}
       />
     );
   }, [userHasTriggerEmergency]);
